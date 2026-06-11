@@ -1,0 +1,113 @@
+/* =============================================
+   OS. CNC MECHPLAST — MAIN STYLESHEET
+   Datei: css/main.css
+   Ändern: Farben, Schriften, globales Layout
+   ============================================= */
+
+:root {
+  --bg:        #F5F3EF;
+  --bg2:       #EEEBE4;
+  --white:     #FDFCFB;
+  --text:      #1A1816;
+  --text2:     #6B6560;
+  --accent:    #C8460A;
+  --accent2:   #E8D5C4;
+  --border:    rgba(26,24,22,0.12);
+  --radius:    4px;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+
+  --max-width:  1100px;
+  --pad-h:      2.5rem;
+  --section-py: 5rem;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+
+.container  { max-width: var(--max-width); margin: 0 auto; padding-left: var(--pad-h); padding-right: var(--pad-h); }
+.section-py { padding-top: var(--section-py); padding-bottom: var(--section-py); }
+.divider    { border: none; border-top: 1px solid var(--border); max-width: var(--max-width); margin: 0 auto; }
+
+.section-tag {
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 0.08em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: .75rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 34px; font-weight: 500; line-height: 1.2; color: var(--text);
+}
+.section-desc {
+  font-size: 15px; color: var(--text2);
+  line-height: 1.75; max-width: 420px; margin-top: .75rem;
+}
+.section-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; margin-bottom: 3rem; gap: 2rem;
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: none; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: opacity .2s, background .2s; padding: 11px 26px;
+}
+.btn-primary  { background: var(--accent); color: #fff; }
+.btn-primary:hover { opacity: .85; }
+.btn-outline  { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.btn-outline:hover { background: var(--bg2); }
+
+.lang-switch { display: flex; gap: 4px; }
+.lang-btn {
+  font-family: var(--font-mono); font-size: 11px;
+  padding: 3px 8px; border: 1px solid var(--border);
+  border-radius: 2px; background: transparent;
+  cursor: pointer; color: var(--text2); transition: all .2s;
+}
+.lang-btn.active, .lang-btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+.ticker {
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: var(--text); color: var(--bg); overflow: hidden; padding: 10px 0;
+}
+.ticker-inner { display: flex; gap: 3rem; animation: ticker 20s linear infinite; white-space: nowrap; }
+.ticker-item { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; opacity: .7; }
+.ticker-item::after { content: ' ·'; opacity: .4; margin-left: 12px; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.08em; color: var(--text2); text-transform: uppercase;
+}
+.form-group input, .form-group select, .form-group textarea {
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg); font-family: var(--font-body);
+  font-size: 14px; color: var(--text); outline: none; transition: border-color .2s;
+}
+.form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+.form-group textarea { resize: vertical; min-height: 90px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+
+.success-banner {
+  display: none; background: #f0f9eb; border: 1px solid #b7dd8b;
+  border-radius: var(--radius); padding: 1rem; text-align: center;
+  font-size: 14px; color: #3B6D11; margin-top: .75rem;
+}
+
+@media (max-width: 768px) {
+  :root { --pad-h: 1.25rem; --section-py: 3rem; }
+  .form-row { grid-template-columns: 1fr; }
+}

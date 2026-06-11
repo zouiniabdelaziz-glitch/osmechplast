@@ -1,0 +1,89 @@
+<!-- =============================================
+     MODUL: Branchen / Referenzen
+     Datei: modules/05_industries.html
+     Ändern: Branchen-Karten beliebig ergänzen/entfernen
+     Neue Branche: Karte duplizieren + Texte in translations.js
+     ============================================= -->
+<style>
+.industries-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem;
+}
+.ind-card {
+  background: var(--white); border: 1px solid var(--border);
+  padding: 1.5rem; border-radius: var(--radius);
+  display: flex; flex-direction: column; gap: .5rem;
+  transition: all .2s; cursor: default;
+}
+.ind-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.ind-icon {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--accent); letter-spacing: 0.06em;
+}
+.ind-card h4 { font-size: 15px; font-weight: 500; }
+.ind-card p  { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+@media (max-width: 768px) { .industries-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .industries-grid { grid-template-columns: 1fr; } }
+</style>
+
+<hr class="divider">
+
+<section class="section-py" id="branchen">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-tag"   data-key="sec_ind_tag"></div>
+        <div class="section-title" data-key="sec_ind_title"></div>
+      </div>
+    </div>
+
+    <div class="industries-grid">
+
+      <div class="ind-card">
+        <div class="ind-icon">AUTO</div>
+        <h4 data-key="ind1_t"></h4>
+        <p  data-key="ind1_p"></p>
+      </div>
+
+      <div class="ind-card">
+        <div class="ind-icon">MED</div>
+        <h4 data-key="ind2_t"></h4>
+        <p  data-key="ind2_p"></p>
+      </div>
+
+      <div class="ind-card">
+        <div class="ind-icon">AER</div>
+        <h4 data-key="ind3_t"></h4>
+        <p  data-key="ind3_p"></p>
+      </div>
+
+      <div class="ind-card">
+        <div class="ind-icon">MECH</div>
+        <h4 data-key="ind4_t"></h4>
+        <p  data-key="ind4_p"></p>
+      </div>
+
+      <div class="ind-card">
+        <div class="ind-icon">ELEK</div>
+        <h4 data-key="ind5_t"></h4>
+        <p  data-key="ind5_p"></p>
+      </div>
+
+      <div class="ind-card">
+        <div class="ind-icon">GEN</div>
+        <h4 data-key="ind6_t"></h4>
+        <p  data-key="ind6_p"></p>
+      </div>
+
+      <!-- NEUE BRANCHE HINZUFÜGEN:
+           <div class="ind-card">
+             <div class="ind-icon">RAIL</div>
+             <h4 data-key="ind7_t"></h4>
+             <p  data-key="ind7_p"></p>
+           </div>
+           Dann in translations.js: ind7_t und ind7_p für alle 4 Sprachen
+      -->
+
+    </div>
+  </div>
+</section>

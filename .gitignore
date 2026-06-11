@@ -1,0 +1,12 @@
+# Private Dateien
+*.xlsx
+~$*.xlsx
+*.pdf
+*.docx
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Editor
+.vscode/
