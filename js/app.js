@@ -14,6 +14,7 @@ let currentLang = CONFIG.defaultLang;
 
 function setLang(lang) {
   currentLang = lang;
+  try { localStorage.setItem('oscnc_lang', lang); } catch(e) {}
   document.querySelectorAll('.lang-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.lang === lang)
   );
@@ -188,7 +189,52 @@ function initDragDrop() {
 }
 
 /* ── INIT ────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
-  applyTranslations();
+/* ── MODUL-LADER ─────────────────────────────── */
+/* Jede Seite besteht aus Modulen: <div data-include="header"></div>
+   lädt modules/header.html. Modul ändern = überall geändert. */
+async function loadModules() {
+  const slots = [...document.querySelectorAll('[data-include]')];
+  await Promise.all(slots.map(async el => {
+    try {
+      const res = await fetch('modules/' + el.dataset.include + '.html');
+      if (res.ok) el.innerHTML = await res.text();
+      else el.innerHTML = '<!-- Modul fehlt: ' + el.dataset.include + ' -->';
+    } catch (e) { console.error('Modul-Fehler:', el.dataset.include, e); }
+  }));
+}
+
+/* Aktiven Menüpunkt markieren */
+function markActiveNav() {
+  const page = location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav a, .dropdown a').forEach(a => {
+    if ((a.getAttribute('href') || '').split('#')[0] === page) a.classList.add('active');
+  });
+}
+
+/* ── SCROLL-REVEAL ───────────────────────────── */
+function initReveal() {
+  const els = document.querySelectorAll(
+    '.svc-card,.mach-card,.ind-card,.media-card,.step,.usp,.mat-box,.sec-head,.cta-band,.faq details,.spec-table,.form-card,.contact-info'
+  );
+  els.forEach((el, i) => {
+    el.classList.add('reveal');
+    el.style.transitionDelay = (i % 4) * 70 + 'ms';
+  });
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  els.forEach(el => io.observe(el));
+}
+
+/* ── INIT ────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadModules();
+  try {
+    const saved = localStorage.getItem('oscnc_lang');
+    if (saved && T[saved]) currentLang = saved;
+  } catch(e) {}
+  setLang(currentLang);
   initDragDrop();
+  initReveal();
+  markActiveNav();
 });

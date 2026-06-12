@@ -3,300 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OS. CNC Mechplast – Precisione CNC in Italia</title>
-  <meta name="description" content="Lavorazione CNC di precisione in Italia – Fresatura, Tornitura, Foratura B2B.">
-
-  <!-- FONTS -->
+  <title>CNC-Drehteile aus Italien | Dreh-Fräs-Komplettbearbeitung — OS. CNC Mechplast</title>
+  <meta name="description" content="CNC-Drehen & Dreh-Fräs-Komplettbearbeitung in einer Aufspannung. 22 technische Kunststoffe (PEEK, POM, PTFE), Aluminium und Stahl. Toleranzen ±0,01 mm. Angebot in 24h — ab Stückzahl 1.">
+  <link rel="canonical" href="https://osmechplast.pages.dev/">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="OS. CNC Mechplast — CNC-Drehteile & Dreh-Fräs-Komplettbearbeitung">
+  <meta property="og:description" content="Präzisionsdrehteile aus technischen Kunststoffen, Aluminium und Stahl. Komplettbearbeitung in einer Aufspannung. Angebot in 24h.">
+  <meta property="og:url" content="https://osmechplast.pages.dev/">
+  <meta property="og:locale" content="de_DE">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Manufacturer",
+    "name": "OS. CNC Mechplast",
+    "description": "CNC-Lohnfertigung: Drehen und Dreh-Fräs-Komplettbearbeitung von technischen Kunststoffen, Aluminium und Stahl.",
+    "url": "https://osmechplast.pages.dev/",
+    "address": { "@type": "PostalAddress", "addressCountry": "IT" },
+    "knowsAbout": ["CNC-Drehen","Dreh-Fräs-Komplettbearbeitung","Kunststoffzerspanung","PEEK","POM","PTFE","Aluminium","Stahl"]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
-
-  <!-- GLOBALES CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
-
-  <!--
-  ═══════════════════════════════════════════════
-   MODUL-ÜBERSICHT — hier steuern was erscheint
-  ═══════════════════════════════════════════════
-   Module ein-/auskommentieren um Sektionen
-   zu aktivieren oder zu deaktivieren.
-
-   REIHENFOLGE = Reihenfolge auf der Website.
-   Tausche Zeilen, um Module umzusortieren.
-  ═══════════════════════════════════════════════
-  -->
 </head>
 <body>
 
-  <!-- ① NAVIGATION (immer oben) -->
-  <!-- QUELLE: modules/01_nav.html -->
-  <nav>
-    <div class="nav-inner">
-      <div class="logo">OS.<span style="color:var(--accent)">CNC</span> Mechplast</div>
-      <div class="nav-links">
-        <a href="#leistungen" data-key="nav_services"></a>
-        <a href="#branchen"   data-key="nav_industries"></a>
-        <a href="#team"       data-key="nav_team"></a>
-        <div class="lang-switch">
-          <button class="lang-btn active" data-lang="de" onclick="setLang('de')">DE</button>
-          <button class="lang-btn"        data-lang="it" onclick="setLang('it')">IT</button>
-          <button class="lang-btn"        data-lang="en" onclick="setLang('en')">EN</button>
-          <button class="lang-btn"        data-lang="fr" onclick="setLang('fr')">FR</button>
-        </div>
-        <button class="btn-nav" data-key="nav_cta"
-          onclick="document.getElementById('kontakt').scrollIntoView({behavior:'smooth'})"></button>
-      </div>
-    </div>
-  </nav>
+<!-- Seitenaufbau aus Modulen (modules/*.html) — dort ändern, gilt überall -->
+<header class="header" data-include="header"></header>
+<section class="hero" data-include="hero"></section>
+<div class="uspbar" data-include="uspbar"></div>
+<section class="sec" id="leistungen" data-include="leistungen"></section>
+<section class="sec sec-soft" id="prozess" data-include="prozess"></section>
+<section class="sec" data-include="band"></section>
+<section class="sec sec-soft" id="galerie" data-include="galerie"></section>
+<footer class="footer" data-include="footer"></footer>
 
-  <!-- ② HERO -->
-  <!-- QUELLE: modules/02_hero.html -->
-  <section class="hero">
-    <div class="hero-left">
-      <div class="hero-eyebrow" data-key="hero_eyebrow"></div>
-      <h1 data-key="hero_h1_html"></h1>
-      <p class="hero-sub" data-key="hero_sub"></p>
-      <div class="hero-actions">
-        <button class="btn btn-primary" data-key="hero_cta1"
-          onclick="document.getElementById('kontakt').scrollIntoView({behavior:'smooth'})"></button>
-        <button class="btn btn-outline" data-key="hero_cta2"
-          onclick="document.getElementById('leistungen').scrollIntoView({behavior:'smooth'})"></button>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="hero-badge" data-key="hero_badge"></div>
-      <div class="hero-stats">
-        <div class="stat-box"><span class="stat-unit">CNC</span><div class="stat-num">3</div><div class="stat-label" data-key="stat1"></div></div>
-        <div class="stat-box"><span class="stat-unit">€</span><div class="stat-num">13K+</div><div class="stat-label" data-key="stat2"></div></div>
-        <div class="stat-box"><span class="stat-unit">SLA</span><div class="stat-num">24h</div><div class="stat-label" data-key="stat3"></div></div>
-        <div class="stat-box"><span class="stat-unit">FOCUS</span><div class="stat-num">B2B</div><div class="stat-label" data-key="stat4"></div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ③ TICKER — deaktivieren: diese Zeile löschen -->
-  <!-- QUELLE: modules/03_ticker.html -->
-  <div class="ticker"><div class="ticker-inner" id="tickerInner"></div></div>
-
-  <hr class="divider">
-
-  <!-- ④ LEISTUNGEN / MASCHINEN -->
-  <!-- QUELLE: modules/04_machines.html -->
-  <section class="section-py" id="leistungen">
-    <div class="container">
-      <div class="section-header">
-        <div>
-          <div class="section-tag"   data-key="sec_machines_tag"></div>
-          <div class="section-title" data-key="sec_machines_title"></div>
-          <div class="section-desc"  data-key="sec_machines_desc"></div>
-        </div>
-      </div>
-      <div class="machines-grid">
-        <div class="machine-card"><div class="machine-accent"></div><div class="machine-num">01 / FRESATURA</div><h3 data-key="m1_title"></h3><p data-key="m1_desc"></p><ul class="machine-specs"><li data-key="m1_s1"></li><li data-key="m1_s2"></li><li data-key="m1_s3"></li></ul></div>
-        <div class="machine-card"><div class="machine-accent"></div><div class="machine-num">02 / TORNITURA</div><h3 data-key="m2_title"></h3><p data-key="m2_desc"></p><ul class="machine-specs"><li data-key="m2_s1"></li><li data-key="m2_s2"></li><li data-key="m2_s3"></li></ul></div>
-        <div class="machine-card"><div class="machine-accent"></div><div class="machine-num">03 / FORATURA</div><h3 data-key="m3_title"></h3><p data-key="m3_desc"></p><ul class="machine-specs"><li data-key="m3_s1"></li><li data-key="m3_s2"></li><li data-key="m3_s3"></li></ul></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ⑤ BRANCHEN -->
-  <!-- QUELLE: modules/05_industries.html -->
-  <hr class="divider">
-  <section class="section-py" id="branchen">
-    <div class="container">
-      <div class="section-header"><div><div class="section-tag" data-key="sec_ind_tag"></div><div class="section-title" data-key="sec_ind_title"></div></div></div>
-      <div class="industries-grid">
-        <div class="ind-card"><div class="ind-icon">AUTO</div><h4 data-key="ind1_t"></h4><p data-key="ind1_p"></p></div>
-        <div class="ind-card"><div class="ind-icon">MED</div><h4 data-key="ind2_t"></h4><p data-key="ind2_p"></p></div>
-        <div class="ind-card"><div class="ind-icon">AER</div><h4 data-key="ind3_t"></h4><p data-key="ind3_p"></p></div>
-        <div class="ind-card"><div class="ind-icon">MECH</div><h4 data-key="ind4_t"></h4><p data-key="ind4_p"></p></div>
-        <div class="ind-card"><div class="ind-icon">ELEK</div><h4 data-key="ind5_t"></h4><p data-key="ind5_p"></p></div>
-        <div class="ind-card"><div class="ind-icon">GEN</div><h4 data-key="ind6_t"></h4><p data-key="ind6_p"></p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ⑥ TEAM -->
-  <!-- QUELLE: modules/06_team.html -->
-  <hr class="divider">
-  <section class="section-py" id="team">
-    <div class="container">
-      <div class="section-header"><div><div class="section-tag" data-key="sec_team_tag"></div><div class="section-title" data-key="sec_team_title"></div></div></div>
-      <div class="team-grid">
-        <div class="team-card"><div class="team-avatar">GF</div><h4 data-key="team1_t"></h4><p data-key="team1_p"></p></div>
-        <div class="team-card"><div class="team-avatar">AV</div><h4 data-key="team2_t"></h4><p data-key="team2_p"></p></div>
-        <div class="team-card"><div class="team-avatar">MB</div><h4 data-key="team3_t"></h4><p data-key="team3_p"></p></div>
-        <div class="team-card"><div class="team-avatar">QS</div><h4 data-key="team4_t"></h4><p data-key="team4_p"></p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ⑦ KONTAKT + KI ANALYSE -->
-  <!-- QUELLE: modules/07_contact.html -->
-  <hr class="divider">
-  <div class="contact-zone" id="kontakt">
-    <div class="contact-inner">
-      <div class="contact-left">
-        <div class="section-tag" data-key="sec_contact_tag"></div>
-        <h2 data-key="contact_h2"></h2>
-        <p  data-key="contact_p"></p>
-        <div class="contact-details">
-          <div class="cd"><span class="cd-label">EMAIL</span> info@oscncmechplast.it</div>
-          <div class="cd"><span class="cd-label">TEL</span>   +39 000 000 0000</div>
-          <div class="cd"><span class="cd-label">SEDE</span>  Italia</div>
-        </div>
-        <div class="ai-info-box">
-          <div class="ai-info-title">✦ AI — <span data-key="ai_box_title"></span></div>
-          <p data-key="ai_box_desc"></p>
-        </div>
-      </div>
-      <form class="contact-form" onsubmit="submitForm(event)">
-        <div class="form-row">
-          <div class="form-group"><label data-key="f_company"></label><input type="text" id="f_company" placeholder="OS. Beispiel S.r.l."></div>
-          <div class="form-group"><label data-key="f_name"></label><input type="text" id="f_name" placeholder="Mario Rossi"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Email</label><input type="email" id="f_email" placeholder="mario@azienda.it" required></div>
-          <div class="form-group"><label data-key="f_phone"></label><input type="tel" id="f_phone" placeholder="+39 ..."></div>
-        </div>
-        <div class="form-group">
-          <label data-key="f_service"></label>
-          <select id="f_service">
-            <option value=""          data-key="f_service_opt0"></option>
-            <option value="fresatura" data-key="f_service_opt1"></option>
-            <option value="tornitura" data-key="f_service_opt2"></option>
-            <option value="foratura"  data-key="f_service_opt3"></option>
-            <option value="combo"     data-key="f_service_opt4"></option>
-          </select>
-        </div>
-        <div class="form-group"><label data-key="f_msg"></label><textarea id="f_msg" placeholder="Materiale, quantità, tolleranze..."></textarea></div>
-        <div class="form-group">
-          <label data-key="f_sketch"></label>
-          <div class="upload-zone" id="uploadZone">
-            <input type="file" id="sketchFile" accept="image/*,.pdf" onchange="handleFileUpload(event)">
-            <div class="upload-icon">⊕</div>
-            <div class="upload-text" data-key="upload_text"></div>
-            <div class="upload-sub"  data-key="upload_sub"></div>
-          </div>
-          <div class="ai-loading" id="aiLoading">AI analizza</div>
-          <div class="ai-result"  id="aiResult">
-            <div class="ai-result-label">✦ AI PRICE ESTIMATE</div>
-            <div id="aiResultContent"></div>
-          </div>
-        </div>
-        <button type="submit" class="submit-btn" data-key="f_submit"></button>
-        <div class="success-banner" id="successBanner"></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ⑧ FOOTER -->
-  <!-- QUELLE: modules/08_footer.html -->
-  <footer>
-    <p>© 2026 OS. CNC Mechplast — Tutti i diritti riservati</p>
-    <p data-key="footer_links"></p>
-  </footer>
-
-
-  <!-- ═══ SCRIPTS — Reihenfolge nicht ändern ═══ -->
-  <script src="js/translations.js"></script><!-- Texte aller 4 Sprachen -->
-  <script src="js/app.js"></script>          <!-- Sprache, Supabase, KI, Formular -->
-
-
-  <!-- MODULE-SPEZIFISCHE STYLES (hier gebündelt für Übersicht) -->
-  <style>
-    /* NAV */
-    nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:0 var(--pad-h)}
-    .nav-inner{max-width:var(--max-width);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
-    .logo{font-family:var(--font-mono);font-size:14px;font-weight:500;letter-spacing:.04em}
-    .nav-links{display:flex;gap:2rem;align-items:center}
-    .nav-links a{font-size:13px;color:var(--text2);letter-spacing:.02em;transition:color .2s}
-    .nav-links a:hover{color:var(--text)}
-    .btn-nav{font-size:13px;padding:7px 18px;border-radius:var(--radius);background:var(--accent);color:#fff;border:none;cursor:pointer;transition:opacity .2s}
-    .btn-nav:hover{opacity:.85}
-
-    /* HERO */
-    .hero{max-width:var(--max-width);margin:0 auto;padding:6rem var(--pad-h) 5rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
-    .hero-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
-    .hero-eyebrow::before{content:'';display:inline-block;width:24px;height:1px;background:var(--accent)}
-    .hero h1{font-family:var(--font-display);font-size:52px;font-weight:500;line-height:1.1;letter-spacing:-.5px;margin-bottom:1.75rem}
-    .hero h1 em{color:var(--accent);font-style:normal}
-    .hero-sub{font-size:16px;color:var(--text2);line-height:1.75;margin-bottom:2.5rem;max-width:420px}
-    .hero-actions{display:flex;gap:12px;align-items:center}
-    .hero-right{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:2rem;position:relative}
-    .hero-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-family:var(--font-mono);font-size:10px;padding:4px 14px;border-radius:20px;white-space:nowrap;letter-spacing:.05em}
-    .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
-    .stat-box{background:var(--white);padding:1.5rem;text-align:center}
-    .stat-unit{font-family:var(--font-mono);font-size:11px;color:var(--accent);display:block;margin-bottom:4px}
-    .stat-num{font-family:var(--font-display);font-size:36px;font-weight:500;color:var(--text)}
-    .stat-label{font-size:12px;color:var(--text2);margin-top:6px}
-
-    /* MACHINES */
-    .machines-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
-    .machine-card{background:var(--white);padding:2rem 1.75rem;position:relative;transition:background .2s}
-    .machine-card:hover{background:var(--bg2)}
-    .machine-accent{position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent)}
-    .machine-num{font-family:var(--font-mono);font-size:11px;color:var(--text2);margin-bottom:1.25rem;letter-spacing:.08em}
-    .machine-card h3{font-family:var(--font-display);font-size:22px;font-weight:500;margin-bottom:.75rem}
-    .machine-card p{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:1.25rem}
-    .machine-specs{list-style:none;display:flex;flex-direction:column;gap:4px}
-    .machine-specs li{font-family:var(--font-mono);font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px}
-    .machine-specs li::before{content:'—';color:var(--accent);flex-shrink:0}
-
-    /* INDUSTRIES */
-    .industries-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
-    .ind-card{background:var(--white);border:1px solid var(--border);padding:1.5rem;border-radius:var(--radius);display:flex;flex-direction:column;gap:.5rem;transition:all .2s}
-    .ind-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-    .ind-icon{font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:.06em}
-    .ind-card h4{font-size:15px;font-weight:500}
-    .ind-card p{font-size:13px;color:var(--text2);line-height:1.6}
-
-    /* TEAM */
-    .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
-    .team-card{text-align:center}
-    .team-avatar{width:60px;height:60px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--accent)}
-    .team-card h4{font-size:14px;font-weight:500;margin-bottom:.25rem}
-    .team-card p{font-size:12px;color:var(--text2)}
-
-    /* CONTACT */
-    .contact-zone{background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-    .contact-inner{max-width:var(--max-width);margin:0 auto;padding:5rem var(--pad-h);display:grid;grid-template-columns:1fr 1.4fr;gap:5rem;align-items:start}
-    .contact-left h2{font-family:var(--font-display);font-size:32px;font-weight:500;line-height:1.25;margin-bottom:1rem}
-    .contact-left p{font-size:15px;color:var(--text2);line-height:1.75;margin-bottom:2rem}
-    .contact-details{display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem}
-    .cd{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2)}
-    .cd-label{font-family:var(--font-mono);font-size:10px;color:var(--accent);min-width:50px;letter-spacing:.08em}
-    .ai-info-box{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.25rem;margin-top:1.5rem}
-    .ai-info-title{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--accent);margin-bottom:.5rem}
-    .ai-info-box p{font-size:13px;color:var(--text2);line-height:1.6;margin:0}
-    .upload-zone{border:1.5px dashed var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);position:relative}
-    .upload-zone:hover,.upload-zone.dragover{border-color:var(--accent);background:rgba(200,70,10,.04)}
-    .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-    .upload-icon{font-size:22px;margin-bottom:6px;color:var(--text2)}
-    .upload-text{font-size:13px;color:var(--text2)}
-    .upload-sub{font-family:var(--font-mono);font-size:10px;color:var(--text2);opacity:.7;margin-top:3px}
-    .ai-loading{display:none;text-align:center;padding:.75rem;font-family:var(--font-mono);font-size:12px;color:var(--text2)}
-    .ai-loading::after{content:'...';animation:dots 1s steps(4,end) infinite}
-    @keyframes dots{0%,20%{content:'.'}40%{content:'..'}60%,100%{content:'...'}}
-    .ai-result{display:none;background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1rem;margin-top:.75rem;font-size:13px;line-height:1.7;color:var(--text)}
-    .ai-result-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;color:var(--accent);margin-bottom:.5rem}
-    .contact-form{display:flex;flex-direction:column;gap:.85rem}
-    .submit-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:500;cursor:pointer;font-family:var(--font-body);transition:opacity .2s}
-    .submit-btn:hover{opacity:.85}
-
-    /* FOOTER */
-    footer{max-width:var(--max-width);margin:0 auto;padding:2rem var(--pad-h);display:flex;align-items:center;justify-content:space-between}
-    footer p{font-family:var(--font-mono);font-size:11px;color:var(--text2);letter-spacing:.04em}
-
-    /* RESPONSIVE */
-    @media(max-width:768px){
-      .hero{grid-template-columns:1fr;gap:2.5rem}.hero h1{font-size:36px}
-      .machines-grid,.team-grid{grid-template-columns:1fr}
-      .industries-grid{grid-template-columns:1fr 1fr}
-      .contact-inner{grid-template-columns:1fr;gap:2.5rem}
-    }
-    @media(max-width:480px){.industries-grid{grid-template-columns:1fr}}
-  </style>
-
+<script src="js/translations.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
