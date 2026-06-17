@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" width="800" height="960">
+
+<g fill="none" transform="translate(170.00 87.69) scale(3.5385)">
+    <rect x="14" y="22" width="102" height="76" rx="12" fill="#16191D"></rect>
+    <g class="m-punch" fill="#fff">
+      <circle cx="44" cy="46" r="9"></circle><circle cx="44" cy="74" r="9"></circle>
+      <circle cx="65" cy="46" r="9"></circle><circle cx="65" cy="74" r="9"></circle>
+      <circle cx="86" cy="46" r="9"></circle><circle cx="86" cy="74" r="9"></circle>
+    </g>
+    <circle class="m-key" cx="65" cy="60" r="0" fill="#15171A"></circle>
+  </g>
+<text x="400" y="848" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="800" font-size="72" letter-spacing="-1" fill="#16191D">OS<tspan fill="#15171A">.</tspan>MECHPLAST</text>
+</svg>

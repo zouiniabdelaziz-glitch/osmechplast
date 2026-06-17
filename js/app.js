@@ -1,15 +1,16 @@
-/* =============================================
-   OS. CNC MECHPLAST — CORE APP
+﻿/* =============================================
+   OS. CNC MECHPLAST â€” CORE APP
    Datei: js/app.js
-   Enthält: Sprache, Cloudflare API, AI-Analyse, Formular
+   EnthÃ¤lt: Sprache, Cloudflare API, AI-Analyse, Formular
    ============================================= */
 
-/* ── KONFIGURATION ───────────────────────────── */
+/* â”€â”€ KONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const CONFIG = {
   defaultLang: 'de',
+  siteVersion: '20260617-luxury-industrial-v1',
 };
 
-/* ── SPRACHE ─────────────────────────────────── */
+/* â”€â”€ SPRACHE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 let currentLang = CONFIG.defaultLang;
 
 function setLang(lang) {
@@ -44,7 +45,7 @@ function applyTranslations() {
       .forEach((k, i) => { if (sel.options[i] && t[k]) sel.options[i].text = t[k]; });
   }
 
-  // Ticker neu befüllen
+  // Ticker neu befÃ¼llen
   const ticker = document.getElementById('tickerInner');
   if (ticker && t.ticker_items) {
     const doubled = [...t.ticker_items, ...t.ticker_items];
@@ -52,7 +53,7 @@ function applyTranslations() {
   }
 }
 
-/* ── CLOUDFLARE D1 LEAD SPEICHERN ────────────── */
+/* â”€â”€ CLOUDFLARE D1 LEAD SPEICHERN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function saveLead(payload) {
   const res = await fetch("/api/leads", {
     method: "POST",
@@ -71,7 +72,7 @@ async function saveLead(payload) {
   return true;
 }
 
-/* ── FORMULAR ABSENDEN ───────────────────────── */
+/* â”€â”€ FORMULAR ABSENDEN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function submitForm(e) {
   e.preventDefault();
   const aiContent = document.getElementById('aiResultContent')?.textContent || '';
@@ -91,7 +92,7 @@ async function submitForm(e) {
   await saveLead(payload);
   const banner = document.getElementById('successBanner');
   if (banner) {
-    banner.textContent = T[currentLang]?.f_success || '✓ Danke!';
+    banner.textContent = T[currentLang]?.f_success || 'âœ“ Danke!';
     banner.style.display = 'block';
     setTimeout(() => banner.style.display = 'none', 5000);
   }
@@ -100,7 +101,7 @@ async function submitForm(e) {
   if (result) result.style.display = 'none';
 }
 
-/* ── AI SKIZZEN-ANALYSE ──────────────────────── */
+/* â”€â”€ AI SKIZZEN-ANALYSE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function handleFileUpload(event) {
   const file = event.target.files?.[0];
   if (!file) return;
@@ -108,7 +109,7 @@ async function handleFileUpload(event) {
   const result  = document.getElementById('aiResult');
   const content = document.getElementById('aiResultContent');
   const uploadText = document.querySelector('.upload-text');
-  if (uploadText) uploadText.textContent = '✓ ' + file.name;
+  if (uploadText) uploadText.textContent = 'âœ“ ' + file.name;
   if (loading) loading.style.display = 'block';
   if (result)  result.style.display  = 'none';
 
@@ -126,7 +127,7 @@ Analyze this technical drawing or sketch and provide in ${langLabel}:
 1. Likely material (aluminium, steel, brass, titanium, plastic)
 2. Machining operations needed (milling / turning / drilling)
 3. Complexity: simple / medium / complex
-4. Estimated price range in EUR — 1 piece and 10 pieces
+4. Estimated price range in EUR â€” 1 piece and 10 pieces
 5. Estimated lead time
 Be concise. Start with a 1-line summary, then list the 5 points with short bullet lines.`
           }
@@ -151,9 +152,9 @@ Reply in ${langLabel}.`
     if (content) content.innerHTML = text.replace(/\n/g, '<br>');
     if (result)  result.style.display = 'block';
 
-    // Nachricht vorausfüllen
+    // Nachricht vorausfÃ¼llen
     const msgField = document.getElementById('f_msg');
-    if (msgField && !msgField.value) msgField.value = '[KI-Analyse beigefügt] ';
+    if (msgField && !msgField.value) msgField.value = '[KI-Analyse beigefÃ¼gt] ';
 
   } catch (err) {
     if (content) content.textContent = 'Fehler bei der KI-Analyse. Bitte beschreiben Sie Ihr Bauteil manuell.';
@@ -172,7 +173,7 @@ function fileToBase64(file) {
   });
 }
 
-/* ── DRAG & DROP ─────────────────────────────── */
+/* â”€â”€ DRAG & DROP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function initDragDrop() {
   const zone = document.getElementById('uploadZone');
   if (!zone) return;
@@ -188,22 +189,22 @@ function initDragDrop() {
   });
 }
 
-/* ── INIT ────────────────────────────────────── */
-/* ── MODUL-LADER ─────────────────────────────── */
+/* â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* â”€â”€ MODUL-LADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* Jede Seite besteht aus Modulen: <div data-include="header"></div>
-   lädt modules/header.html. Modul ändern = überall geändert. */
+   lÃ¤dt modules/header.html. Modul Ã¤ndern = Ã¼berall geÃ¤ndert. */
 async function loadModules() {
   const slots = [...document.querySelectorAll('[data-include]')];
   await Promise.all(slots.map(async el => {
     try {
-      const res = await fetch('modules/' + el.dataset.include + '.html');
+      const res = await fetch('modules/' + el.dataset.include + '.html?v=' + CONFIG.siteVersion);
       if (res.ok) el.innerHTML = await res.text();
       else el.innerHTML = '<!-- Modul fehlt: ' + el.dataset.include + ' -->';
     } catch (e) { console.error('Modul-Fehler:', el.dataset.include, e); }
   }));
 }
 
-/* Aktiven Menüpunkt markieren */
+/* Aktiven MenÃ¼punkt markieren */
 function markActiveNav() {
   const page = location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav a, .dropdown a').forEach(a => {
@@ -211,10 +212,10 @@ function markActiveNav() {
   });
 }
 
-/* ── SCROLL-REVEAL ───────────────────────────── */
+/* â”€â”€ SCROLL-REVEAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function initReveal() {
   const els = document.querySelectorAll(
-    '.svc-card,.mach-card,.ind-card,.media-card,.step,.usp,.mat-box,.sec-head,.cta-band,.faq details,.spec-table,.form-card,.contact-info'
+    '.svc-card,.mach-card,.ind-card,.media-card,.step,.usp,.mat-box,.sec-head,.cta-band,.faq details,.spec-table,.form-card,.contact-info,.robot-cell,.map-card,.flow-steps div,.location-points div'
   );
   els.forEach((el, i) => {
     el.classList.add('reveal');
@@ -226,7 +227,7 @@ function initReveal() {
   els.forEach(el => io.observe(el));
 }
 
-/* ── INIT ────────────────────────────────────── */
+/* â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 document.addEventListener('DOMContentLoaded', async () => {
   await loadModules();
   try {
@@ -238,3 +239,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   initReveal();
   markActiveNav();
 });
+

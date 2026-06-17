@@ -1,0 +1,49 @@
+<!-- ════════ MODUL: KONTAKT / RFQ-FORMULAR ════════
+     ACHTUNG: IDs (f_company, f_name, ...) NICHT ändern —
+     js/app.js und Cloudflare /api/leads hängen daran. -->
+<div class="container contact-grid">
+  <div class="contact-info">
+    <span class="kicker" data-key="c_kicker"></span>
+    <h2 data-key="contact_h2"></h2>
+    <p class="sec-lead" data-key="c_lead"></p>
+    <div class="contact-points">
+      <div class="cp"><div class="cp-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></div><div><b data-key="cp1_t"></b><span data-key="cp1_s"></span></div></div>
+      <div class="cp"><div class="cp-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v5h5"/><path d="M5 3h9l5 5v13H5V3z"/><path d="M9 13h6M9 17h6"/></svg></div><div><b data-key="cp2_t"></b><span data-key="cp2_s"></span></div></div>
+      <div class="cp"><div class="cp-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-5"/><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></div><div><b data-key="cp3_t"></b><span data-key="cp3_s"></span></div></div>
+    </div>
+  </div>
+  <div class="form-card">
+    <form id="leadForm" onsubmit="submitForm(event)">
+      <div class="form-grid">
+        <div class="form-row">
+          <div class="form-group"><label for="f_company" data-key="f_company"></label><input id="f_company" required></div>
+          <div class="form-group"><label for="f_name" data-key="f_name"></label><input id="f_name" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="f_email">E-Mail *</label><input id="f_email" type="email" required></div>
+          <div class="form-group"><label for="f_phone" data-key="f_phone"></label><input id="f_phone"></div>
+        </div>
+        <div class="form-group">
+          <label for="f_service" data-key="f_service"></label>
+          <select id="f_service"><option></option><option></option><option></option><option></option><option></option></select>
+        </div>
+        <div class="form-group"><label for="f_msg" data-key="f_msg"></label><textarea id="f_msg"></textarea></div>
+        <div class="form-group">
+          <label data-key="f_sketch"></label>
+          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('sketchFile').click()">
+            <div class="upload-text" data-key="upload_text"></div>
+            <div class="upload-sub" data-key="upload_sub"></div>
+          </div>
+          <input type="file" id="sketchFile" accept="image/*,.pdf,.dxf,.step,.stp" style="display:none" onchange="handleFileUpload(event)">
+          <div class="ai-loading" id="aiLoading" data-key="ai_loading"></div>
+          <div class="ai-result" id="aiResult">
+            <div class="ai-result-title" data-key="ai_result_title"></div>
+            <div id="aiResultContent"></div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" data-key="f_submit"></button>
+        <div class="success-banner" id="successBanner"></div>
+      </div>
+    </form>
+  </div>
+</div>

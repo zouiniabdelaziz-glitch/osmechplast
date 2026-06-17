@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" width="800" height="960">
+
+<g fill="none" transform="translate(170.00 70.00) scale(3.8333)">
+    <circle cx="60" cy="60" r="40" stroke="#16191D" stroke-width="6"></circle>
+    <path d="M60 34 L82.5 47 L82.5 73 L60 86 L37.5 73 L37.5 47 Z" stroke="#16191D" stroke-width="6" stroke-linejoin="round"></path>
+    <g class="m-blade" stroke="#16191D" stroke-width="5" stroke-linecap="round">
+      <line x1="60" y1="34" x2="80" y2="25.4"></line>
+      <line x1="82.5" y1="47" x2="100" y2="60"></line>
+      <line x1="82.5" y1="73" x2="80" y2="94.6"></line>
+      <line x1="60" y1="86" x2="40" y2="94.6"></line>
+      <line x1="37.5" y1="73" x2="20" y2="60"></line>
+      <line x1="37.5" y1="47" x2="40" y2="25.4"></line>
+    </g>
+    <circle class="m-dot" cx="60" cy="60" r="8" fill="#15171A"></circle>
+  </g>
+<text x="400" y="848" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="800" font-size="72" letter-spacing="-1" fill="#16191D">OS<tspan fill="#15171A">.</tspan>MECHPLAST</text>
+</svg>
