@@ -1091,6 +1091,591 @@ body {
 }
 
 /* =============================================
+   Light Industrial Correction
+   Reference intent: bright B2B engineering site,
+   photo-led hero, white content, no AI-dark look.
+   ============================================= */
+:root {
+  --ink: #111820;
+  --ink2: #607080;
+  --bg: #FFFFFF;
+  --bg-soft: #F5F7F9;
+  --bg-deep: #0F1720;
+  --blue: #0D5DB8;
+  --blue-d: #083F7E;
+  --blue-bg: #EAF3FF;
+  --green: #168F5C;
+  --line: #DDE5EE;
+  --line-d: rgba(255,255,255,.14);
+  --shadow: 0 12px 34px rgba(17,24,32,.08);
+  --shadow-l: 0 24px 70px rgba(17,24,32,.12);
+  --font-display: 'Afacad', sans-serif;
+  --font-body: 'Afacad', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 8px;
+}
+
+html {
+  background: #fff;
+}
+
+body {
+  color: var(--ink);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 16.5px;
+}
+
+body::before,
+body::after {
+  display: none;
+}
+
+.container {
+  max-width: 1180px;
+}
+
+.header {
+  background: rgba(255,255,255,.96);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(17,24,32,.05);
+  backdrop-filter: blur(14px);
+}
+
+.header-in {
+  height: 76px;
+}
+
+.logo {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  text-transform: none;
+}
+
+.logo b,
+.logo small,
+.nav a:hover,
+.nav a.active {
+  color: var(--blue);
+}
+
+.logo small {
+  color: var(--ink2);
+  font-family: var(--font-mono);
+  font-size: 9px;
+}
+
+.brand-mark {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  filter: none;
+}
+
+.brand-logo {
+  display: block;
+  width: 220px;
+  height: 72px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.logo-lockup {
+  min-width: 220px;
+}
+
+.nav a {
+  color: #526273;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.lang-switch {
+  border-color: var(--line);
+  background: #fff;
+}
+
+.lang-btn {
+  color: var(--ink2);
+  font-family: var(--font-mono);
+}
+
+.lang-btn.active {
+  background: var(--blue);
+  color: #fff;
+}
+
+.btn {
+  border-radius: 6px;
+  font-family: var(--font-body);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(13,93,184,.22);
+}
+
+.btn-primary:hover {
+  background: var(--blue-d);
+}
+
+.btn-ghost,
+.hero .btn-ghost {
+  border-color: #C9D5E2;
+  background: #fff;
+  color: var(--ink);
+}
+
+.hero {
+  min-height: auto;
+  padding: 136px 0 74px;
+  color: var(--ink);
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.96) 0 45%, rgba(245,248,251,.92) 45% 100%),
+    linear-gradient(135deg, #fff, #EFF4F8);
+}
+
+.hero::before,
+.hero::after {
+  display: none;
+}
+
+.hero-modern-grid,
+.hero-light-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, .86fr) minmax(420px, 1.14fr);
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 5.5rem);
+}
+
+.hero-copy,
+.hero-brand-stage {
+  animation: none;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  color: var(--blue);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.hero-eyebrow::before {
+  content: "";
+  width: 34px;
+  height: 2px;
+  background: var(--blue);
+}
+
+.hero-copy h1 {
+  max-width: 640px;
+  margin: 0 0 22px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(42px, 5.8vw, 74px);
+  font-weight: 700;
+  line-height: .98;
+  letter-spacing: -.035em;
+  text-transform: none;
+}
+
+.hero-copy h1 em {
+  color: var(--blue);
+}
+
+.hero-sub {
+  max-width: 580px;
+  color: #536272 !important;
+  font-size: clamp(18px, 1.7vw, 21px);
+  line-height: 1.55;
+}
+
+.hero-proof {
+  max-width: 650px;
+  margin-top: 34px;
+  transform: none;
+}
+
+.hero-proof div {
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.hero-proof b {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.hero-proof span {
+  color: var(--ink2);
+  font-family: var(--font-body);
+  text-transform: none;
+}
+
+.hero-photo-card {
+  position: relative;
+}
+
+.photo-window {
+  min-height: 480px;
+  border-radius: 10px;
+  border: 1px solid #CCD8E4;
+  background:
+    linear-gradient(180deg, rgba(10,19,30,.08), rgba(10,19,30,.24)),
+    linear-gradient(135deg, #E7EDF3 0%, #C8D5E1 55%, #F7FAFC 100%);
+  box-shadow: var(--shadow-l);
+  overflow: hidden;
+}
+
+.photo-window::before {
+  content: "";
+  position: absolute;
+  inset: 26px;
+  border: 1px solid rgba(255,255,255,.70);
+  border-radius: 8px;
+}
+
+.photo-window::after {
+  content: "";
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  bottom: 24%;
+  height: 92px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 30% 50%, rgba(13,93,184,.42), transparent 14%),
+    linear-gradient(90deg, #AEBCCA, #F5F8FB, #8EA1B3);
+  box-shadow: inset 0 0 0 10px rgba(255,255,255,.38), 0 22px 38px rgba(17,24,32,.16);
+}
+
+.photo-note {
+  position: absolute;
+  left: 34px;
+  bottom: 34px;
+  z-index: 2;
+  max-width: 320px;
+  padding: 18px 20px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.92);
+  box-shadow: var(--shadow);
+}
+
+.photo-note b {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.photo-note span {
+  color: var(--ink2);
+  font-size: 14px;
+}
+
+.photo-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 14px;
+  color: var(--ink2);
+  font-size: 13px;
+}
+
+.photo-caption strong {
+  color: var(--ink);
+}
+
+.sec {
+  padding: 5.5rem 0;
+  background: #fff;
+}
+
+.sec-soft {
+  background: var(--bg-soft);
+}
+
+.kicker {
+  color: var(--blue);
+  font-family: var(--font-mono);
+}
+
+.kicker::before {
+  background: var(--blue);
+}
+
+h2.sec-title,
+.contact-info h2,
+.tbl-title {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -.025em;
+  text-transform: none;
+}
+
+.sec-lead,
+.svc-card p,
+.ind-card p,
+.media-card figcaption,
+.step p,
+.mat-box > p {
+  color: var(--ink2);
+}
+
+.svc-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.svc-card,
+.mat-box,
+.ind-card,
+.media-card,
+.mach-card,
+.form-card,
+.faq details,
+.spec-table,
+.flow-steps div,
+.location-points div {
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(17,24,32,.06);
+}
+
+.svc-card:first-child,
+.svc-card:nth-child(2),
+.robot-cell,
+.map-card,
+.cinematic-cell {
+  transform: none;
+}
+
+.svc-card h3,
+.mach-card h3,
+.mat-box h3,
+.ind-card b,
+.flow-steps b,
+.location-points b {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  text-transform: none;
+}
+
+.svc-visual {
+  background: linear-gradient(145deg, #EDF3F8, #F9FBFD);
+}
+
+.svc-visual svg [stroke] {
+  stroke: var(--blue);
+}
+
+.svc-visual svg [fill="#0E5FD8"] {
+  fill: var(--blue);
+}
+
+.svc-visual svg [fill="#fff"] {
+  fill: #fff;
+}
+
+.svc-specs div,
+.spec-table th,
+.spec-table td {
+  border-color: var(--line);
+}
+
+.spec-table,
+.spec-table th,
+.spec-table td {
+  color: var(--ink);
+}
+
+.spec-table th {
+  background: var(--bg-soft);
+}
+
+.spec-table td:first-child,
+.spec-table th,
+.svc-specs dt {
+  color: var(--ink2);
+}
+
+.uspbar {
+  background: #fff;
+  border-color: var(--line);
+}
+
+.usp {
+  border-color: var(--line);
+}
+
+.usp-ic,
+.dd-ic,
+.ind-ic,
+.cp-ic {
+  background: var(--blue-bg);
+  color: var(--blue);
+  border-radius: 8px;
+}
+
+.usp b,
+.media-card figcaption b,
+.footer .logo {
+  color: var(--ink);
+}
+
+.usp span {
+  color: var(--ink2);
+}
+
+.flow-grid,
+.location-grid {
+  grid-template-columns: minmax(0, .92fr) minmax(420px, 1.08fr);
+}
+
+.robot-cell,
+.map-card {
+  border-radius: 10px;
+  border: 1px solid #CCD8E4;
+  background:
+    linear-gradient(rgba(255,255,255,.84), rgba(255,255,255,.84)),
+    linear-gradient(90deg, rgba(13,93,184,.08) 1px, transparent 1px),
+    linear-gradient(rgba(13,93,184,.08) 1px, transparent 1px);
+  background-size: auto, 42px 42px, 42px 42px;
+  box-shadow: var(--shadow-l);
+}
+
+.robot-cell::before {
+  background: linear-gradient(90deg, #8CA1B4, var(--blue), #8CA1B4);
+}
+
+.arm-base,
+.arm-link {
+  background: #1A2632;
+}
+
+.arm-joint,
+.part::after {
+  background: var(--blue);
+}
+
+.gripper {
+  border-color: #1A2632;
+}
+
+.part {
+  border-color: #1A2632;
+  background: #fff;
+}
+
+.process-rail span {
+  border-radius: 6px;
+  border-color: var(--line);
+  background: #fff;
+  color: var(--ink2);
+}
+
+.finished-bin,
+.map-caption {
+  border-radius: 8px;
+  background: #101A24;
+}
+
+.map-card circle {
+  fill: var(--blue);
+}
+
+.route {
+  stroke: #1A2632;
+}
+
+.route-two {
+  stroke: var(--blue);
+}
+
+.pin {
+  border-radius: 8px;
+  background: #101A24;
+  border: 1px solid rgba(16,26,36,.12);
+}
+
+.pin-it {
+  background: var(--blue);
+}
+
+.cta-band {
+  border-radius: 10px;
+  border: 1px solid #CCD8E4;
+  background: linear-gradient(135deg, #101A24, #163A62);
+}
+
+.footer {
+  background: #101A24;
+  border-top: none;
+}
+
+.footer .logo,
+.footer h4 {
+  color: #fff;
+}
+
+.reveal {
+  transform: translateY(26px);
+}
+
+.reveal.in {
+  transform: none;
+}
+
+@media (max-width: 1024px) {
+  .hero-light-grid,
+  .flow-grid,
+  .location-grid,
+  .svc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero {
+    padding-top: 118px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(36px, 12vw, 56px);
+  }
+
+  .photo-window {
+    min-height: 360px;
+  }
+}
+
+/* =============================================
    Luxury Industrial Direction
    Problem: earn RFQ trust from DACH buyers fast.
    Tone: blackened steel, burgundy inspection marks.
