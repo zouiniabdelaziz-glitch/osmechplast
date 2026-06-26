@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 960" role="img" aria-labelledby="title desc">
+  <title id="title">Illustrative technische Zeichnung eines CNC-Drehteils</title>
+  <desc id="desc">Neutrale Zeichnung einer Welle mit Masslinien, Mittellinie und roten Bearbeitungsmarkierungen.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#d7dfe4" stroke-width="1"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#55616a"/>
+    </marker>
+    <style>
+      .line { fill: none; stroke: #1d252d; stroke-width: 5; stroke-linejoin: round; }
+      .thin { fill: none; stroke: #55616a; stroke-width: 2.5; }
+      .center { fill: none; stroke: #8a969e; stroke-width: 2; stroke-dasharray: 18 10 3 10; }
+      .dim { fill: none; stroke: #55616a; stroke-width: 2.5; marker-start: url(#arrow); marker-end: url(#arrow); }
+      .extension { fill: none; stroke: #8a969e; stroke-width: 2; }
+      .accent { fill: none; stroke: #e3000b; stroke-width: 3; }
+      .label { fill: #1d252d; font: 600 28px Arial, sans-serif; letter-spacing: 1px; }
+      .small { fill: #55616a; font: 500 22px Arial, sans-serif; letter-spacing: .5px; }
+      .call { fill: #ffffff; stroke: #e3000b; stroke-width: 3; }
+      .calltext { fill: #c80009; font: 700 24px Arial, sans-serif; letter-spacing: .8px; }
+    </style>
+  </defs>
+  <rect width="1600" height="960" fill="#f8fafb"/>
+  <rect x="42" y="42" width="1516" height="876" fill="url(#grid)" stroke="#c8d1d8" stroke-width="2"/>
+  <text x="92" y="108" class="label">ILLUSTRATIVE CNC DRAWING</text>
+  <text x="92" y="142" class="small">TURNED PART / NOT A CUSTOMER DRAWING</text>
+
+  <path class="center" d="M180 484 H1430"/>
+  <path class="line" d="M248 436 H310 V386 H390 V338 H470 V386 H564 V314 H1030 V386 H1110 V338 H1190 V386 H1270 V436 H1340 V532 H1270 V582 H1190 V630 H1110 V582 H1030 V654 H564 V582 H470 V630 H390 V582 H310 V532 H248 Z"/>
+  <path class="thin" d="M310 436 V532 M390 386 V582 M470 386 V582 M564 314 V654 M1030 314 V654 M1110 386 V582 M1190 386 V582 M1270 436 V532"/>
+  <path class="thin" d="M694 314 V654 M900 314 V654"/>
+  <circle cx="270" cy="484" r="24" class="line"/>
+  <circle cx="1318" cy="484" r="24" class="line"/>
+  <path class="thin" d="M576 344 L598 366 M604 344 L626 366 M632 344 L654 366 M960 344 L982 366 M988 344 L1010 366"/>
+
+  <path class="extension" d="M248 706 V760 M1340 706 V760"/>
+  <path class="dim" d="M248 744 H1340"/>
+  <text x="730" y="724" class="small">OVERALL LENGTH</text>
+  <text x="775" y="786" class="label">L</text>
+
+  <path class="extension" d="M564 276 V212 M1030 276 V212"/>
+  <path class="dim" d="M564 234 H1030"/>
+  <text x="716" y="202" class="small">TURNED DIAMETER</text>
+  <text x="775" y="268" class="label">D</text>
+
+  <path class="extension" d="M414 386 H240 M414 582 H240"/>
+  <path class="dim" d="M274 386 V582"/>
+  <text x="196" y="500" class="label">d1</text>
+
+  <path class="extension" d="M1178 386 H1390 M1178 582 H1390"/>
+  <path class="dim" d="M1358 386 V582"/>
+  <text x="1390" y="500" class="label">d2</text>
+
+  <rect x="86" y="188" width="264" height="70" class="call"/>
+  <text x="108" y="232" class="calltext">CROSS HOLE</text>
+  <path class="accent" d="M350 224 H484 L564 314"/>
+
+  <rect x="1080" y="176" width="310" height="70" class="call"/>
+  <text x="1102" y="220" class="calltext">MILLED FEATURE</text>
+  <path class="accent" d="M1080 246 H1010 L948 314"/>
+
+  <rect x="94" y="822" width="316" height="58" class="call"/>
+  <text x="114" y="860" class="calltext">THREAD / GROOVE</text>
+  <path class="accent" d="M410 850 H510 L564 650"/>
+
+  <rect x="1080" y="816" width="344" height="58" class="call"/>
+  <text x="1102" y="854" class="calltext">REAR SIDE WORK</text>
+  <path class="accent" d="M1080 844 H1036 L1030 654"/>
+
+  <rect x="112" y="304" width="198" height="54" fill="#ffffff" stroke="#8a969e" stroke-width="2"/>
+  <text x="132" y="338" class="small">DATUM A</text>
+  <rect x="1280" y="610" width="198" height="54" fill="#ffffff" stroke="#8a969e" stroke-width="2"/>
+  <text x="1300" y="644" class="small">DATUM B</text>
+</svg>

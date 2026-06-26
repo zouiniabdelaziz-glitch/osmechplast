@@ -1,68 +1,152 @@
-<!-- ════════ MODUL: LEISTUNGEN (3 Karten + Datentabelle) ════════ -->
-<div class="container">
-  <div class="sec-head split">
-    <div>
-      <span class="kicker" data-key="svc_kicker"></span>
-      <h2 class="sec-title" data-key="svc_title"></h2>
-      <p class="sec-lead" data-key="svc_lead"></p>
-    </div>
-    <a href="kontakt.html" class="btn btn-ghost" data-key="svc_cta"></a>
-  </div>
-  <div class="svc-grid">
-    <article class="svc-card">
-      <div class="svc-visual"><svg viewBox="0 0 220 100"><line x1="10" y1="50" x2="210" y2="50" stroke="#8FA8C8" stroke-dasharray="10 4 2 4"/><rect x="40" y="32" width="60" height="36" rx="2" fill="#fff" stroke="#0E5FD8" stroke-width="1.5"/><rect x="100" y="22" width="70" height="56" rx="2" fill="#fff" stroke="#0E5FD8" stroke-width="1.5"/><rect x="170" y="40" width="30" height="20" rx="2" fill="#fff" stroke="#0E5FD8" stroke-width="1.5"/><path d="M30 20 l10 14 h-20 z" fill="#0E5FD8"/></svg></div>
-      <div class="svc-body">
-        <div class="svc-num">01 / CNC</div>
-        <h3 data-key="s1_t"></h3>
-        <p data-key="s1_p"></p>
-        <dl class="svc-specs">
-          <div><dt data-key="sp_tol"></dt><dd>±0,01 mm</dd></div>
-          <div><dt data-key="sp_lot"></dt><dd data-key="sp_lot_v"></dd></div>
-          <div><dt data-key="sp_quote"></dt><dd>24 h</dd></div>
-        </dl>
-        <a href="drehen.html" class="svc-more" data-key="more"></a>
+<div class="container service-hub">
+  <aside class="service-side-menu" aria-label="Leistungen und Wissen">
+    <span class="kicker">Leistungen</span>
+    <nav>
+      <a href="#cnc-drehen">CNC-Drehen</a>
+      <a href="#drehfraesen">Dreh-Fr&auml;sbearbeitung</a>
+      <a href="#prototypen-serien">Prototypen &amp; Serien</a>
+      <a href="#werkstoffe">Werkstoffe</a>
+      <a href="#technische-pruefung">Technische Pr&uuml;fung</a>
+      <a href="#anfrage-vorbereiten">CNC-Anfrage vorbereiten</a>
+    </nav>
+  </aside>
+
+  <div class="service-hub-content">
+    <section class="service-intro" aria-labelledby="service-intro-title">
+      <span class="kicker">Leistungs&uuml;bersicht</span>
+      <h2 id="service-intro-title">Fertigung, abgestimmt auf Ihr Bauteil.</h2>
+      <p>Wir fertigen Dreh- und Dreh-Fr&auml;steile f&uuml;r Prototypen, Ersatzteile, Kleinserien und wiederkehrende Serien. Ma&szlig;geblich sind Zeichnung, Werkstoff und Funktion des Bauteils.</p>
+    </section>
+
+    <section class="service-section" id="cnc-drehen">
+      <header class="service-section__head">
+        <span>01</span>
+        <div>
+          <h2>CNC-Drehen</h2>
+          <p>F&uuml;r rotationssymmetrische Drehteile aus Stangen- oder Rohmaterial.</p>
+        </div>
+      </header>
+      <div class="service-section__body">
+        <p>Wir fertigen unter anderem Wellen, Buchsen, Bolzen, Flansche, Ringe und Adapter nach Zeichnung. Je nach Bauteilgeometrie geh&ouml;ren Au&szlig;en- und Innendrehen, Bohren, Gewinde, Nuten, Einstiche und Passungen zum Bearbeitungsumfang.</p>
+        <ul class="service-detail-list">
+          <li>Wellen, Buchsen, Bolzen, Flansche und Adapter</li>
+          <li>Au&szlig;en- und Innendrehen</li>
+          <li>Bohren, Gewinde, Nuten und Einstiche</li>
+        </ul>
       </div>
-    </article>
-    <article class="svc-card">
-      <div class="svc-visual"><svg viewBox="0 0 220 100"><rect x="55" y="30" width="110" height="40" rx="3" fill="#fff" stroke="#0E5FD8" stroke-width="1.5"/><circle cx="85" cy="50" r="8" fill="none" stroke="#0E5FD8" stroke-width="1.5"/><circle cx="135" cy="50" r="8" fill="none" stroke="#0E5FD8" stroke-width="1.5"/><line x1="110" y1="10" x2="110" y2="30" stroke="#0E5FD8" stroke-width="3"/><path d="M104 10 h12 l-6 -8 z" fill="#0E5FD8"/><line x1="30" y1="85" x2="190" y2="85" stroke="#8FA8C8"/></svg></div>
-      <div class="svc-body">
-        <div class="svc-num">02 / Y + SUB</div>
-        <h3 data-key="s2_t"></h3>
-        <p data-key="s2_p"></p>
-        <dl class="svc-specs">
-          <div><dt data-key="sp_setup"></dt><dd>1</dd></div>
-          <div><dt data-key="sp_axes"></dt><dd data-key="sp_axes_v"></dd></div>
-          <div><dt data-key="sp_machine"></dt><dd>HD2200SY</dd></div>
-        </dl>
-        <a href="komplettbearbeitung.html" class="svc-more" data-key="more"></a>
+    </section>
+
+    <section class="service-section" id="drehfraesen">
+      <header class="service-section__head">
+        <span>02</span>
+        <div>
+          <h2>Dreh-Fr&auml;sbearbeitung</h2>
+          <p>Wenn ein Drehteil zus&auml;tzliche Fr&auml;s- oder Bearbeitungsmerkmale braucht.</p>
+        </div>
+      </header>
+      <div class="service-section__body">
+        <p>Querbohrungen, Fr&auml;sfl&auml;chen, Konturen oder Bearbeitung auf der R&uuml;ckseite machen aus einem einfachen Drehteil oft ein komplexeres Bauteil. Auf der Hyundai WIA HD2200SY stehen daf&uuml;r unter anderem Y-Achse und Gegenspindel zur Verf&uuml;gung.</p>
+        <ul class="service-detail-list">
+          <li>Querbohrungen und stirnseitige Merkmale</li>
+          <li>Fr&auml;sfl&auml;chen, Konturen und Nuten</li>
+          <li>Bearbeitung auf Vorder- und R&uuml;ckseite</li>
+        </ul>
       </div>
-    </article>
-    <article class="svc-card">
-      <div class="svc-visual"><svg viewBox="0 0 220 100"><polygon points="110,12 150,30 150,70 110,88 70,70 70,30" fill="#fff" stroke="#0E5FD8" stroke-width="1.5"/><circle cx="110" cy="50" r="14" fill="none" stroke="#0E5FD8" stroke-width="1.5"/><text x="163" y="42" font-family="IBM Plex Mono" font-size="11" fill="#51607E">PEEK</text><text x="163" y="58" font-family="IBM Plex Mono" font-size="11" fill="#51607E">POM</text><text x="163" y="74" font-family="IBM Plex Mono" font-size="11" fill="#51607E">PTFE</text></svg></div>
-      <div class="svc-body">
-        <div class="svc-num">03 / POLYMER</div>
-        <h3 data-key="s3_t"></h3>
-        <p data-key="s3_p"></p>
-        <dl class="svc-specs">
-          <div><dt data-key="sp_mat"></dt><dd>22 + Alu/Stahl</dd></div>
-          <div><dt data-key="sp_top"></dt><dd>PEEK · POM · PTFE</dd></div>
-          <div><dt data-key="sp_fda"></dt><dd data-key="sp_fda_v"></dd></div>
-        </dl>
-        <a href="werkstoffe.html" class="svc-more" data-key="more"></a>
+    </section>
+
+    <section class="service-section" id="prototypen-serien">
+      <header class="service-section__head">
+        <span>03</span>
+        <div>
+          <h2>Prototypen &amp; Serien</h2>
+          <p>Vom Erstmuster bis zur wiederkehrenden Fertigung.</p>
+        </div>
+      </header>
+      <div class="service-section__body">
+        <p>Wir betrachten Einzelteile, Erstmuster, Ersatzteile, Kleinserien und wiederkehrende Fertigung jeweils anhand des konkreten Bauteils. F&uuml;r die technische Pr&uuml;fung sind besonders Geometrie, Werkstoff, Menge und Zieltermin relevant.</p>
+        <ul class="service-detail-list">
+          <li>Einzelteile und Erstmuster</li>
+          <li>Ersatzteile nach Zeichnung oder Muster</li>
+          <li>Kleinserien und wiederkehrende Bedarfe</li>
+        </ul>
       </div>
-    </article>
-  </div>
-  <div style="margin-top:3.5rem">
-    <h3 class="tbl-title" data-key="cap_tbl_t"></h3>
-    <table class="spec-table">
-      <tbody>
-        <tr><td data-key="ct_r1"></td><td><b>±0,01 mm</b></td></tr>
-        <tr><td data-key="ct_r2"></td><td><b data-key="ct_r2v"></b></td></tr>
-        <tr><td data-key="ct_r3"></td><td><b>22</b> <span data-key="ct_r3v"></span></td></tr>
-        <tr><td data-key="ct_r4"></td><td><b data-key="ct_r4v"></b></td></tr>
-        <tr><td data-key="ct_r5"></td><td><b>24 h</b> <span data-key="ct_r5v"></span></td></tr>
-        <tr><td data-key="ct_r6"></td><td><b>PDF · DXF · STEP</b></td></tr>
-      </tbody>
-    </table>
+    </section>
+
+    <section class="service-section" id="werkstoffe">
+      <header class="service-section__head">
+        <span>04</span>
+        <div>
+          <h2>Werkstoffe</h2>
+          <p>Werkstoffwahl passend zu Funktion, Geometrie und Einsatzbereich.</p>
+        </div>
+      </header>
+      <div class="service-section__body">
+        <p>OS.Mechplast bearbeitet Kunststoff, Aluminium und zerspanbare St&auml;hle. Wenn der Werkstoff noch nicht festgelegt ist, hilft eine kurze Beschreibung der Funktion und Einsatzbedingungen bei der ersten technischen Abstimmung.</p>
+        <ul class="service-detail-list">
+          <li>Kunststoff f&uuml;r technische Bauteile</li>
+          <li>Aluminium f&uuml;r leichte Konstruktionen</li>
+          <li>Zerspanbare St&auml;hle f&uuml;r belastete Bauteile</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="service-section" id="technische-pruefung">
+      <header class="service-section__head">
+        <span>05</span>
+        <div>
+          <h2>Technische Pr&uuml;fung</h2>
+          <p>Vor dem Angebot kl&auml;ren wir, was f&uuml;r das Bauteil wirklich wichtig ist.</p>
+        </div>
+      </header>
+      <div class="service-section__body">
+        <p>Toleranzen, Bezugsfl&auml;chen, Oberfl&auml;chen, Pr&uuml;fumfang und Zieltermin werden anhand von Zeichnung und Funktion des Bauteils abgestimmt. Messprotokolle sind auf Anfrage m&ouml;glich.</p>
+        <ul class="service-detail-list">
+          <li>Funktionsma&szlig;e, Passungen und Bezugsfl&auml;chen</li>
+          <li>Oberfl&auml;chen und besondere Bearbeitungsmerkmale</li>
+          <li>Pr&uuml;fumfang nach Abstimmung</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="service-section service-section--knowledge" id="anfrage-vorbereiten">
+      <header class="service-section__head">
+        <span>06</span>
+        <div>
+          <span class="kicker">Wissen f&uuml;r Ihre Anfrage</span>
+          <h2>CNC-Anfrage vorbereiten</h2>
+          <p>Welche Angaben helfen bei einer technischen Pr&uuml;fung?</p>
+        </div>
+      </header>
+      <div class="service-section__body">
+        <p>Eine Anfrage muss nicht perfekt sein. Zeichnung oder bema&szlig;te Skizze, Werkstoff, Menge und Zieltermin sind eine gute Grundlage. Bei komplexeren Bauteilen helfen zus&auml;tzlich PDF, DXF oder STEP.</p>
+        <div class="service-knowledge-grid">
+          <div>
+            <h3>Zeichnung und Daten</h3>
+            <p>Zeichnung, Skizze oder Muster zeigen Geometrie und Bearbeitungsmerkmale. Toleranzen, Gewinde, Bohrungen, Nuten und Fr&auml;sfl&auml;chen sollten eindeutig erkennbar sein.</p>
+          </div>
+          <div>
+            <h3>Werkstoff und Menge</h3>
+            <p>Der gew&uuml;nschte Werkstoff sowie Einzelteil, Erstmuster, Kleinserie oder Wiederholung helfen bei der Einsch&auml;tzung des Bearbeitungswegs.</p>
+          </div>
+          <div>
+            <h3>Toleranzen und Oberfl&auml;che</h3>
+            <p>Besonders wichtig sind Funktionsma&szlig;e, Passungen, Bezugsfl&auml;chen, Rundlauf und besondere Oberfl&auml;chenanforderungen.</p>
+          </div>
+          <div>
+            <h3>Termin und offene Punkte</h3>
+            <p>Ein Zieltermin hilft bei der Planung. Offene Punkte k&ouml;nnen in der technischen Abstimmung gekl&auml;rt werden.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="service-final-cta" id="anfrage">
+      <div>
+        <span class="kicker">N&auml;chster Schritt</span>
+        <h2>Sie haben Zeichnung, Skizze oder Muster?</h2>
+        <p>Wir pr&uuml;fen Ihr Bauteil technisch und stimmen offene Punkte zu Werkstoff, Bearbeitung oder Menge mit Ihnen ab.</p>
+      </div>
+      <a href="kontakt.html" class="btn btn-primary">Bauteil pr&uuml;fen lassen</a>
+    </section>
   </div>
 </div>

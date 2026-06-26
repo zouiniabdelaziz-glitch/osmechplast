@@ -29,17 +29,13 @@
         </div>
         <div class="form-group"><label for="f_msg" data-key="f_msg"></label><textarea id="f_msg"></textarea></div>
         <div class="form-group">
-          <label data-key="f_sketch"></label>
+          <label for="sketchFile" data-key="f_sketch"></label>
           <div class="upload-zone" id="uploadZone" onclick="document.getElementById('sketchFile').click()">
             <div class="upload-text" data-key="upload_text"></div>
             <div class="upload-sub" data-key="upload_sub"></div>
           </div>
           <input type="file" id="sketchFile" accept="image/*,.pdf,.dxf,.step,.stp" style="display:none" onchange="handleFileUpload(event)">
-          <div class="ai-loading" id="aiLoading" data-key="ai_loading"></div>
-          <div class="ai-result" id="aiResult">
-            <div class="ai-result-title" data-key="ai_result_title"></div>
-            <div id="aiResultContent"></div>
-          </div>
+          <div class="upload-selected" id="uploadSelected" aria-live="polite"></div>
         </div>
         <button type="submit" class="btn btn-primary btn-lg" data-key="f_submit"></button>
         <div class="success-banner" id="successBanner"></div>

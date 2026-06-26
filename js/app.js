@@ -7,7 +7,7 @@
 /* â”€â”€ KONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const CONFIG = {
   defaultLang: 'de',
-  siteVersion: '20260618-light-industrial-logo-v2',
+  siteVersion: '20260626-company-page-v1',
 };
 
 /* â”€â”€ SPRACHE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -75,7 +75,6 @@ async function saveLead(payload) {
 /* â”€â”€ FORMULAR ABSENDEN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function submitForm(e) {
   e.preventDefault();
-  const aiContent = document.getElementById('aiResultContent')?.textContent || '';
   const payload = {
     company:     document.getElementById('f_company')?.value || '',
     name:        document.getElementById('f_name')?.value || '',
@@ -83,7 +82,7 @@ async function submitForm(e) {
     phone:       document.getElementById('f_phone')?.value || '',
     service:     document.getElementById('f_service')?.value || '',
     message:     document.getElementById('f_msg')?.value || '',
-    ai_analysis: aiContent || null,
+    ai_analysis: null,
     language:    currentLang,
     source:      'website',
     status:      'new',
@@ -97,80 +96,18 @@ async function submitForm(e) {
     setTimeout(() => banner.style.display = 'none', 5000);
   }
   e.target.reset();
-  const result = document.getElementById('aiResult');
-  if (result) result.style.display = 'none';
+  const uploadSelected = document.getElementById('uploadSelected');
+  if (uploadSelected) uploadSelected.textContent = '';
 }
 
-/* â”€â”€ AI SKIZZEN-ANALYSE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-async function handleFileUpload(event) {
+/* â”€â”€ DATEI-UPLOAD HINWEIS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+function handleFileUpload(event) {
   const file = event.target.files?.[0];
   if (!file) return;
-  const loading = document.getElementById('aiLoading');
-  const result  = document.getElementById('aiResult');
-  const content = document.getElementById('aiResultContent');
   const uploadText = document.querySelector('.upload-text');
-  if (uploadText) uploadText.textContent = 'âœ“ ' + file.name;
-  if (loading) loading.style.display = 'block';
-  if (result)  result.style.display  = 'none';
-
-  try {
-    const base64    = await fileToBase64(file);
-    const isImage   = file.type.startsWith('image/');
-    const langLabel = { de:'German', it:'Italian', en:'English', fr:'French' }[currentLang] || 'English';
-
-    const userContent = isImage
-      ? [
-          { type: 'image', source: { type: 'base64', media_type: file.type, data: base64 } },
-          { type: 'text', text:
-            `You are a CNC machining cost estimator for OS. CNC Mechplast in Italy.
-Analyze this technical drawing or sketch and provide in ${langLabel}:
-1. Likely material (aluminium, steel, brass, titanium, plastic)
-2. Machining operations needed (milling / turning / drilling)
-3. Complexity: simple / medium / complex
-4. Estimated price range in EUR â€” 1 piece and 10 pieces
-5. Estimated lead time
-Be concise. Start with a 1-line summary, then list the 5 points with short bullet lines.`
-          }
-        ]
-      : [{ type: 'text', text:
-          `A PDF drawing file was uploaded (${file.name}).
-As CNC cost estimator for OS. CNC Mechplast Italy, provide a general CNC price estimate range (1 pc / 10 pcs) in EUR and advise the user to also upload a photo or image for more accurate AI analysis.
-Reply in ${langLabel}.`
-        }];
-
-    const res  = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: userContent }]
-      })
-    });
-    const data = await res.json();
-    const text = data.content?.find(b => b.type === 'text')?.text || 'Keine Antwort.';
-    if (content) content.innerHTML = text.replace(/\n/g, '<br>');
-    if (result)  result.style.display = 'block';
-
-    // Nachricht vorausfÃ¼llen
-    const msgField = document.getElementById('f_msg');
-    if (msgField && !msgField.value) msgField.value = '[KI-Analyse beigefÃ¼gt] ';
-
-  } catch (err) {
-    if (content) content.textContent = 'Fehler bei der KI-Analyse. Bitte beschreiben Sie Ihr Bauteil manuell.';
-    if (result)  result.style.display = 'block';
-    console.error(err);
-  }
-  if (loading) loading.style.display = 'none';
-}
-
-function fileToBase64(file) {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload  = () => res(r.result.split(',')[1]);
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
+  const selected = document.getElementById('uploadSelected');
+  if (uploadText) uploadText.textContent = 'Datei ausgewählt';
+  if (selected) selected.textContent = file.name + ' ist für die Anfrage vorgemerkt.';
 }
 
 /* â”€â”€ DRAG & DROP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -204,18 +141,111 @@ async function loadModules() {
   }));
 }
 
+function scrollToHashTarget() {
+  const id = decodeURIComponent(window.location.hash.slice(1));
+  if (!id) return;
+  const target = document.getElementById(id);
+  if (!target) return;
+  requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+}
+
 /* Aktiven MenÃ¼punkt markieren */
 function markActiveNav() {
   const page = location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav a, .dropdown a').forEach(a => {
-    if ((a.getAttribute('href') || '').split('#')[0] === page) a.classList.add('active');
+  const hash = location.hash || '';
+  document.querySelectorAll('.nav a, .dropdown a, .oncc-nav a, .oncc-mobile-menu a').forEach(a => {
+    const href = a.getAttribute('href') || '';
+    const parts = href.split('#');
+    const hrefPage = parts[0] || 'index.html';
+    const hrefHash = parts[1] ? '#' + parts[1] : '';
+    const samePage = hrefPage === page || (page === '' && hrefPage === 'index.html');
+    const sameAnchor = hrefHash && hrefHash === hash;
+    if (samePage && (!hrefHash || sameAnchor)) {
+      a.classList.add('active');
+      a.setAttribute('aria-current', 'page');
+    }
+  });
+}
+
+function initRequestAssistant() {
+  const form = document.getElementById('requestAssistant');
+  if (!form) return;
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const params = new URLSearchParams({
+      assistant: '1',
+      service: document.getElementById('assistantService')?.value || 'unsicher',
+      material: document.getElementById('assistantMaterial')?.value || 'Noch offen',
+      quantity: document.getElementById('assistantQuantity')?.value || 'Noch offen',
+      drawing: document.getElementById('assistantDrawing')?.value || 'Noch in Vorbereitung'
+    });
+    window.location.href = 'kontakt.html?' + params.toString();
+  });
+}
+
+function prefillContactFormFromAssistant() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('assistant') !== '1') return;
+
+  const service = params.get('service') || 'unsicher';
+  const material = params.get('material') || 'Noch offen';
+  const quantity = params.get('quantity') || 'Noch offen';
+  const drawing = params.get('drawing') || 'Noch in Vorbereitung';
+  const serviceSelect = document.getElementById('f_service');
+  const serviceIndex = { drehen: 1, drehfraesen: 2, unsicher: 4 };
+  if (serviceSelect && serviceIndex[service] !== undefined) {
+    serviceSelect.selectedIndex = serviceIndex[service];
+  }
+
+  const message = document.getElementById('f_msg');
+  if (message && !message.value) {
+    const serviceLabel = { drehen: 'CNC-Drehen', drehfraesen: 'Dreh-Fräsbearbeitung', unsicher: 'Noch nicht sicher' }[service];
+    message.value = [
+      'Vorbereitete Anfrage aus dem Anfrage-Assistenten:',
+      'Bearbeitung: ' + serviceLabel,
+      'Werkstoff: ' + material,
+      'Menge: ' + quantity,
+      'Zeichnungsstand: ' + drawing,
+      '',
+      'Weitere Angaben zum Bauteil:'
+    ].join('\n');
+  }
+}
+
+function initHeaderNav() {
+  const mobileButton = document.querySelector('[data-menu-toggle]');
+  const mobileMenu = document.getElementById('oncc-mobile-menu');
+  if (mobileButton && mobileMenu) {
+    mobileButton.addEventListener('click', () => {
+      const isOpen = mobileButton.getAttribute('aria-expanded') === 'true';
+      mobileButton.setAttribute('aria-expanded', String(!isOpen));
+      mobileMenu.hidden = isOpen;
+      document.body.classList.toggle('mobile-menu-open', !isOpen);
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileButton.setAttribute('aria-expanded', 'false');
+        mobileMenu.hidden = true;
+        document.body.classList.remove('mobile-menu-open');
+      });
+    });
+  }
+
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    if (mobileButton && mobileMenu) {
+      mobileButton.setAttribute('aria-expanded', 'false');
+      mobileMenu.hidden = true;
+      document.body.classList.remove('mobile-menu-open');
+    }
   });
 }
 
 /* â”€â”€ SCROLL-REVEAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function initReveal() {
   const els = document.querySelectorAll(
-    '.svc-card,.mach-card,.ind-card,.media-card,.step,.usp,.mat-box,.sec-head,.cta-band,.faq details,.spec-table,.form-card,.contact-info,.robot-cell,.map-card,.flow-steps div,.location-points div'
+    '.svc-card,.mach-card,.ind-card,.media-card,.step,.usp,.mat-box,.sec-head,.cta-band,.faq details,.spec-table,.form-card,.contact-info,.robot-cell,.map-card,.flow-steps div,.location-points div,.request-assistant,.process-step'
   );
   els.forEach((el, i) => {
     el.classList.add('reveal');
@@ -230,14 +260,17 @@ function initReveal() {
 /* â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 document.addEventListener('DOMContentLoaded', async () => {
   await loadModules();
-  try {
-    const saved = localStorage.getItem('oscnc_lang');
-    if (saved && T[saved]) currentLang = saved;
-  } catch(e) {}
+  scrollToHashTarget();
+  currentLang = CONFIG.defaultLang;
   setLang(currentLang);
+  initHeaderNav();
   initDragDrop();
+  initRequestAssistant();
+  prefillContactFormFromAssistant();
   initReveal();
   markActiveNav();
 });
+
+
 
 
