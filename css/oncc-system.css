@@ -2702,6 +2702,13 @@ textarea:focus {
   color: var(--oncc-red) !important;
 }
 
+.footer-brand-logo {
+  display: block;
+  height: auto;
+  max-width: 220px;
+  width: 100%;
+}
+
 .oncc-brand__logo {
   filter: none;
 }
