@@ -4,15 +4,15 @@
    ============================================= */
 
 :root {
-  --ink:      #0C1A2A;   /* Haupttext, fast schwarz-blau */
+  --ink:      #1D1D1F;   /* Haupttext, Graphit */
   --ink2:     #51607290;
   --ink2:     #5A6B7E;   /* Sekundärtext */
   --bg:       #FFFFFF;
-  --bg-soft:  #F4F7FA;   /* Abwechselnde Sektionen */
-  --bg-deep:  #0C1A2A;   /* Dunkle Sektionen (Maschinenpark, Footer) */
-  --blue:     #0E5FD8;   /* Primär-Akzent */
-  --blue-d:   #0A4AAB;
-  --blue-bg:  #E8F0FD;
+  --bg-soft:  #F3F4F5;   /* Abwechselnde Sektionen */
+  --bg-deep:  #161616;   /* Dunkle Sektionen (Maschinenpark, Footer) */
+  --blue:     #F28C28;   /* Primär-Akzent: OSMP Orange */
+  --blue-d:   #C96F16;
+  --blue-bg:  #FFF1E1;
   --green:    #168F5C;
   --line:     #E3E9F0;
   --line-d:   rgba(255,255,255,0.12);

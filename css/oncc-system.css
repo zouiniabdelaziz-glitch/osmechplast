@@ -2,17 +2,17 @@
    Phase 10 step 1: tokens and base components only. */
 
 :root {
-  --oncc-navy: #1d252d;
-  --oncc-slate: #313f4c;
-  --oncc-charcoal: #3f454c;
-  --oncc-red: #e3000b;
-  --oncc-red-dark: #b80008;
-  --oncc-light: #e9eef1;
-  --oncc-soft: #efefef;
+  --oncc-navy: #111111;
+  --oncc-slate: #2b2b2d;
+  --oncc-charcoal: #161616;
+  --oncc-red: #f28c28;
+  --oncc-red-dark: #c96f16;
+  --oncc-light: #eef0f2;
+  --oncc-soft: #f3f4f5;
   --oncc-white: #ffffff;
-  --oncc-ink: #1d252d;
-  --oncc-muted: #767676;
-  --oncc-border: #d9e0e5;
+  --oncc-ink: #1d1d1f;
+  --oncc-muted: #8f9094;
+  --oncc-border: #d8dadd;
   --oncc-success: #155724;
   --oncc-error: #721c24;
 
@@ -21,7 +21,7 @@
   --font-mono: "JetBrains Mono", monospace;
 
   --bg: var(--oncc-light);
-  --bg-deep: var(--oncc-navy);
+  --bg-deep: var(--oncc-charcoal);
   --surface: var(--oncc-white);
   --ink: var(--oncc-ink);
   --ink2: var(--oncc-muted);
@@ -161,7 +161,7 @@ h5,
 .btn-primary {
   background: var(--oncc-red) !important;
   border-color: var(--oncc-red) !important;
-  color: var(--oncc-white) !important;
+  color: #111111 !important;
 }
 
 .btn-primary:hover {
@@ -309,10 +309,10 @@ textarea:focus {
 
 .oncc-brand__logo {
   background: transparent;
-  height: 44px;
+  height: auto;
   object-fit: contain;
   padding: 0;
-  width: 148px;
+  width: 164px;
 }
 
 .oncc-brand__meta {
@@ -541,8 +541,8 @@ textarea:focus {
   }
 
   .oncc-brand__logo {
-    height: 40px;
-    width: 138px;
+    height: auto;
+    width: 142px;
   }
 
   .oncc-brand__meta,
@@ -2668,4 +2668,40 @@ textarea:focus {
   .footer-legal {
     flex-wrap: wrap;
   }
+}
+
+/* OSMP brand refresh: graphite, silver and precision-orange accents. */
+.hero .kicker,
+.page-hero .kicker,
+.sec-deep .kicker,
+.mach-tag {
+  color: var(--oncc-red) !important;
+}
+
+.hero .kicker::before,
+.page-hero .kicker::before,
+.sec-deep .kicker::before {
+  background: var(--oncc-red) !important;
+}
+
+.hero .btn-ghost:hover,
+.page-hero .btn-ghost:hover,
+.sec-deep .btn-ghost:hover,
+.crumbs a:hover {
+  border-color: var(--oncc-red) !important;
+  color: var(--oncc-red) !important;
+}
+
+.footer,
+.sec-deep {
+  background: var(--oncc-charcoal) !important;
+}
+
+.footer .logo b,
+.logo b {
+  color: var(--oncc-red) !important;
+}
+
+.oncc-brand__logo {
+  filter: none;
 }
