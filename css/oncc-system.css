@@ -2,17 +2,17 @@
    Phase 10 step 1: tokens and base components only. */
 
 :root {
-  --oncc-navy: #111111;
-  --oncc-slate: #2b2b2d;
-  --oncc-charcoal: #161616;
-  --oncc-red: #f28c28;
-  --oncc-red-dark: #c96f16;
-  --oncc-light: #eef0f2;
+  --oncc-navy: #1d252d;
+  --oncc-slate: #313f4c;
+  --oncc-charcoal: #3f454c;
+  --oncc-red: #e3000b;
+  --oncc-red-dark: #b80008;
+  --oncc-light: #e9eef1;
   --oncc-soft: #f3f4f5;
   --oncc-white: #ffffff;
-  --oncc-ink: #1d1d1f;
-  --oncc-muted: #8f9094;
-  --oncc-border: #d8dadd;
+  --oncc-ink: #1d252d;
+  --oncc-muted: #767676;
+  --oncc-border: #d9e0e5;
   --oncc-success: #155724;
   --oncc-error: #721c24;
 
@@ -2571,16 +2571,17 @@ textarea:focus {
 }
 
 .legal-notice {
-  background: #fff7e6;
-  border: 1px solid #f2d7a2;
-  color: #6d4c13;
+  background: #ffffff;
+  border: 1px solid var(--oncc-border);
+  border-left: 4px solid var(--oncc-red);
+  color: var(--oncc-ink);
   font-size: 16px;
   line-height: 1.45;
   padding: 18px 20px;
 }
 
 .legal-notice strong {
-  color: #2c1d00;
+  color: var(--oncc-red);
 }
 
 .legal-card {
@@ -2670,7 +2671,7 @@ textarea:focus {
   }
 }
 
-/* OSMP brand refresh: graphite, silver and precision-orange accents. */
+/* OSMP brand refresh: navy, silver and precision-red accents. */
 .hero .kicker,
 .page-hero .kicker,
 .sec-deep .kicker,
