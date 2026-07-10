@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://osmechplast.pages.dev/sitemap.xml

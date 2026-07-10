@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" width="800" height="960">
-
-<g fill="none" transform="translate(170.00 102.86) scale(3.2857)">
-    <circle cx="48" cy="60" r="30" stroke="#16191D" stroke-width="13"></circle>
-    <path d="M70 60 h18" stroke="#3B2E8C" stroke-width="13" stroke-linecap="butt"></path>
-    <path d="M118 44 a18 18 0 0 0 -18 -10 a15 15 0 0 0 0 30 a15 15 0 0 1 0 30 a18 18 0 0 1 -18 -10" stroke="#16191D" stroke-width="13" stroke-linecap="round" fill="none"></path>
-  </g>
-<text x="400" y="848" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="800" font-size="72" letter-spacing="-1" fill="#16191D">OS<tspan fill="#3B2E8C">.</tspan>MECHPLAST</text>
-</svg>

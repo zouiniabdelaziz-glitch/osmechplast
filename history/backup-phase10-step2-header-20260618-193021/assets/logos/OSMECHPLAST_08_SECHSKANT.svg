@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" width="800" height="960">
-
-<g fill="none" transform="translate(170.00 70.00) scale(3.8333)">
-    <path d="M60 10 L103 35 V85 L60 110 L17 85 V35 Z" fill="#16191D"></path>
-    <text x="60" y="64" text-anchor="middle" dominant-baseline="central" font-family="&#39;Archivo&#39;,sans-serif" font-weight="800" font-size="40" letter-spacing="-2" fill="#fff">OS</text>
-    <circle class="m-dot" cx="60" cy="60" r="0" fill="#5B6770"></circle>
-  </g>
-<text x="400" y="848" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="800" font-size="72" letter-spacing="-1" fill="#16191D">OS<tspan fill="#5B6770">.</tspan>MECHPLAST</text>
-</svg>

@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960" width="800" height="960">
-
-<g fill="none" transform="translate(170.00 70.00) scale(3.8333)">
-    <path d="M28 20 H46 V92 H100 V74 H64 V20 Z" fill="#16191D"></path>
-    <path class="m-deg" d="M52 30 A40 40 0 0 1 90 68" stroke="#C2502E" stroke-width="6" fill="none" stroke-linecap="round"></path>
-  </g>
-<text x="400" y="848" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="800" font-size="72" letter-spacing="-1" fill="#16191D">OS<tspan fill="#C2502E">.</tspan>MECHPLAST</text>
-</svg>
