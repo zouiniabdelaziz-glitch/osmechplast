@@ -309,10 +309,10 @@ textarea:focus {
 
 .oncc-brand__logo {
   background: transparent;
-  height: auto;
+  height: 50px;
   object-fit: contain;
   padding: 0;
-  width: 164px;
+  width: 178px;
 }
 
 .oncc-brand__meta {
@@ -541,8 +541,8 @@ textarea:focus {
   }
 
   .oncc-brand__logo {
-    height: auto;
-    width: 142px;
+    height: 44px;
+    width: 156px;
   }
 
   .oncc-brand__meta,
@@ -2700,13 +2700,6 @@ textarea:focus {
 .footer .logo b,
 .logo b {
   color: var(--oncc-red) !important;
-}
-
-.footer-brand-logo {
-  display: block;
-  height: auto;
-  max-width: 220px;
-  width: 100%;
 }
 
 .oncc-brand__logo {

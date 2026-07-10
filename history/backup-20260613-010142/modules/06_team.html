@@ -1,0 +1,74 @@
+<!-- =============================================
+     MODUL: Team / Über uns
+     Datei: modules/06_team.html
+     Ändern: Namen, Initialen im Avatar, Rollen
+     Neue Person: .team-card duplizieren
+     ============================================= -->
+<style>
+.team-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+}
+.team-card { text-align: center; }
+.team-avatar {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: var(--bg2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1rem;
+  font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--accent);
+}
+.team-card h4 { font-size: 14px; font-weight: 500; margin-bottom: .25rem; }
+.team-card p  { font-size: 12px; color: var(--text2); }
+
+@media (max-width: 768px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+
+<hr class="divider">
+
+<section class="section-py" id="team">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-tag"   data-key="sec_team_tag"></div>
+        <div class="section-title" data-key="sec_team_title"></div>
+      </div>
+    </div>
+
+    <div class="team-grid">
+
+      <!-- Person 1 — Initialen im Avatar ändern -->
+      <div class="team-card">
+        <div class="team-avatar">GF</div><!-- ← Initialen ändern -->
+        <h4 data-key="team1_t"></h4>
+        <p  data-key="team1_p"></p>
+      </div>
+
+      <div class="team-card">
+        <div class="team-avatar">AV</div>
+        <h4 data-key="team2_t"></h4>
+        <p  data-key="team2_p"></p>
+      </div>
+
+      <div class="team-card">
+        <div class="team-avatar">MB</div>
+        <h4 data-key="team3_t"></h4>
+        <p  data-key="team3_p"></p>
+      </div>
+
+      <div class="team-card">
+        <div class="team-avatar">QS</div>
+        <h4 data-key="team4_t"></h4>
+        <p  data-key="team4_p"></p>
+      </div>
+
+      <!-- NEUE PERSON:
+           <div class="team-card">
+             <div class="team-avatar">XX</div>
+             <h4 data-key="team5_t"></h4>
+             <p  data-key="team5_p"></p>
+           </div>
+           + translations.js: team5_t, team5_p für alle Sprachen
+      -->
+
+    </div>
+  </div>
+</section>

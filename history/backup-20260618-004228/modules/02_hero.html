@@ -1,0 +1,85 @@
+<!-- =============================================
+     MODUL: Hero (Startbereich)
+     Datei: modules/02_hero.html
+     Ändern: Statistiken (stat-num), Hero-Bild, Texte
+     ============================================= -->
+<style>
+.hero {
+  max-width: var(--max-width); margin: 0 auto;
+  padding: 6rem var(--pad-h) 5rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+}
+.hero-eyebrow {
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.1em; color: var(--accent); text-transform: uppercase;
+  margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px;
+}
+.hero-eyebrow::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--accent); }
+.hero h1 {
+  font-family: var(--font-display); font-size: 52px; font-weight: 500;
+  line-height: 1.1; letter-spacing: -0.5px; margin-bottom: 1.75rem;
+}
+.hero h1 em { color: var(--accent); font-style: normal; }
+.hero-sub { font-size: 16px; color: var(--text2); line-height: 1.75; margin-bottom: 2.5rem; max-width: 420px; }
+.hero-actions { display: flex; gap: 12px; align-items: center; }
+
+/* Statistiken-Box */
+.hero-right {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 8px; padding: 2rem; position: relative;
+}
+.hero-badge {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #fff;
+  font-family: var(--font-mono); font-size: 10px;
+  padding: 4px 14px; border-radius: 20px; white-space: nowrap; letter-spacing: 0.05em;
+}
+.hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
+.stat-box { background: var(--white); padding: 1.5rem; text-align: center; }
+.stat-unit { font-family: var(--font-mono); font-size: 11px; color: var(--accent); display: block; margin-bottom: 4px; }
+.stat-num  { font-family: var(--font-display); font-size: 36px; font-weight: 500; color: var(--text); }
+.stat-label{ font-size: 12px; color: var(--text2); margin-top: 6px; }
+
+@media (max-width: 768px) { .hero { grid-template-columns: 1fr; gap: 2.5rem; } .hero h1 { font-size: 36px; } }
+</style>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow" data-key="hero_eyebrow"></div>
+    <h1 data-key="hero_h1_html"></h1>
+    <p class="hero-sub" data-key="hero_sub"></p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" data-key="hero_cta1"
+        onclick="document.getElementById('kontakt').scrollIntoView({behavior:'smooth'})"></button>
+      <button class="btn btn-outline" data-key="hero_cta2"
+        onclick="document.getElementById('leistungen').scrollIntoView({behavior:'smooth'})"></button>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-badge" data-key="hero_badge"></div>
+    <div class="hero-stats">
+      <!-- STATISTIKEN: Zahlen hier direkt ändern -->
+      <div class="stat-box">
+        <span class="stat-unit">CNC</span>
+        <div class="stat-num">3</div>
+        <div class="stat-label" data-key="stat1"></div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-unit">€</span>
+        <div class="stat-num">13K+</div>
+        <div class="stat-label" data-key="stat2"></div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-unit">SLA</span>
+        <div class="stat-num">24h</div>
+        <div class="stat-label" data-key="stat3"></div>
+      </div>
+      <div class="stat-box">
+        <span class="stat-unit">FOCUS</span>
+        <div class="stat-num">B2B</div>
+        <div class="stat-label" data-key="stat4"></div>
+      </div>
+    </div>
+  </div>
+</section>

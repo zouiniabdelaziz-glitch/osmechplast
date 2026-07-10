@@ -1,0 +1,245 @@
+﻿/* =============================================
+   OS. CNC MECHPLAST â€” CORE APP
+   Datei: js/app.js
+   EnthÃ¤lt: Sprache, Cloudflare API, AI-Analyse, Formular
+   ============================================= */
+
+/* â”€â”€ KONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+const CONFIG = {
+  defaultLang: 'de',
+  siteVersion: '20260618-wedirekt-v1',
+};
+
+/* â”€â”€ SPRACHE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+let currentLang = CONFIG.defaultLang;
+
+function setLang(lang) {
+  currentLang = lang;
+  try { localStorage.setItem('oscnc_lang', lang); } catch(e) {}
+  document.querySelectorAll('.lang-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === lang)
+  );
+  applyTranslations();
+  document.documentElement.lang = lang;
+}
+
+function applyTranslations() {
+  const t = T[currentLang];
+  if (!t) return;
+
+  // Texte
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.dataset.key;
+    if (!t[key]) return;
+    if (key === 'hero_h1_html' || key === 'contact_h2') {
+      el.innerHTML = t[key];
+    } else {
+      el.textContent = t[key];
+    }
+  });
+
+  // Select-Optionen
+  const sel = document.getElementById('f_service');
+  if (sel) {
+    ['f_service_opt0','f_service_opt1','f_service_opt2','f_service_opt3','f_service_opt4']
+      .forEach((k, i) => { if (sel.options[i] && t[k]) sel.options[i].text = t[k]; });
+  }
+
+  // Ticker neu befÃ¼llen
+  const ticker = document.getElementById('tickerInner');
+  if (ticker && t.ticker_items) {
+    const doubled = [...t.ticker_items, ...t.ticker_items];
+    ticker.innerHTML = doubled.map(i => `<span class="ticker-item">${i}</span>`).join('');
+  }
+}
+
+/* â”€â”€ CLOUDFLARE D1 LEAD SPEICHERN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+async function saveLead(payload) {
+  const res = await fetch("/api/leads", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("Lead konnte nicht gespeichert werden:", errorText);
+    return false;
+  }
+
+  return true;
+}
+
+/* â”€â”€ FORMULAR ABSENDEN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+async function submitForm(e) {
+  e.preventDefault();
+  const aiContent = document.getElementById('aiResultContent')?.textContent || '';
+  const payload = {
+    company:     document.getElementById('f_company')?.value || '',
+    name:        document.getElementById('f_name')?.value || '',
+    email:       document.getElementById('f_email')?.value || '',
+    phone:       document.getElementById('f_phone')?.value || '',
+    service:     document.getElementById('f_service')?.value || '',
+    message:     document.getElementById('f_msg')?.value || '',
+    ai_analysis: aiContent || null,
+    language:    currentLang,
+    source:      'website',
+    status:      'new',
+    created_at:  new Date().toISOString()
+  };
+  await saveLead(payload);
+  const banner = document.getElementById('successBanner');
+  if (banner) {
+    banner.textContent = T[currentLang]?.f_success || 'âœ“ Danke!';
+    banner.style.display = 'block';
+    setTimeout(() => banner.style.display = 'none', 5000);
+  }
+  e.target.reset();
+  const result = document.getElementById('aiResult');
+  if (result) result.style.display = 'none';
+}
+
+/* â”€â”€ AI SKIZZEN-ANALYSE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+async function handleFileUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const loading = document.getElementById('aiLoading');
+  const result  = document.getElementById('aiResult');
+  const content = document.getElementById('aiResultContent');
+  const uploadText = document.querySelector('.upload-text');
+  if (uploadText) uploadText.textContent = 'âœ“ ' + file.name;
+  if (loading) loading.style.display = 'block';
+  if (result)  result.style.display  = 'none';
+
+  try {
+    const base64    = await fileToBase64(file);
+    const isImage   = file.type.startsWith('image/');
+    const langLabel = { de:'German', it:'Italian', en:'English', fr:'French' }[currentLang] || 'English';
+
+    const userContent = isImage
+      ? [
+          { type: 'image', source: { type: 'base64', media_type: file.type, data: base64 } },
+          { type: 'text', text:
+            `You are a CNC machining cost estimator for OS. CNC Mechplast in Italy.
+Analyze this technical drawing or sketch and provide in ${langLabel}:
+1. Likely material (aluminium, steel, brass, titanium, plastic)
+2. Machining operations needed (milling / turning / drilling)
+3. Complexity: simple / medium / complex
+4. Estimated price range in EUR â€” 1 piece and 10 pieces
+5. Estimated lead time
+Be concise. Start with a 1-line summary, then list the 5 points with short bullet lines.`
+          }
+        ]
+      : [{ type: 'text', text:
+          `A PDF drawing file was uploaded (${file.name}).
+As CNC cost estimator for OS. CNC Mechplast Italy, provide a general CNC price estimate range (1 pc / 10 pcs) in EUR and advise the user to also upload a photo or image for more accurate AI analysis.
+Reply in ${langLabel}.`
+        }];
+
+    const res  = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: userContent }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.find(b => b.type === 'text')?.text || 'Keine Antwort.';
+    if (content) content.innerHTML = text.replace(/\n/g, '<br>');
+    if (result)  result.style.display = 'block';
+
+    // Nachricht vorausfÃ¼llen
+    const msgField = document.getElementById('f_msg');
+    if (msgField && !msgField.value) msgField.value = '[KI-Analyse beigefÃ¼gt] ';
+
+  } catch (err) {
+    if (content) content.textContent = 'Fehler bei der KI-Analyse. Bitte beschreiben Sie Ihr Bauteil manuell.';
+    if (result)  result.style.display = 'block';
+    console.error(err);
+  }
+  if (loading) loading.style.display = 'none';
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload  = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+/* â”€â”€ DRAG & DROP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+function initDragDrop() {
+  const zone = document.getElementById('uploadZone');
+  if (!zone) return;
+  zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('dragover');
+    const f = e.dataTransfer.files[0];
+    if (f) {
+      document.getElementById('sketchFile').files = e.dataTransfer.files;
+      handleFileUpload({ target: { files: [f] } });
+    }
+  });
+}
+
+/* â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* â”€â”€ MODUL-LADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Jede Seite besteht aus Modulen: <div data-include="header"></div>
+   lÃ¤dt modules/header.html. Modul Ã¤ndern = Ã¼berall geÃ¤ndert. */
+async function loadModules() {
+  const slots = [...document.querySelectorAll('[data-include]')];
+  await Promise.all(slots.map(async el => {
+    try {
+      const res = await fetch('modules/' + el.dataset.include + '.html?v=' + CONFIG.siteVersion);
+      if (res.ok) el.innerHTML = await res.text();
+      else el.innerHTML = '<!-- Modul fehlt: ' + el.dataset.include + ' -->';
+    } catch (e) { console.error('Modul-Fehler:', el.dataset.include, e); }
+  }));
+}
+
+/* Aktiven MenÃ¼punkt markieren */
+function markActiveNav() {
+  const page = location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav a, .dropdown a').forEach(a => {
+    if ((a.getAttribute('href') || '').split('#')[0] === page) a.classList.add('active');
+  });
+}
+
+/* â”€â”€ SCROLL-REVEAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+function initReveal() {
+  const els = document.querySelectorAll(
+    '.svc-card,.mach-card,.ind-card,.media-card,.step,.usp,.mat-box,.sec-head,.cta-band,.faq details,.spec-table,.form-card,.contact-info,.robot-cell,.map-card,.flow-steps div,.location-points div'
+  );
+  els.forEach((el, i) => {
+    el.classList.add('reveal');
+    el.style.transitionDelay = (i % 4) * 70 + 'ms';
+  });
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  els.forEach(el => io.observe(el));
+}
+
+/* â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadModules();
+  try {
+    const saved = localStorage.getItem('oscnc_lang');
+    if (saved && T[saved]) currentLang = saved;
+  } catch(e) {}
+  setLang(currentLang);
+  initDragDrop();
+  initReveal();
+  markActiveNav();
+});
+
+
+
+

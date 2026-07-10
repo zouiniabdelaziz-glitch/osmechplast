@@ -1,0 +1,170 @@
+<!-- =============================================
+     MODUL: Kontakt + KI-Skizzenanalyse
+     Datei: modules/07_contact.html
+     Ändern: E-Mail, Telefon, Adresse im .contact-details
+     KI deaktivieren: .upload-zone Block entfernen
+     Supabase: URL + Key in js/app.js → CONFIG
+     ============================================= -->
+<style>
+.contact-zone {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.contact-inner {
+  max-width: var(--max-width); margin: 0 auto;
+  padding: 5rem var(--pad-h);
+  display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem; align-items: start;
+}
+.contact-left h2 {
+  font-family: var(--font-display); font-size: 32px;
+  font-weight: 500; line-height: 1.25; margin-bottom: 1rem;
+}
+.contact-left p { font-size: 15px; color: var(--text2); line-height: 1.75; margin-bottom: 2rem; }
+.contact-details { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 2rem; }
+.cd { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text2); }
+.cd-label { font-family: var(--font-mono); font-size: 10px; color: var(--accent); min-width: 50px; letter-spacing: 0.08em; }
+
+/* AI Box */
+.ai-info-box {
+  background: var(--bg); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius); padding: 1.25rem; margin-top: 1.5rem;
+}
+.ai-info-title {
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.06em; color: var(--accent); margin-bottom: .5rem;
+}
+.ai-info-box p { font-size: 13px; color: var(--text2); line-height: 1.6; margin: 0; }
+
+/* Upload */
+.upload-zone {
+  border: 1.5px dashed var(--border); border-radius: var(--radius);
+  padding: 1.25rem; text-align: center; cursor: pointer;
+  transition: all .2s; background: var(--bg); position: relative;
+}
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: rgba(200,70,10,0.04); }
+.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.upload-icon { font-size: 22px; margin-bottom: 6px; color: var(--text2); }
+.upload-text { font-size: 13px; color: var(--text2); data-key: upload_text; }
+.upload-sub  { font-family: var(--font-mono); font-size: 10px; color: var(--text2); opacity: .7; margin-top: 3px; }
+
+.ai-loading { display: none; text-align: center; padding: .75rem; font-family: var(--font-mono); font-size: 12px; color: var(--text2); }
+.ai-loading::after { content: '...'; animation: dots 1s steps(4,end) infinite; }
+@keyframes dots { 0%,20%{content:'.'}40%{content:'..'}60%,100%{content:'...'} }
+
+.ai-result {
+  display: none; background: var(--bg);
+  border: 1px solid var(--border); border-left: 3px solid var(--accent);
+  border-radius: var(--radius); padding: 1rem; margin-top: .75rem;
+  font-size: 13px; line-height: 1.7; color: var(--text);
+}
+.ai-result-label {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.08em; color: var(--accent); margin-bottom: .5rem;
+}
+
+/* Form */
+.contact-form { display: flex; flex-direction: column; gap: .85rem; }
+.submit-btn {
+  width: 100%; padding: 12px; margin-top: .25rem;
+  background: var(--accent); color: #fff; border: none;
+  border-radius: var(--radius); font-size: 14px; font-weight: 500;
+  cursor: pointer; font-family: var(--font-body); transition: opacity .2s;
+}
+.submit-btn:hover { opacity: .85; }
+
+@media (max-width: 768px) { .contact-inner { grid-template-columns: 1fr; gap: 2.5rem; } }
+</style>
+
+<hr class="divider">
+
+<div class="contact-zone" id="kontakt">
+  <div class="contact-inner">
+
+    <!-- LINKE SPALTE: Infos -->
+    <div class="contact-left">
+      <div class="section-tag" data-key="sec_contact_tag"></div>
+      <h2 data-key="contact_h2"></h2>
+      <p  data-key="contact_p"></p>
+
+      <!-- KONTAKTDATEN: hier direkt ändern -->
+      <div class="contact-details">
+        <div class="cd"><span class="cd-label">EMAIL</span> info@oscncmechplast.it</div>
+        <div class="cd"><span class="cd-label">TEL</span>   +39 000 000 0000</div>
+        <div class="cd"><span class="cd-label">SEDE</span>  Italia</div>
+        <!-- Neue Zeile: <div class="cd"><span class="cd-label">FAX</span> +39 ...</div> -->
+      </div>
+
+      <!-- KI INFO BOX (deaktivieren: diesen Block löschen) -->
+      <div class="ai-info-box">
+        <div class="ai-info-title">✦ AI — <span data-key="ai_box_title"></span></div>
+        <p data-key="ai_box_desc"></p>
+      </div>
+    </div>
+
+    <!-- RECHTE SPALTE: Formular -->
+    <form class="contact-form" onsubmit="submitForm(event)">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label data-key="f_company"></label>
+          <input type="text" id="f_company" placeholder="OS. Beispiel S.r.l.">
+        </div>
+        <div class="form-group">
+          <label data-key="f_name"></label>
+          <input type="text" id="f_name" placeholder="Mario Rossi">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="f_email" placeholder="mario@azienda.it" required>
+        </div>
+        <div class="form-group">
+          <label data-key="f_phone"></label>
+          <input type="tel" id="f_phone" placeholder="+39 ...">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label data-key="f_service"></label>
+        <select id="f_service">
+          <option value=""         data-key="f_service_opt0"></option>
+          <option value="fresatura"data-key="f_service_opt1"></option>
+          <option value="tornitura"data-key="f_service_opt2"></option>
+          <option value="foratura" data-key="f_service_opt3"></option>
+          <option value="combo"    data-key="f_service_opt4"></option>
+          <!-- Neue Option: <option value="rettifica">Rettifica CNC</option> -->
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label data-key="f_msg"></label>
+        <textarea id="f_msg" placeholder="Materiale, quantità, tolleranze, data di consegna..."></textarea>
+      </div>
+
+      <!-- KI UPLOAD (deaktivieren: diesen form-group Block löschen) -->
+      <div class="form-group">
+        <label data-key="f_sketch"></label>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="sketchFile" accept="image/*,.pdf"
+            onchange="handleFileUpload(event)">
+          <div class="upload-icon">⊕</div>
+          <div class="upload-text" data-key="upload_text"></div>
+          <div class="upload-sub"  data-key="upload_sub"></div>
+        </div>
+        <div class="ai-loading"  id="aiLoading">AI analizza</div>
+        <div class="ai-result"   id="aiResult">
+          <div class="ai-result-label">✦ AI PRICE ESTIMATE</div>
+          <div id="aiResultContent"></div>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" data-key="f_submit"></button>
+      <div class="success-banner" id="successBanner"></div>
+
+    </form>
+  </div>
+</div>

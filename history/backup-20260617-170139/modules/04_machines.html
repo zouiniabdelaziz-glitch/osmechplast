@@ -1,0 +1,102 @@
+<!-- =============================================
+     MODUL: Leistungen / Maschinen
+     Datei: modules/04_machines.html
+     Ändern: Anzahl Karten (02 / 03 einfach kopieren)
+     Neue Maschine: neue .machine-card duplizieren
+     Texte: in js/translations.js → m4_title, m4_desc usw.
+     ============================================= -->
+<style>
+.machines-section { background: var(--bg); }
+.machines-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+}
+.machine-card {
+  background: var(--white); padding: 2rem 1.75rem;
+  position: relative; transition: background .2s;
+}
+.machine-card:hover { background: var(--bg2); }
+.machine-accent {
+  position: absolute; top: 0; left: 0;
+  width: 3px; height: 100%; background: var(--accent);
+}
+.machine-num {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text2); margin-bottom: 1.25rem; letter-spacing: 0.08em;
+}
+.machine-card h3 {
+  font-family: var(--font-display); font-size: 22px;
+  font-weight: 500; margin-bottom: .75rem; color: var(--text);
+}
+.machine-card p { font-size: 14px; color: var(--text2); line-height: 1.7; margin-bottom: 1.25rem; }
+.machine-specs { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.machine-specs li {
+  font-family: var(--font-mono); font-size: 11px; color: var(--text2);
+  display: flex; align-items: center; gap: 6px;
+}
+.machine-specs li::before { content: '—'; color: var(--accent); flex-shrink: 0; }
+
+@media (max-width: 768px) { .machines-grid { grid-template-columns: 1fr; } }
+</style>
+
+<section class="machines-section section-py" id="leistungen">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-tag"   data-key="sec_machines_tag"></div>
+        <div class="section-title" data-key="sec_machines_title"></div>
+        <div class="section-desc"  data-key="sec_machines_desc"></div>
+      </div>
+    </div>
+
+    <div class="machines-grid">
+
+      <!-- MASCHINE 1 — CNC FRÄSEN -->
+      <div class="machine-card">
+        <div class="machine-accent"></div>
+        <div class="machine-num">01 / FRESATURA</div>
+        <h3 data-key="m1_title"></h3>
+        <p  data-key="m1_desc"></p>
+        <ul class="machine-specs">
+          <li data-key="m1_s1"></li>
+          <li data-key="m1_s2"></li>
+          <li data-key="m1_s3"></li>
+        </ul>
+      </div>
+
+      <!-- MASCHINE 2 — CNC DREHEN -->
+      <div class="machine-card">
+        <div class="machine-accent"></div>
+        <div class="machine-num">02 / TORNITURA</div>
+        <h3 data-key="m2_title"></h3>
+        <p  data-key="m2_desc"></p>
+        <ul class="machine-specs">
+          <li data-key="m2_s1"></li>
+          <li data-key="m2_s2"></li>
+          <li data-key="m2_s3"></li>
+        </ul>
+      </div>
+
+      <!-- MASCHINE 3 — CNC BOHREN -->
+      <div class="machine-card">
+        <div class="machine-accent"></div>
+        <div class="machine-num">03 / FORATURA</div>
+        <h3 data-key="m3_title"></h3>
+        <p  data-key="m3_desc"></p>
+        <ul class="machine-specs">
+          <li data-key="m3_s1"></li>
+          <li data-key="m3_s2"></li>
+          <li data-key="m3_s3"></li>
+        </ul>
+      </div>
+
+      <!-- NEUE MASCHINE HINZUFÜGEN:
+           1. Diese Karte kopieren
+           2. Nummer anpassen: 04 / RETTIFICA
+           3. data-key ändern: m4_title, m4_desc, m4_s1 usw.
+           4. In js/translations.js die Texte für alle 4 Sprachen eintragen
+      -->
+
+    </div>
+  </div>
+</section>
