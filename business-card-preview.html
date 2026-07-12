@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSMP Visitenkarte — Mohammed Ouhsine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #061722;
+      --navy-soft: #0b2230;
+      --red: #e3000b;
+      --silver: #9aa3ad;
+      --line: #d9e0e5;
+      --paper: #f4f6f7;
+      --white: #ffffff;
+      --ink: #1d252d;
+      --muted: #687583;
+      --font: "Afacad", "Segoe UI", sans-serif;
+      --mono: "JetBrains Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #eef2f4;
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .page {
+      margin: 0 auto;
+      max-width: 1380px;
+      padding: 44px clamp(20px, 5vw, 70px) 70px;
+    }
+
+    .hero {
+      align-items: end;
+      display: grid;
+      gap: 28px;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, .55fr);
+      margin-bottom: 36px;
+    }
+
+    h1 {
+      color: var(--navy);
+      font-size: clamp(40px, 5vw, 76px);
+      line-height: .96;
+      margin: 0 0 18px;
+    }
+
+    .eyebrow,
+    .label {
+      color: var(--red);
+      display: inline-flex;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      gap: 12px;
+      letter-spacing: .08em;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before,
+    .label::before {
+      background: currentColor;
+      content: "";
+      height: 2px;
+      margin-top: .68em;
+      width: 36px;
+    }
+
+    .hero p {
+      color: #40505e;
+      font-size: clamp(19px, 1.5vw, 23px);
+      margin: 0;
+      max-width: 860px;
+    }
+
+    .spec {
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 24px 28px;
+    }
+
+    .spec b {
+      color: var(--navy);
+      display: block;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .spec ul {
+      color: var(--muted);
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 32px;
+    }
+
+    .option {
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: clamp(20px, 3vw, 34px);
+    }
+
+    .option--recommended {
+      border-color: var(--red);
+      box-shadow: 0 24px 70px rgba(6, 23, 34, .10);
+    }
+
+    .option-head {
+      align-items: center;
+      display: flex;
+      gap: 20px;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .option-head h2 {
+      color: var(--navy);
+      font-size: clamp(28px, 2.8vw, 42px);
+      line-height: 1;
+      margin: 0;
+    }
+
+    .badge {
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      padding: 8px 10px;
+      text-transform: uppercase;
+    }
+
+    .cards {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card-wrap small {
+      color: var(--muted);
+      display: block;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      margin-bottom: 9px;
+      text-transform: uppercase;
+    }
+
+    .card {
+      aspect-ratio: 85 / 55;
+      background: var(--white);
+      border: 1px solid rgba(6, 23, 34, .18);
+      box-shadow: 0 18px 34px rgba(6, 23, 34, .12);
+      overflow: hidden;
+      position: relative;
+      width: min(100%, 520px);
+    }
+
+    .card-inner {
+      height: 100%;
+      padding: 34px 38px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dark {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.055), transparent 42%),
+        var(--navy);
+      color: var(--white);
+    }
+
+    .red-line {
+      background: var(--red);
+      height: 4px;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 34%;
+    }
+
+    .hairline {
+      background: var(--silver);
+      height: 2px;
+      opacity: .8;
+      width: 74%;
+    }
+
+    .logo-primary {
+      height: auto;
+      width: 235px;
+    }
+
+    .logo-header {
+      height: auto;
+      width: 185px;
+    }
+
+    .name {
+      color: var(--navy);
+      font-size: 34px;
+      font-weight: 700;
+      line-height: .98;
+      margin: 0 0 7px;
+    }
+
+    .dark .name { color: var(--white); }
+
+    .role {
+      color: var(--red);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .company {
+      color: var(--silver);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .contact {
+      display: grid;
+      gap: 4px;
+      list-style: none;
+      margin: 18px 0 0;
+      padding: 0;
+    }
+
+    .contact li {
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .dark .contact li { color: rgba(255,255,255,.86); }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .dark .muted { color: rgba(255,255,255,.62); }
+
+    .services {
+      bottom: 26px;
+      color: rgba(255,255,255,.72);
+      display: flex;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      gap: 12px;
+      left: 38px;
+      letter-spacing: .08em;
+      position: absolute;
+      text-transform: uppercase;
+    }
+
+    .services span::after {
+      color: var(--red);
+      content: "·";
+      margin-left: 12px;
+    }
+
+    .services span:last-child::after { content: ""; }
+
+    .variant-a-front .card-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 26px;
+    }
+
+    .variant-a-front .left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .variant-a-front .right {
+      align-self: end;
+      text-align: right;
+    }
+
+    .variant-a-back .card-inner {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .variant-b-front .card-inner {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 54px;
+    }
+
+    .variant-b-front .logo-primary {
+      width: 310px;
+    }
+
+    .variant-b-back .card-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 26px;
+    }
+
+    .variant-b-back .contact {
+      align-self: end;
+      border-left: 2px solid var(--red);
+      padding-left: 18px;
+    }
+
+    .variant-c-front {
+      background: var(--paper);
+    }
+
+    .variant-c-front::before {
+      background: var(--navy);
+      bottom: 0;
+      content: "";
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 33%;
+    }
+
+    .variant-c-front .logo-header {
+      left: 34px;
+      position: absolute;
+      top: 34px;
+      width: 155px;
+    }
+
+    .variant-c-front .identity {
+      margin-left: 36%;
+      padding-top: 24px;
+    }
+
+    .variant-c-back .card-inner {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 22px;
+    }
+
+    .mini-note {
+      color: #536272;
+      margin: 14px 0 0;
+      max-width: 880px;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <span class="eyebrow">OSMP Business Card</span>
+        <h1>Visitenkarte für Mohammed Ouhsine.</h1>
+        <p>Erste Layout-Auswahl auf Basis der Website: dunkles OSMP-Navy, Präzisionsrot, klare Typografie und keine dekorativen Spielereien. Der Posten bleibt bewusst als Platzhalter.</p>
+      </div>
+      <aside class="spec">
+        <b>Druckbasis</b>
+        <ul>
+          <li>Endformat: 85 × 55 mm</li>
+          <li>Druckdatei mit Beschnitt: 91 × 61 mm</li>
+          <li>ruhige B2B-Optik, gut lesbar, front/back</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="grid">
+      <article class="option option--recommended">
+        <div class="option-head">
+          <div>
+            <span class="label">Empfehlung</span>
+            <h2>Layout A — Präzise, hell, sehr B2B.</h2>
+          </div>
+          <span class="badge">Empfohlen</span>
+        </div>
+        <div class="cards">
+          <div class="card-wrap">
+            <small>Vorderseite</small>
+            <div class="card variant-a-front">
+              <span class="red-line"></span>
+              <div class="card-inner">
+                <div class="left">
+                  <img class="logo-header" src="assets/brand/osmechplast-logo-header.svg" alt="OSMP">
+                  <div>
+                    <p class="company">OS.MECHPLAST SRLS</p>
+                    <div class="hairline"></div>
+                  </div>
+                </div>
+                <div class="right">
+                  <h3 class="name">Mohammed<br>Ouhsine</h3>
+                  <span class="role">[Posten eintragen]</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-wrap">
+            <small>Rückseite</small>
+            <div class="card variant-a-back dark">
+              <div class="card-inner">
+                <div>
+                  <img class="logo-primary" src="assets/brand/osmechplast-logo-primary.svg" alt="OSMP OS.Mechplast">
+                </div>
+                <div>
+                  <ul class="contact">
+                    <li>info@osmechplast.com</li>
+                    <li>+39 0464 667981</li>
+                    <li>Ala, Trentino, Italien</li>
+                  </ul>
+                  <p class="muted">CNC-Drehen · Dreh-Fräsbearbeitung · Technische Prüfung nach Zeichnung</p>
+                </div>
+                <div class="services">
+                  <span>Precision</span><span>CNC</span><span>Quality</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="mini-note">Warum diese Variante: vorne sehr sauber und persönlich, hinten starkes Markenbild. Sie wirkt hochwertig, aber nicht laut — passend für Einkauf, Maschinenbau und DACH-Kunden.</p>
+      </article>
+
+      <article class="option">
+        <div class="option-head">
+          <div>
+            <span class="label">Alternative</span>
+            <h2>Layout B — Dunkel, technisch, premium.</h2>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card-wrap">
+            <small>Vorderseite</small>
+            <div class="card variant-b-front dark">
+              <span class="red-line"></span>
+              <div class="card-inner">
+                <img class="logo-primary" src="assets/brand/osmechplast-logo-primary.svg" alt="OSMP OS.Mechplast">
+                <div class="services">
+                  <span>Precision</span><span>Measured</span><span>Engineered</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-wrap">
+            <small>Rückseite</small>
+            <div class="card variant-b-back">
+              <div class="card-inner">
+                <div>
+                  <h3 class="name">Mohammed<br>Ouhsine</h3>
+                  <span class="role">[Posten eintragen]</span>
+                </div>
+                <ul class="contact">
+                  <li>info@osmechplast.com</li>
+                  <li>+39 0464 667981</li>
+                  <li>Ala, Trentino, Italien</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="mini-note">Stärker als Markenkarte. Gut für Präsentationen, aber etwas dunkler und schwerer als die Website.</p>
+      </article>
+
+      <article class="option">
+        <div class="option-head">
+          <div>
+            <span class="label">Alternative</span>
+            <h2>Layout C — Split-Layout, modern, kantig.</h2>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card-wrap">
+            <small>Vorderseite</small>
+            <div class="card variant-c-front">
+              <span class="red-line"></span>
+              <img class="logo-header" src="assets/brand/osmechplast-logo-header.svg" alt="OSMP">
+              <div class="card-inner identity">
+                <h3 class="name">Mohammed<br>Ouhsine</h3>
+                <span class="role">[Posten eintragen]</span>
+                <ul class="contact">
+                  <li>info@osmechplast.com</li>
+                  <li>+39 0464 667981</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-wrap">
+            <small>Rückseite</small>
+            <div class="card variant-c-back">
+              <div class="card-inner">
+                <div>
+                  <img class="logo-header" src="assets/brand/osmechplast-logo-header.svg" alt="OSMP">
+                </div>
+                <div>
+                  <p class="company">CNC-Lohnfertigung aus Ala</p>
+                  <p class="muted">Drehteile und Dreh-Fräsbearbeitung nach Zeichnung. Aluminium, zerspanbarer Stahl und weitere Werkstoffe auf Anfrage.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="mini-note">Auffälliger und moderner, aber weniger ruhig. Für OSMP würde ich diese Variante nur nehmen, wenn ihr bewusst etwas markanter auftreten wollt.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

@@ -7,7 +7,8 @@
 /* â”€â”€ KONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const CONFIG = {
   defaultLang: 'de',
-  siteVersion: '20260712-home-i18n-v1',
+  siteVersion: '20260712-analytics-v1',
+  analyticsMeasurementId: 'G-H0S7TVLBRY',
 };
 
 /* â”€â”€ SPRACHE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -33,6 +34,8 @@ function setLang(lang) {
   });
   applyTranslations();
   document.documentElement.lang = lang;
+  if (window.OSMP_ANALYTICS_CONFIG) window.OSMP_ANALYTICS_CONFIG.lang = lang;
+  if (window.OSMPAnalytics?.setLang) window.OSMPAnalytics.setLang(lang);
 }
 
 function initLanguageSelects() {
@@ -261,6 +264,21 @@ function initHeaderNav() {
   });
 }
 
+function initAnalyticsConsent() {
+  if (document.getElementById('osmp-analytics-consent-js')) return;
+
+  window.OSMP_ANALYTICS_CONFIG = {
+    measurementId: CONFIG.analyticsMeasurementId,
+    lang: currentLang
+  };
+
+  const script = document.createElement('script');
+  script.id = 'osmp-analytics-consent-js';
+  script.src = 'js/analytics.js?v=' + encodeURIComponent(CONFIG.siteVersion);
+  script.defer = true;
+  document.body.appendChild(script);
+}
+
 /* â”€â”€ SCROLL-REVEAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function initReveal() {
   const els = document.querySelectorAll(
@@ -283,6 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   currentLang = getSavedLang();
   initLanguageSelects();
   setLang(currentLang);
+  initAnalyticsConsent();
   initHeaderNav();
   initDragDrop();
   initRequestAssistant();
