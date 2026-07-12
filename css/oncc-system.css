@@ -329,7 +329,7 @@ textarea:focus {
 .oncc-nav {
   align-items: center;
   display: flex;
-  gap: 17px;
+  gap: clamp(20px, 1.55vw, 30px);
   margin-left: auto;
 }
 
@@ -341,7 +341,7 @@ textarea:focus {
   cursor: pointer;
   display: inline-flex;
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: clamp(16px, .92vw, 18px);
   font-weight: 700;
   gap: 6px;
   line-height: 1;
@@ -355,6 +355,9 @@ textarea:focus {
 
 .oncc-header__cta {
   flex: none;
+  font-size: clamp(16px, .95vw, 18px);
+  min-height: 54px;
+  padding-inline: clamp(26px, 2vw, 38px);
 }
 
 .oncc-lang {
@@ -371,11 +374,11 @@ textarea:focus {
   color: var(--oncc-navy);
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
-  min-height: 42px;
-  min-width: 128px;
-  padding: 0 32px 0 12px;
+  min-height: 48px;
+  min-width: 146px;
+  padding: 0 34px 0 14px;
   text-transform: uppercase;
 }
 

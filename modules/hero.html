@@ -13,51 +13,51 @@
 
     <form class="request-assistant" id="requestAssistant">
       <div class="request-assistant__head">
-        <span class="kicker">Anfrage-Assistent</span>
-        <h2>Ihr CNC-Teil vorbereiten.</h2>
-        <p>Vier Angaben reichen f&uuml;r den Start. Im n&auml;chsten Schritt erg&auml;nzen Sie Ihre Kontaktdaten und Zeichnung.</p>
+        <span class="kicker" data-key="assistant_kicker">Anfrage-Assistent</span>
+        <h2 data-key="assistant_title">Ihr CNC-Teil vorbereiten.</h2>
+        <p data-key="assistant_lead">Vier Angaben reichen f&uuml;r den Start. Im n&auml;chsten Schritt erg&auml;nzen Sie Ihre Kontaktdaten und Zeichnung.</p>
       </div>
 
       <div class="assistant-field">
-        <label for="assistantService">Welche Bearbeitung wird ben&ouml;tigt?</label>
+        <label for="assistantService" data-key="assistant_service_label">Welche Bearbeitung wird ben&ouml;tigt?</label>
         <select id="assistantService" name="service">
-          <option value="drehen">CNC-Drehen</option>
-          <option value="drehfraesen">Dreh-Fr&auml;sbearbeitung</option>
-          <option value="unsicher">Noch nicht sicher</option>
+          <option value="drehen" data-key="assistant_service_turning">CNC-Drehen</option>
+          <option value="drehfraesen" data-key="assistant_service_turnmill">Dreh-Fr&auml;sbearbeitung</option>
+          <option value="unsicher" data-key="assistant_service_unsure">Noch nicht sicher</option>
         </select>
       </div>
 
       <div class="assistant-grid">
         <div class="assistant-field">
-          <label for="assistantMaterial">Werkstoff</label>
+          <label for="assistantMaterial" data-key="assistant_material_label">Werkstoff</label>
           <select id="assistantMaterial" name="material">
-            <option value="Aluminium">Aluminium</option>
-            <option value="Zerspanbarer Stahl">Zerspanbarer Stahl</option>
-            <option value="Andere auf Nachfrage">Andere auf Nachfrage</option>
+            <option value="Aluminium" data-key="assistant_mat_aluminium">Aluminium</option>
+            <option value="Zerspanbarer Stahl" data-key="assistant_mat_steel">Zerspanbarer Stahl</option>
+            <option value="Andere auf Nachfrage" data-key="assistant_mat_other">Andere auf Nachfrage</option>
           </select>
         </div>
         <div class="assistant-field">
-          <label for="assistantQuantity">Menge</label>
+          <label for="assistantQuantity" data-key="assistant_qty_label">Menge</label>
           <select id="assistantQuantity" name="quantity">
-            <option value="Einzelteil oder Erstmuster">Einzelteil / Erstmuster</option>
-            <option value="Kleinserie">Kleinserie</option>
-            <option value="Wiederkehrende Serie">Wiederkehrende Serie</option>
-            <option value="Noch offen">Noch offen</option>
+            <option value="Einzelteil oder Erstmuster" data-key="assistant_qty_single">Einzelteil / Erstmuster</option>
+            <option value="Kleinserie" data-key="assistant_qty_small">Kleinserie</option>
+            <option value="Wiederkehrende Serie" data-key="assistant_qty_repeat">Wiederkehrende Serie</option>
+            <option value="Noch offen" data-key="assistant_qty_open">Noch offen</option>
           </select>
         </div>
       </div>
 
       <div class="assistant-field">
-        <label for="assistantDrawing">Zeichnungsstand</label>
+        <label for="assistantDrawing" data-key="assistant_drawing_label">Zeichnungsstand</label>
         <select id="assistantDrawing" name="drawing">
-          <option value="Zeichnung liegt vor">Zeichnung liegt vor (PDF, DXF oder STEP)</option>
-          <option value="Skizze oder Muster liegt vor">Skizze oder Muster liegt vor</option>
-          <option value="Noch in Vorbereitung">Noch in Vorbereitung</option>
+          <option value="Zeichnung liegt vor" data-key="assistant_drawing_ready">Zeichnung liegt vor (PDF, DXF oder STEP)</option>
+          <option value="Skizze oder Muster liegt vor" data-key="assistant_drawing_sample">Skizze oder Muster liegt vor</option>
+          <option value="Noch in Vorbereitung" data-key="assistant_drawing_prepare">Noch in Vorbereitung</option>
         </select>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-lg">Anfrage vorbereiten</button>
-      <p class="request-assistant__note">Keine Preisautomatik: Wir pr&uuml;fen Zeichnung und Machbarkeit technisch.</p>
+      <button type="submit" class="btn btn-primary btn-lg" data-key="assistant_submit">Anfrage vorbereiten</button>
+      <p class="request-assistant__note" data-key="assistant_note">Keine Preisautomatik: Wir pr&uuml;fen Zeichnung und Machbarkeit technisch.</p>
     </form>
   </div>
 </div>
