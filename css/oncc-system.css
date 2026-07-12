@@ -2722,3 +2722,115 @@ textarea:focus {
 .oncc-brand__logo {
   filter: none;
 }
+
+/* Responsive width calibration: use more desktop space without turning long text into full-width lines. */
+:root {
+  --container-max: 1560px;
+  --container-pad: clamp(22px, 4.4vw, 72px);
+}
+
+.container {
+  max-width: none !important;
+  width: min(calc(100% - (var(--container-pad) * 2)), var(--container-max)) !important;
+}
+
+.oncc-brand {
+  min-width: 0;
+}
+
+.page-hero {
+  padding: clamp(136px, 10vw, 178px) 0 clamp(78px, 7vw, 112px) !important;
+}
+
+.page-hero h1 {
+  font-size: clamp(44px, 4.8vw, 72px) !important;
+  max-width: 1060px;
+}
+
+.page-hero p {
+  font-size: clamp(19px, 1.35vw, 23px) !important;
+  line-height: 1.55;
+  max-width: 860px !important;
+}
+
+.company-founders__intro {
+  max-width: 1120px;
+}
+
+.company-founders__intro h2 {
+  font-size: clamp(46px, 5.2vw, 78px);
+}
+
+.company-founders__intro p {
+  font-size: clamp(19px, 1.35vw, 23px);
+  max-width: 980px;
+}
+
+.company-founder-profile {
+  grid-template-columns: minmax(360px, 38%) minmax(0, 1fr);
+  min-height: 500px;
+}
+
+.company-founder-profile__photo {
+  min-height: 500px;
+}
+
+.company-founder-profile__content {
+  padding: clamp(42px, 5.2vw, 78px);
+}
+
+.company-founder-profile h3 {
+  font-size: clamp(42px, 4.2vw, 66px);
+}
+
+.company-founder-profile p {
+  font-size: clamp(18px, 1.25vw, 22px);
+}
+
+.company-founder-profile li {
+  font-size: clamp(17px, 1.1vw, 19px);
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --container-pad: clamp(20px, 3.2vw, 40px);
+  }
+
+  .page-hero h1 {
+    font-size: clamp(40px, 6vw, 58px) !important;
+  }
+
+  .company-founder-profile {
+    grid-template-columns: minmax(300px, 40%) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 820px) {
+  .company-founder-profile {
+    grid-template-columns: 1fr;
+  }
+
+  .company-founder-profile__photo {
+    min-height: 340px;
+  }
+}
+
+@media (max-width: 700px) {
+  :root {
+    --container-pad: 16px;
+  }
+
+  .page-hero {
+    padding: 116px 0 54px !important;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(38px, 10vw, 50px) !important;
+  }
+
+  .page-hero p,
+  .company-founders__intro p,
+  .company-founder-profile p {
+    font-size: 18px !important;
+  }
+}
