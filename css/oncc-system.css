@@ -2486,7 +2486,7 @@ textarea:focus {
   object-position: center 18%;
 }
 
-.company-founder-profile__photo--aziz img {
+.company-founder-profile__photo--abdelaziz img {
   object-position: center 16%;
 }
 
@@ -2520,6 +2520,12 @@ textarea:focus {
   line-height: 1.58;
   margin: 0 0 22px;
   max-width: 780px;
+}
+
+.company-founder-profile__headline {
+  color: var(--oncc-navy) !important;
+  font-weight: 700;
+  margin-bottom: 16px !important;
 }
 
 .company-founder-profile ul {
