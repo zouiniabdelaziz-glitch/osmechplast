@@ -7,20 +7,39 @@
 /* â”€â”€ KONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const CONFIG = {
   defaultLang: 'de',
-  siteVersion: '20260629-osmp-brand-v1',
+  siteVersion: '20260712-lang-select-v1',
 };
 
 /* â”€â”€ SPRACHE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 let currentLang = CONFIG.defaultLang;
 
+function getSavedLang() {
+  try {
+    const saved = localStorage.getItem('oscnc_lang');
+    if (saved && T[saved]) return saved;
+  } catch(e) {}
+  return CONFIG.defaultLang;
+}
+
 function setLang(lang) {
+  if (!T[lang]) lang = CONFIG.defaultLang;
   currentLang = lang;
   try { localStorage.setItem('oscnc_lang', lang); } catch(e) {}
   document.querySelectorAll('.lang-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.lang === lang)
   );
+  document.querySelectorAll('[data-lang-select]').forEach(sel => {
+    if (sel.value !== lang) sel.value = lang;
+  });
   applyTranslations();
   document.documentElement.lang = lang;
+}
+
+function initLanguageSelects() {
+  document.querySelectorAll('[data-lang-select]').forEach(sel => {
+    sel.value = currentLang;
+    sel.addEventListener('change', () => setLang(sel.value));
+  });
 }
 
 function applyTranslations() {
@@ -261,7 +280,8 @@ function initReveal() {
 document.addEventListener('DOMContentLoaded', async () => {
   await loadModules();
   scrollToHashTarget();
-  currentLang = CONFIG.defaultLang;
+  currentLang = getSavedLang();
+  initLanguageSelects();
   setLang(currentLang);
   initHeaderNav();
   initDragDrop();

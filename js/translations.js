@@ -10,6 +10,9 @@ const T = {
     logo_tag: 'Präzisionsdrehteile · Italien',
     nav_services: 'Leistungen', nav_machines: 'Maschinenpark', nav_materials: 'Werkstoffe',
     nav_process: 'Ablauf', nav_industries: 'Branchen', nav_cta: 'Angebot anfragen',
+    hnav_services: 'Leistungen', hnav_technology: 'Technologie', hnav_materials: 'Materialien',
+    hnav_quality: 'Qualität', hnav_company: 'Unternehmen', hnav_contact: 'Kontakt',
+    hnav_cta: 'Zeichnung senden', hnav_menu: 'Menü',
 
     hero_eyebrow: 'CNC-Lohnfertigung · Italien',
     hero_h1_html: 'CNC-Drehteile nach Zeichnung<br><em>aus Italien.</em>',
@@ -182,6 +185,9 @@ const T = {
     logo_tag: 'Tornitura di precisione · Italia',
     nav_services: 'Servizi', nav_machines: 'Parco macchine', nav_materials: 'Materiali',
     nav_process: 'Processo', nav_industries: 'Settori', nav_cta: 'Richiedi preventivo',
+    hnav_services: 'Servizi', hnav_technology: 'Tecnologia', hnav_materials: 'Materiali',
+    hnav_quality: 'Qualità', hnav_company: 'Azienda', hnav_contact: 'Contatto',
+    hnav_cta: 'Invia disegno', hnav_menu: 'Menu',
 
     hero_eyebrow: 'Lavorazioni CNC conto terzi · Italia',
     hero_h1_html: 'Particolari torniti, finiti<br>in <em>un solo piazzamento.</em>',
@@ -345,6 +351,9 @@ const T = {
     logo_tag: 'Precision Turning · Italy',
     nav_services: 'Services', nav_machines: 'Machinery', nav_materials: 'Materials',
     nav_process: 'Process', nav_industries: 'Industries', nav_cta: 'Get a quote',
+    hnav_services: 'Services', hnav_technology: 'Technology', hnav_materials: 'Materials',
+    hnav_quality: 'Quality', hnav_company: 'Company', hnav_contact: 'Contact',
+    hnav_cta: 'Send drawing', hnav_menu: 'Menu',
 
     hero_eyebrow: 'CNC contract manufacturing · Italy',
     hero_h1_html: 'Turned parts, finished<br>in <em>a single setup.</em>',
@@ -508,6 +517,9 @@ const T = {
     logo_tag: 'Décolletage de précision · Italie',
     nav_services: 'Services', nav_machines: 'Parc machines', nav_materials: 'Matériaux',
     nav_process: 'Processus', nav_industries: 'Secteurs', nav_cta: 'Demander un devis',
+    hnav_services: 'Services', hnav_technology: 'Technologie', hnav_materials: 'Matériaux',
+    hnav_quality: 'Qualité', hnav_company: 'Entreprise', hnav_contact: 'Contact',
+    hnav_cta: 'Envoyer le plan', hnav_menu: 'Menu',
 
     hero_eyebrow: 'Usinage CNC en sous-traitance · Italie',
     hero_h1_html: 'Pièces tournées, finies<br>en <em>une seule prise.</em>',

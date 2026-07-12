@@ -357,6 +357,34 @@ textarea:focus {
   flex: none;
 }
 
+.oncc-lang {
+  flex: none;
+}
+
+.oncc-lang-select {
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--oncc-navy) 50%) calc(100% - 15px) 50% / 6px 6px no-repeat,
+    linear-gradient(135deg, var(--oncc-navy) 50%, transparent 50%) calc(100% - 10px) 50% / 6px 6px no-repeat,
+    var(--oncc-white);
+  border: 1px solid rgba(29, 37, 45, .22);
+  color: var(--oncc-navy);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  min-height: 42px;
+  min-width: 128px;
+  padding: 0 32px 0 12px;
+  text-transform: uppercase;
+}
+
+.oncc-lang-select:focus {
+  border-color: var(--oncc-red);
+  outline: 2px solid rgba(227, 0, 11, .18);
+  outline-offset: 2px;
+}
+
 .oncc-menu-button {
   align-items: center;
   background: transparent;
@@ -392,6 +420,15 @@ textarea:focus {
   gap: 0;
   padding-bottom: 20px;
   padding-top: 8px;
+}
+
+.oncc-mobile-lang {
+  border-bottom: 1px solid rgba(29, 37, 45, .10);
+  padding: 12px 0;
+}
+
+.oncc-mobile-lang .oncc-lang-select {
+  width: 100%;
 }
 
 .oncc-mobile-menu__inner > a:not(.btn) {
@@ -547,6 +584,7 @@ textarea:focus {
 
   .oncc-brand__meta,
   .oncc-nav,
+  .oncc-lang,
   .oncc-header__cta {
     display: none !important;
   }

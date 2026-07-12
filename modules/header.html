@@ -4,30 +4,47 @@
   </a>
 
   <nav class="oncc-nav" aria-label="Hauptnavigation">
-    <a href="leistungen.html">Leistungen</a>
-    <a href="technologie.html">Technologie</a>
-    <a href="werkstoffe.html">Materialien</a>
-    <a href="qualitaet.html">Qualität</a>
-    <a href="unternehmen.html">Unternehmen</a>
-    <a href="kontakt.html">Kontakt</a>
+    <a href="leistungen.html" data-key="hnav_services">Leistungen</a>
+    <a href="technologie.html" data-key="hnav_technology">Technologie</a>
+    <a href="werkstoffe.html" data-key="hnav_materials">Materialien</a>
+    <a href="qualitaet.html" data-key="hnav_quality">Qualität</a>
+    <a href="unternehmen.html" data-key="hnav_company">Unternehmen</a>
+    <a href="kontakt.html" data-key="hnav_contact">Kontakt</a>
   </nav>
 
-  <a href="kontakt.html" class="btn btn-primary oncc-header__cta">Zeichnung senden</a>
+  <div class="oncc-lang" aria-label="Sprache wählen">
+    <select class="oncc-lang-select" data-lang-select aria-label="Sprache wählen">
+      <option value="de">Deutsch</option>
+      <option value="en">English</option>
+      <option value="it">Italiano</option>
+      <option value="fr">Français</option>
+    </select>
+  </div>
+
+  <a href="kontakt.html" class="btn btn-primary oncc-header__cta" data-key="hnav_cta">Zeichnung senden</a>
 
   <button class="oncc-menu-button" type="button" aria-expanded="false" aria-controls="oncc-mobile-menu" data-menu-toggle>
     <span></span><span></span><span></span>
-    <b>Menü</b>
+    <b data-key="hnav_menu">Menü</b>
   </button>
 </div>
 
 <div class="oncc-mobile-menu" id="oncc-mobile-menu" hidden>
   <div class="container oncc-mobile-menu__inner">
-    <a href="leistungen.html">Leistungen</a>
-    <a href="technologie.html">Technologie</a>
-    <a href="werkstoffe.html">Materialien</a>
-    <a href="qualitaet.html">Qualität</a>
-    <a href="unternehmen.html">Unternehmen</a>
-    <a href="kontakt.html">Kontakt</a>
-    <a href="kontakt.html" class="btn btn-primary">Zeichnung senden</a>
+    <div class="oncc-mobile-lang" aria-label="Sprache wählen">
+      <select class="oncc-lang-select" data-lang-select aria-label="Sprache wählen">
+        <option value="de">Deutsch</option>
+        <option value="en">English</option>
+        <option value="it">Italiano</option>
+        <option value="fr">Français</option>
+      </select>
+    </div>
+    <a href="leistungen.html" data-key="hnav_services">Leistungen</a>
+    <a href="technologie.html" data-key="hnav_technology">Technologie</a>
+    <a href="werkstoffe.html" data-key="hnav_materials">Materialien</a>
+    <a href="qualitaet.html" data-key="hnav_quality">Qualität</a>
+    <a href="unternehmen.html" data-key="hnav_company">Unternehmen</a>
+    <a href="kontakt.html" data-key="hnav_contact">Kontakt</a>
+    <a href="kontakt.html" class="btn btn-primary" data-key="hnav_cta">Zeichnung senden</a>
   </div>
 </div>

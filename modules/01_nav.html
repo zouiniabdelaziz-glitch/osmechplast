@@ -44,12 +44,14 @@ nav {
       <a href="#branchen"   data-key="nav_industries"></a>
       <a href="#team"       data-key="nav_team"></a>
 
-      <!-- SPRACHUMSCHALTER: neue Sprache = neuen Button + Block in translations.js -->
+      <!-- SPRACHWAHL: ein Auswahlfeld statt einzelner Sprachbuttons -->
       <div class="lang-switch">
-        <button class="lang-btn active" data-lang="de" onclick="setLang('de')">DE</button>
-        <button class="lang-btn"        data-lang="it" onclick="setLang('it')">IT</button>
-        <button class="lang-btn"        data-lang="en" onclick="setLang('en')">EN</button>
-        <button class="lang-btn"        data-lang="fr" onclick="setLang('fr')">FR</button>
+        <select class="oncc-lang-select" data-lang-select aria-label="Sprache wählen">
+          <option value="de">Deutsch</option>
+          <option value="en">English</option>
+          <option value="it">Italiano</option>
+          <option value="fr">Français</option>
+        </select>
       </div>
 
       <button class="btn-nav" data-key="nav_cta"
