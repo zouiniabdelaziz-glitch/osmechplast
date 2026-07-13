@@ -2,7 +2,7 @@
   'use strict';
 
   const CONFIG = window.OSMP_ANALYTICS_CONFIG || {};
-  const MEASUREMENT_ID = CONFIG.measurementId || 'G-H0S7TVLBRY';
+  const MEASUREMENT_ID = CONFIG.measurementId || 'G-KFFN0VWBGK';
   const STORAGE_KEY = 'osmp_analytics_consent';
   const SCRIPT_ID = 'osmp-google-tag';
   const STYLE_ID = 'osmp-consent-style';
