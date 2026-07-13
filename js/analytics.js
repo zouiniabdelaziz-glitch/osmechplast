@@ -3,37 +3,39 @@
 
   const CONFIG = window.OSMP_ANALYTICS_CONFIG || {};
   const MEASUREMENT_ID = CONFIG.measurementId || 'G-KFFN0VWBGK';
-  const STORAGE_KEY = 'osmp_analytics_consent';
+  const CLARITY_PROJECT_ID = CONFIG.clarityProjectId || 'xlwutfjzhw';
+  const STORAGE_KEY = 'osmp_analytics_clarity_consent';
   const SCRIPT_ID = 'osmp-google-tag';
+  const CLARITY_SCRIPT_ID = 'osmp-clarity-tag';
   const STYLE_ID = 'osmp-consent-style';
   const BANNER_ID = 'osmp-consent-banner';
   const SETTINGS_ID = 'osmp-consent-settings';
 
   const copy = {
     de: {
-      title: 'Analytics-Einstellungen',
-      text: 'Wir nutzen Google Analytics nur, wenn Sie zustimmen. Damit sehen wir, welche Seiten hilfreich sind und können die Website verbessern.',
+      title: 'Analyse-Einstellungen',
+      text: 'Wir nutzen Google Analytics und Microsoft Clarity nur, wenn Sie zustimmen. Damit sehen wir, welche Seiten hilfreich sind und können die Website verbessern.',
       accept: 'Akzeptieren',
       reject: 'Ablehnen',
       settings: 'Cookie-Einstellungen'
     },
     en: {
       title: 'Analytics settings',
-      text: 'We only use Google Analytics if you consent. It helps us understand which pages are useful and improve the website.',
+      text: 'We only use Google Analytics and Microsoft Clarity if you consent. They help us understand which pages are useful and improve the website.',
       accept: 'Accept',
       reject: 'Reject',
       settings: 'Cookie settings'
     },
     it: {
       title: 'Impostazioni Analytics',
-      text: 'Usiamo Google Analytics solo con il tuo consenso. Ci aiuta a capire quali pagine sono utili e a migliorare il sito.',
+      text: 'Usiamo Google Analytics e Microsoft Clarity solo con il tuo consenso. Ci aiutano a capire quali pagine sono utili e a migliorare il sito.',
       accept: 'Accetta',
       reject: 'Rifiuta',
       settings: 'Impostazioni cookie'
     },
     fr: {
       title: 'Paramètres Analytics',
-      text: 'Nous utilisons Google Analytics uniquement avec votre accord. Cela nous aide à comprendre les pages utiles et à améliorer le site.',
+      text: 'Nous utilisons Google Analytics et Microsoft Clarity uniquement avec votre accord. Cela nous aide à comprendre les pages utiles et à améliorer le site.',
       accept: 'Accepter',
       reject: 'Refuser',
       settings: 'Paramètres cookies'
@@ -104,11 +106,44 @@
     });
   }
 
-  function deleteAnalyticsCookies() {
+  function ensureClarityQueue() {
+    window.clarity = window.clarity || function () {
+      (window.clarity.q = window.clarity.q || []).push(arguments);
+    };
+  }
+
+  function setClarityConsent(choice) {
+    ensureClarityQueue();
+    window.clarity('consentv2', {
+      ad_Storage: 'denied',
+      analytics_Storage: choice === 'granted' ? 'granted' : 'denied'
+    });
+  }
+
+  function loadMicrosoftClarity() {
+    setClarityConsent('granted');
+    if (document.getElementById(CLARITY_SCRIPT_ID)) return;
+
+    const tag = document.createElement('script');
+    tag.id = CLARITY_SCRIPT_ID;
+    tag.async = true;
+    tag.src = 'https://www.clarity.ms/tag/' + encodeURIComponent(CLARITY_PROJECT_ID);
+    document.head.appendChild(tag);
+  }
+
+  function deleteTrackingCookies() {
     const names = document.cookie
       .split(';')
       .map(cookie => cookie.split('=')[0].trim())
-      .filter(name => name === '_ga' || name === '_gid' || name === '_gat' || name.startsWith('_ga_'));
+      .filter(name =>
+        name === '_ga'
+        || name === '_gid'
+        || name === '_gat'
+        || name.startsWith('_ga_')
+        || name === '_clck'
+        || name === '_clsk'
+        || name === '_cltk'
+      );
 
     if (!names.length) return;
 
@@ -126,8 +161,12 @@
 
   function updateConsent(choice) {
     window.gtag('consent', 'update', consentState(choice));
-    if (choice === 'granted') loadGoogleTag();
-    if (choice === 'denied') deleteAnalyticsCookies();
+    setClarityConsent(choice);
+    if (choice === 'granted') {
+      loadGoogleTag();
+      loadMicrosoftClarity();
+    }
+    if (choice === 'denied') deleteTrackingCookies();
   }
 
   function injectStyles() {
@@ -263,7 +302,7 @@
     banner.setAttribute('role', 'dialog');
     banner.setAttribute('aria-labelledby', 'osmp-consent-title');
     banner.innerHTML = `
-      <span class="osmp-consent__label">Google Analytics</span>
+      <span class="osmp-consent__label">Analytics & Clarity</span>
       <div>
         <h2 id="osmp-consent-title">${text.title}</h2>
         <p>${text.text}</p>

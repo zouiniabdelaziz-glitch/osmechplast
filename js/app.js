@@ -7,8 +7,9 @@
 /* â”€â”€ KONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const CONFIG = {
   defaultLang: 'de',
-  siteVersion: '20260713-analytics-v2',
+  siteVersion: '20260713-analytics-clarity-v3',
   analyticsMeasurementId: 'G-KFFN0VWBGK',
+  clarityProjectId: 'xlwutfjzhw',
 };
 
 /* â”€â”€ SPRACHE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -269,6 +270,7 @@ function initAnalyticsConsent() {
 
   window.OSMP_ANALYTICS_CONFIG = {
     measurementId: CONFIG.analyticsMeasurementId,
+    clarityProjectId: CONFIG.clarityProjectId,
     lang: currentLang
   };
 
