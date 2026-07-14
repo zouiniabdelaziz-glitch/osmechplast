@@ -7,7 +7,7 @@
 /* â”€â”€ KONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const CONFIG = {
   defaultLang: 'de',
-  siteVersion: '20260713-analytics-clarity-v3',
+  siteVersion: '20260714-i18n-v2',
   analyticsMeasurementId: 'G-KFFN0VWBGK',
   clarityProjectId: 'xlwutfjzhw',
 };
@@ -74,6 +74,68 @@ function applyTranslations() {
     const doubled = [...t.ticker_items, ...t.ticker_items];
     ticker.innerHTML = doubled.map(i => `<span class="ticker-item">${i}</span>`).join('');
   }
+
+  applyStaticTranslations();
+}
+
+function normalizeTextForTranslation(value) {
+  return (value || '').replace(/\s+/g, ' ').trim();
+}
+
+function preserveOuterWhitespace(original, translated) {
+  const leading = original.match(/^\s*/)?.[0] || '';
+  const trailing = original.match(/\s*$/)?.[0] || '';
+  return leading + translated + trailing;
+}
+
+function applyStaticTranslations() {
+  if (currentLang === CONFIG.defaultLang) return;
+  const dict = buildStaticTranslationDictionary(currentLang);
+  if (!dict) return;
+
+  const skipTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'SVG', 'PATH']);
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parent = node.parentElement;
+      if (!parent || skipTags.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
+      if (parent.closest('[data-no-translate]')) return NodeFilter.FILTER_REJECT;
+      const key = normalizeTextForTranslation(node.nodeValue);
+      return dict[key] ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => {
+    const key = normalizeTextForTranslation(node.nodeValue);
+    node.nodeValue = preserveOuterWhitespace(node.nodeValue, dict[key]);
+  });
+
+  ['aria-label', 'alt', 'title', 'placeholder'].forEach(attr => {
+    document.querySelectorAll(`[${attr}]`).forEach(el => {
+      const key = normalizeTextForTranslation(el.getAttribute(attr));
+      if (dict[key]) el.setAttribute(attr, dict[key]);
+    });
+  });
+}
+
+function buildStaticTranslationDictionary(lang) {
+  if (!T || !T.de || !T[lang]) return null;
+
+  const dict = {};
+  Object.keys(T.de).forEach(key => {
+    const source = T.de[key];
+    const translated = T[lang][key];
+    if (typeof source === 'string' && typeof translated === 'string') {
+      dict[normalizeTextForTranslation(source)] = translated;
+    }
+  });
+
+  if (typeof STATIC_TRANSLATIONS !== 'undefined' && STATIC_TRANSLATIONS[lang]) {
+    Object.assign(dict, STATIC_TRANSLATIONS[lang]);
+  }
+
+  return dict;
 }
 
 /* â”€â”€ CLOUDFLARE D1 LEAD SPEICHERN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
