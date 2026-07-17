@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OSMP Visitenkarte Mohammed – Varianten</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --navy:#061722; --red:#E3000B; --paper:#f3f5f6; --ink:#0b1720; --muted:#5a6570; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:Afacad, Arial, sans-serif; }
+    main { max-width:1380px; margin:0 auto; padding:38px 28px 60px; }
+    h1 { margin:0 0 8px; font-size:34px; line-height:1.05; letter-spacing:-.03em; }
+    .lead { max-width:820px; margin:0 0 28px; color:var(--muted); font-size:18px; }
+    .variant { margin:28px 0 42px; padding:24px; background:#fff; border:1px solid #d8dee3; }
+    .variant-head { display:flex; justify-content:space-between; gap:24px; align-items:end; margin-bottom:18px; }
+    h2 { margin:0; font-size:24px; letter-spacing:-.02em; }
+    .note { margin:0; color:var(--muted); font-size:15px; }
+    .cards { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:20px; align-items:start; }
+    figure { margin:0; }
+    figcaption { margin:10px 0 0; font:600 12px/1.2 'JetBrains Mono', Consolas, monospace; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+    .card { width:100%; aspect-ratio:91 / 61; background:#fff; border:1px solid #ccd3da; display:block; }
+    .recommendation { padding:22px 24px; background:var(--navy); color:white; border-left:7px solid var(--red); }
+    .recommendation h2 { color:white; }
+    .recommendation p { margin:10px 0 0; color:#c6ced5; font-size:17px; max-width:900px; }
+    .files { margin-top:26px; color:var(--muted); font-size:15px; }
+    .files code { color:var(--ink); }
+    @media (max-width: 900px) { .cards { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>OSMP Visitenkarte Mohammed – 3 Varianten</h1>
+    <p class="lead">Format 85 × 55 mm quer, angelegt mit 3 mm Beschnitt als 91 × 61 mm SVG. Keine Schnittmarken im Design. QR-Code führt direkt auf https://osmechplast.com.</p>
+
+    
+    <section class="variant">
+      <div class="variant-head">
+        <div>
+          <h2>Variante 1</h2>
+          <p class="note">Helle Kontaktseite, dunkle Rückseite – sehr seriös und gut lesbar.</p>
+        </div>
+      </div>
+      <div class="cards">
+        <figure>
+          <img class="card" src="variante-1-vorderseite.svg" alt="Variante 1 Vorderseite">
+          <figcaption>Vorderseite</figcaption>
+        </figure>
+        <figure>
+          <img class="card" src="variante-1-rueckseite.svg" alt="Variante 1 Rückseite">
+          <figcaption>Rückseite</figcaption>
+        </figure>
+      </div>
+    </section>
+    <section class="variant">
+      <div class="variant-head">
+        <div>
+          <h2>Variante 2</h2>
+          <p class="note">Beide Seiten dunkel – stärkste Markenwirkung, sehr kompakt.</p>
+        </div>
+      </div>
+      <div class="cards">
+        <figure>
+          <img class="card" src="variante-2-vorderseite.svg" alt="Variante 2 Vorderseite">
+          <figcaption>Vorderseite</figcaption>
+        </figure>
+        <figure>
+          <img class="card" src="variante-2-rueckseite.svg" alt="Variante 2 Rückseite">
+          <figcaption>Rückseite</figcaption>
+        </figure>
+      </div>
+    </section>
+    <section class="variant">
+      <div class="variant-head">
+        <div>
+          <h2>Variante 3</h2>
+          <p class="note">Asymmetrisches Raster – technisch, moderner, etwas markanter.</p>
+        </div>
+      </div>
+      <div class="cards">
+        <figure>
+          <img class="card" src="variante-3-vorderseite.svg" alt="Variante 3 Vorderseite">
+          <figcaption>Vorderseite</figcaption>
+        </figure>
+        <figure>
+          <img class="card" src="variante-3-rueckseite.svg" alt="Variante 3 Rückseite">
+          <figcaption>Rückseite</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="recommendation">
+      <h2>Empfehlung: Variante 1</h2>
+      <p>Variante 1 ist für technische Einkäufer und Industriekunden am stärksten: Der Name ist sofort lesbar, die Kontaktseite wirkt ruhig und professionell, die dunkle Rückseite trägt die Marke klar. Sie passt am besten zu einem CNC-Zulieferer, weil sie präzise, nicht laut und sehr vertrauenswürdig wirkt.</p>
+    </section>
+
+    <p class="files">Produktionsdateien liegen in <code>outputs/business-card-mohammed/</code>. Für echte Druckfreigabe bitte Telefonnummer, E-Mail, Nachname und Position ersetzen, danach als PDF/X beim Druckdienst exportieren.</p>
+  </main>
+</body>
+</html>

@@ -1,4 +1,24 @@
 User-agent: *
-Allow: /
+
+# Internal or technical paths.
+Disallow: /api/
+Disallow: /functions/
+Disallow: /scripts/
+Disallow: /outputs/
+
+# Local work, test and project files.
+Disallow: /business-card-preview.html
+Disallow: /cnc-anfrage-vorbereiten.html
+Disallow: /FOTO_VIDEO_PLAN.md
+Disallow: /OSMP_BUSINESSMODELL_WEBSITE_MASTER.md
+Disallow: /README.md
+Disallow: /schema.sql
+Disallow: /start-website-8099.bat
+
+# Public render resources. Do not block CSS, JS, images or HTML modules.
+Allow: /assets/
+Allow: /css/
+Allow: /js/
+Allow: /modules/
 
 Sitemap: https://osmechplast.com/sitemap.xml
