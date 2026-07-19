@@ -19,6 +19,21 @@
 /maschinenpark.html
   X-Robots-Tag: noindex, follow
 
+/drehen.html
+  X-Robots-Tag: noindex, follow
+
+/komplettbearbeitung.html
+  X-Robots-Tag: noindex, follow
+
+/ablauf.html
+  X-Robots-Tag: noindex, follow
+
+/branchen.html
+  X-Robots-Tag: noindex, follow
+
+/faq.html
+  X-Robots-Tag: noindex, follow
+
 /README.md
   X-Robots-Tag: noindex, nofollow
 

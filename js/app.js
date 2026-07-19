@@ -1,4 +1,4 @@
-﻿/* =============================================
+/* =============================================
    OS. CNC MECHPLAST â€” CORE APP
    Datei: js/app.js
    EnthÃ¤lt: Sprache, Cloudflare API, AI-Analyse, Formular
@@ -219,7 +219,7 @@ async function loadModules() {
   const slots = [...document.querySelectorAll('[data-include]')];
   await Promise.all(slots.map(async el => {
     try {
-      const res = await fetch('modules/' + el.dataset.include + '.html?v=' + CONFIG.siteVersion);
+      const res = await fetch('/modules/' + el.dataset.include + '.html?v=' + CONFIG.siteVersion);
       if (res.ok) el.innerHTML = await res.text();
       else el.innerHTML = '<!-- Modul fehlt: ' + el.dataset.include + ' -->';
     } catch (e) { console.error('Modul-Fehler:', el.dataset.include, e); }
@@ -235,15 +235,34 @@ function scrollToHashTarget() {
 }
 
 /* Aktiven MenÃ¼punkt markieren */
+function normalizePagePath(value) {
+  let path = (value || '/').split('?')[0].split('#')[0];
+  path = path.replace(/^https?:\/\/[^/]+/i, '');
+  if (!path || path === '/' || path === '/index.html' || path === 'index.html') return '/';
+  if (!path.startsWith('/')) path = '/' + path;
+
+  const htmlToClean = {
+    '/leistungen.html': '/leistungen/',
+    '/qualitaet.html': '/qualitaet/',
+    '/technologie.html': '/technologie/',
+    '/unternehmen.html': '/unternehmen/',
+    '/werkstoffe.html': '/werkstoffe/',
+    '/kontakt.html': '/kontakt/',
+    '/impressum.html': '/impressum/'
+  };
+  if (htmlToClean[path]) return htmlToClean[path];
+  return path.endsWith('/') ? path : path + '/';
+}
+
 function markActiveNav() {
-  const page = location.pathname.split('/').pop() || 'index.html';
+  const page = normalizePagePath(location.pathname);
   const hash = location.hash || '';
   document.querySelectorAll('.nav a, .dropdown a, .oncc-nav a, .oncc-mobile-menu a').forEach(a => {
     const href = a.getAttribute('href') || '';
     const parts = href.split('#');
-    const hrefPage = parts[0] || 'index.html';
+    const hrefPage = normalizePagePath(parts[0] || '/');
     const hrefHash = parts[1] ? '#' + parts[1] : '';
-    const samePage = hrefPage === page || (page === '' && hrefPage === 'index.html');
+    const samePage = hrefPage === page;
     const sameAnchor = hrefHash && hrefHash === hash;
     if (samePage && (!hrefHash || sameAnchor)) {
       a.classList.add('active');
@@ -265,7 +284,7 @@ function initRequestAssistant() {
       quantity: document.getElementById('assistantQuantity')?.value || 'Noch offen',
       drawing: document.getElementById('assistantDrawing')?.value || 'Noch in Vorbereitung'
     });
-    window.location.href = 'kontakt.html?' + params.toString();
+    window.location.href = '/kontakt/?' + params.toString();
   });
 }
 
@@ -338,7 +357,7 @@ function initAnalyticsConsent() {
 
   const script = document.createElement('script');
   script.id = 'osmp-analytics-consent-js';
-  script.src = 'js/analytics.js?v=' + encodeURIComponent(CONFIG.siteVersion);
+  script.src = '/js/analytics.js?v=' + encodeURIComponent(CONFIG.siteVersion);
   script.defer = true;
   document.body.appendChild(script);
 }

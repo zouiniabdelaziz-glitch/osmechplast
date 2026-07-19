@@ -2,54 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://osmechplast.com/</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
-    <loc>https://osmechplast.com/leistungen.html</loc>
-    <lastmod>2026-07-14</lastmod>
+    <loc>https://osmechplast.com/leistungen/</loc>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
-    <loc>https://osmechplast.com/technologie.html</loc>
-    <lastmod>2026-07-14</lastmod>
+    <loc>https://osmechplast.com/qualitaet/</loc>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
-    <loc>https://osmechplast.com/drehen.html</loc>
-    <lastmod>2026-07-14</lastmod>
+    <loc>https://osmechplast.com/technologie/</loc>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
-    <loc>https://osmechplast.com/komplettbearbeitung.html</loc>
-    <lastmod>2026-07-14</lastmod>
+    <loc>https://osmechplast.com/unternehmen/</loc>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
-    <loc>https://osmechplast.com/werkstoffe.html</loc>
-    <lastmod>2026-07-14</lastmod>
+    <loc>https://osmechplast.com/werkstoffe/</loc>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
-    <loc>https://osmechplast.com/qualitaet.html</loc>
-    <lastmod>2026-07-14</lastmod>
+    <loc>https://osmechplast.com/kontakt/</loc>
+    <lastmod>2026-07-19</lastmod>
   </url>
   <url>
-    <loc>https://osmechplast.com/unternehmen.html</loc>
-    <lastmod>2026-07-14</lastmod>
-  </url>
-  <url>
-    <loc>https://osmechplast.com/ablauf.html</loc>
-    <lastmod>2026-07-14</lastmod>
-  </url>
-  <url>
-    <loc>https://osmechplast.com/branchen.html</loc>
-    <lastmod>2026-07-14</lastmod>
-  </url>
-  <url>
-    <loc>https://osmechplast.com/faq.html</loc>
-    <lastmod>2026-07-14</lastmod>
-  </url>
-  <url>
-    <loc>https://osmechplast.com/kontakt.html</loc>
-    <lastmod>2026-07-14</lastmod>
-  </url>
-  <url>
-    <loc>https://osmechplast.com/impressum.html</loc>
+    <loc>https://osmechplast.com/impressum/</loc>
     <lastmod>2026-07-19</lastmod>
   </url>
 </urlset>

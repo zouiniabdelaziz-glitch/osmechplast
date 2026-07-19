@@ -1,0 +1,30 @@
+/index.html  /  301
+/leistungen.html  /leistungen/  301
+/qualitaet.html  /qualitaet/  301
+/technologie.html  /technologie/  301
+/unternehmen.html  /unternehmen/  301
+/werkstoffe.html  /werkstoffe/  301
+/kontakt.html  /kontakt/  301
+/impressum.html  /impressum/  301
+
+/drehen.html  /leistungen/#cnc-drehen  301
+/komplettbearbeitung.html  /leistungen/#drehfraesen  301
+/ablauf.html  /leistungen/#anfrage-vorbereiten  301
+/branchen.html  /leistungen/  301
+/faq.html  /kontakt/  301
+
+/leistungen  /leistungen/  301
+/qualitaet  /qualitaet/  301
+/technologie  /technologie/  301
+/unternehmen  /unternehmen/  301
+/werkstoffe  /werkstoffe/  301
+/kontakt  /kontakt/  301
+/impressum  /impressum/  301
+
+/leistungen/  /leistungen.html  200
+/qualitaet/  /qualitaet.html  200
+/technologie/  /technologie.html  200
+/unternehmen/  /unternehmen.html  200
+/werkstoffe/  /werkstoffe.html  200
+/kontakt/  /kontakt.html  200
+/impressum/  /impressum.html  200
