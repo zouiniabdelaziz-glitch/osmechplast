@@ -1,0 +1,35 @@
+/api/*
+  X-Robots-Tag: noindex, nofollow
+
+/functions/*
+  X-Robots-Tag: noindex, nofollow
+
+/outputs/*
+  X-Robots-Tag: noindex, nofollow
+
+/scripts/*
+  X-Robots-Tag: noindex, nofollow
+
+/business-card-preview.html
+  X-Robots-Tag: noindex, nofollow
+
+/cnc-anfrage-vorbereiten.html
+  X-Robots-Tag: noindex, follow
+
+/maschinenpark.html
+  X-Robots-Tag: noindex, follow
+
+/README.md
+  X-Robots-Tag: noindex, nofollow
+
+/FOTO_VIDEO_PLAN.md
+  X-Robots-Tag: noindex, nofollow
+
+/OSMP_BUSINESSMODELL_WEBSITE_MASTER.md
+  X-Robots-Tag: noindex, nofollow
+
+/schema.sql
+  X-Robots-Tag: noindex, nofollow
+
+/start-website-8099.bat
+  X-Robots-Tag: noindex, nofollow

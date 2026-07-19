@@ -63,6 +63,10 @@ export async function onRequestOptions() {
   });
 }
 
+export async function onRequestGet() {
+  return json({ ok: false, error: "Method not allowed." }, 405);
+}
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
@@ -77,6 +81,7 @@ function corsHeaders() {
   return {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type"
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Robots-Tag": "noindex, nofollow"
   };
 }
