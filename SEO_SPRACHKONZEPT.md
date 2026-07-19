@@ -19,9 +19,9 @@ Die Sprachumschaltung verändert aktuell nur die Texte im Browser per JavaScript
 
 Aktuell gibt es nur eine echte, indexierbare Sprachversion: Deutsch.
 
-Deshalb werden aktuell keine `hreflang`-Tags gesetzt. Das ist Absicht, weil `hreflang` nur für echte, vollständige Sprachseiten mit eigenen URLs verwendet werden soll.
+Deshalb werden aktuell nur deutsche `hreflang`-Self-References plus `x-default` gesetzt. Das ist Absicht, weil `hreflang` nur für echte, vollständige Sprachseiten mit eigenen URLs verwendet werden soll.
 
-Würden jetzt `hreflang`-Tags für Italienisch, Englisch oder Französisch gesetzt, wäre das aus SEO-Sicht falsch: Google und Bing würden Sprachversionen erwarten, die öffentlich nicht als eigene kanonische URLs existieren.
+Es werden keine `hreflang`-Tags für Italienisch, Englisch oder Französisch gesetzt. Das wäre aus SEO-Sicht falsch: Google und Bing würden Sprachversionen erwarten, die öffentlich nicht als eigene kanonische URLs existieren.
 
 ## Aktuelle kanonische deutsche URLs
 
@@ -35,6 +35,19 @@ Würden jetzt `hreflang`-Tags für Italienisch, Englisch oder Französisch geset
 | Werkstoffe | `https://osmechplast.com/werkstoffe/` |
 | Kontakt | `https://osmechplast.com/kontakt/` |
 | Impressum | `https://osmechplast.com/impressum/` |
+
+## Aktuelle hreflang-Matrix
+
+| Seite | `hreflang="de"` | `hreflang="x-default"` |
+| --- | --- | --- |
+| Startseite | `https://osmechplast.com/` | `https://osmechplast.com/` |
+| Leistungen | `https://osmechplast.com/leistungen/` | `https://osmechplast.com/leistungen/` |
+| Qualität | `https://osmechplast.com/qualitaet/` | `https://osmechplast.com/qualitaet/` |
+| Technologie | `https://osmechplast.com/technologie/` | `https://osmechplast.com/technologie/` |
+| Unternehmen | `https://osmechplast.com/unternehmen/` | `https://osmechplast.com/unternehmen/` |
+| Werkstoffe | `https://osmechplast.com/werkstoffe/` | `https://osmechplast.com/werkstoffe/` |
+| Kontakt | `https://osmechplast.com/kontakt/` | `https://osmechplast.com/kontakt/` |
+| Impressum | `https://osmechplast.com/impressum/` | `https://osmechplast.com/impressum/` |
 
 ## Empfohlenes URL-Konzept für spätere italienische Version
 
