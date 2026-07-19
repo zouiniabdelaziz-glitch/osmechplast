@@ -1,25 +1,36 @@
-/index.html  /  301
-/leistungen.html  /leistungen/  301
-/qualitaet.html  /qualitaet/  301
-/technologie.html  /technologie/  301
-/unternehmen.html  /unternehmen/  301
-/werkstoffe.html  /werkstoffe/  301
-/kontakt.html  /kontakt/  301
-/impressum.html  /impressum/  301
+/index.html  https://osmechplast.com/  301
 
-/drehen.html  /leistungen/#cnc-drehen  301
-/komplettbearbeitung.html  /leistungen/#drehfraesen  301
-/ablauf.html  /leistungen/#anfrage-vorbereiten  301
-/branchen.html  /leistungen/  301
-/faq.html  /kontakt/  301
+/leistungen.html  https://osmechplast.com/leistungen/  301
+/qualitaet.html  https://osmechplast.com/qualitaet/  301
+/technologie.html  https://osmechplast.com/technologie/  301
+/unternehmen.html  https://osmechplast.com/unternehmen/  301
+/werkstoffe.html  https://osmechplast.com/werkstoffe/  301
+/kontakt.html  https://osmechplast.com/kontakt/  301
+/impressum.html  https://osmechplast.com/impressum/  301
 
-/leistungen  /leistungen/  301
-/qualitaet  /qualitaet/  301
-/technologie  /technologie/  301
-/unternehmen  /unternehmen/  301
-/werkstoffe  /werkstoffe/  301
-/kontakt  /kontakt/  301
-/impressum  /impressum/  301
+/leistungen/index.html  https://osmechplast.com/leistungen/  301
+/qualitaet/index.html  https://osmechplast.com/qualitaet/  301
+/technologie/index.html  https://osmechplast.com/technologie/  301
+/unternehmen/index.html  https://osmechplast.com/unternehmen/  301
+/werkstoffe/index.html  https://osmechplast.com/werkstoffe/  301
+/kontakt/index.html  https://osmechplast.com/kontakt/  301
+/impressum/index.html  https://osmechplast.com/impressum/  301
+
+/drehen.html  https://osmechplast.com/leistungen/#cnc-drehen  301
+/komplettbearbeitung.html  https://osmechplast.com/leistungen/#drehfraesen  301
+/ablauf.html  https://osmechplast.com/leistungen/#anfrage-vorbereiten  301
+/branchen.html  https://osmechplast.com/leistungen/  301
+/faq.html  https://osmechplast.com/kontakt/  301
+/maschinenpark.html  https://osmechplast.com/technologie/#maschinenpark  301
+/cnc-anfrage-vorbereiten.html  https://osmechplast.com/leistungen/#anfrage-vorbereiten  301
+
+/leistungen  https://osmechplast.com/leistungen/  301
+/qualitaet  https://osmechplast.com/qualitaet/  301
+/technologie  https://osmechplast.com/technologie/  301
+/unternehmen  https://osmechplast.com/unternehmen/  301
+/werkstoffe  https://osmechplast.com/werkstoffe/  301
+/kontakt  https://osmechplast.com/kontakt/  301
+/impressum  https://osmechplast.com/impressum/  301
 
 /leistungen/  /leistungen.html  200
 /qualitaet/  /qualitaet.html  200
