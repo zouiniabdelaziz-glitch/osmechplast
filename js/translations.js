@@ -94,7 +94,7 @@ const T = {
     g2_t: 'Gefertigte Teile', g2_p: 'Werkstückfotos werden später durch eigene Referenzbilder ersetzt.',
     g3_t: 'Messung & Dokumentation', g3_p: 'Messprotokoll und Prüfmerkmale auf Anfrage und nach Auftrag.',
 
-    c_kicker: 'Anfrage', contact_h2: 'Zeichnung senden.<br><em>Machbarkeit prüfen lassen.</em>',
+    c_kicker: 'Anfrage', contact_h2: 'CNC Anfrage vorbereiten.<br><em>Zeichnung senden.</em>',
     c_lead: 'Senden Sie Zeichnung, Material, Menge und Zieltermin. Wir prüfen die Daten technisch und melden uns mit Rückfragen oder einem Angebot.',
     cp1_t: 'Technische Rückmeldung', cp1_s: 'Nach Prüfung der Zeichnung und Machbarkeit.',
     cp2_t: 'Alle Formate', cp2_s: 'PDF, DXF, STEP — oder Handskizze.',
