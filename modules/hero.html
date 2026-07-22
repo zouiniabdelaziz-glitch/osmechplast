@@ -14,12 +14,12 @@
     <form class="request-assistant" id="requestAssistant">
       <div class="request-assistant__head">
         <span class="kicker" data-key="assistant_kicker">Anfrage-Assistent</span>
-        <h2 data-key="assistant_title">Ihr CNC-Teil vorbereiten.</h2>
-        <p data-key="assistant_lead">Vier Angaben reichen f&uuml;r den Start. Im n&auml;chsten Schritt erg&auml;nzen Sie Ihre Kontaktdaten und Zeichnung.</p>
+        <h2 data-key="assistant_title">CNC-Drehteil nach Zeichnung vorbereiten.</h2>
+        <p data-key="assistant_lead">Vier Angaben reichen f&uuml;r den Start: Bearbeitung, Werkstoff, Menge und Zeichnungsstand. Danach erg&auml;nzen Sie Kontaktdaten und Zeichnung.</p>
       </div>
 
       <div class="assistant-field">
-        <label for="assistantService" data-key="assistant_service_label">Welche Bearbeitung wird ben&ouml;tigt?</label>
+        <label for="assistantService" data-key="assistant_service_label">Welche Leistung wird f&uuml;r Ihr Zeichnungsteil ben&ouml;tigt?</label>
         <select id="assistantService" name="service">
           <option value="drehen" data-key="assistant_service_turning">CNC-Drehen</option>
           <option value="drehfraesen" data-key="assistant_service_turnmill">Dreh-Fr&auml;sbearbeitung</option>
@@ -56,7 +56,7 @@
         </select>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-lg" data-key="assistant_submit">Anfrage vorbereiten</button>
+      <button type="submit" class="btn btn-primary btn-lg" data-key="assistant_submit">CNC-Drehteil anfragen</button>
       <p class="request-assistant__note" data-key="assistant_note">Keine Preisautomatik: Wir pr&uuml;fen Zeichnung und Machbarkeit technisch.</p>
     </form>
   </div>

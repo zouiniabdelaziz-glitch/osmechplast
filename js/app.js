@@ -7,7 +7,7 @@
 /* â”€â”€ KONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const CONFIG = {
   defaultLang: 'de',
-  siteVersion: '20260714-i18n-v2',
+  siteVersion: '20260722-topic-map-v1',
   analyticsMeasurementId: 'G-KFFN0VWBGK',
   clarityProjectId: 'xlwutfjzhw',
 };
