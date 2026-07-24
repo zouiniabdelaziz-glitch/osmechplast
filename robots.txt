@@ -20,5 +20,6 @@ Allow: /assets/
 Allow: /css/
 Allow: /js/
 Allow: /modules/
+Allow: /llms.txt
 
 Sitemap: https://osmechplast.com/sitemap.xml

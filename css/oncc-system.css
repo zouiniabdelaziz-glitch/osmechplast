@@ -2875,3 +2875,80 @@ textarea:focus {
     font-size: 18px !important;
   }
 }
+
+/* SEO-053: reserve stable media and form-helper space to reduce avoidable layout shifts. */
+.oncc-brand__logo {
+  aspect-ratio: 604 / 246;
+}
+
+.footer-brand-logo {
+  aspect-ratio: 604 / 292;
+}
+
+.service-machine-card__media {
+  aspect-ratio: 4 / 3;
+  min-height: 240px;
+}
+
+.upload-selected {
+  min-height: 22px;
+}
+
+.success-banner {
+  min-height: 52px;
+}
+
+/* SEO-032/043: direct contact details without changing the RFQ form behavior. */
+.contact-direct {
+  border-top: 1px solid var(--oncc-border);
+  color: var(--oncc-muted);
+  display: grid;
+  gap: 10px;
+  margin-top: 26px;
+  padding-top: 22px;
+}
+
+.contact-direct h3 {
+  color: var(--oncc-navy);
+  font-size: 18px;
+  margin: 0;
+}
+
+.contact-direct p {
+  margin: 0;
+}
+
+.contact-faq {
+  margin-top: 64px;
+}
+
+.contact-faq h2 {
+  color: var(--oncc-navy);
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.2vw, 42px);
+  line-height: 1.08;
+  margin: 10px 0 22px;
+}
+
+.contact-faq__list {
+  display: grid;
+  gap: 10px;
+  max-width: 980px;
+}
+
+.contact-faq details {
+  background: var(--oncc-white);
+  border: 1px solid var(--oncc-border);
+  padding: 16px 18px;
+}
+
+.contact-faq summary {
+  color: var(--oncc-navy);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.contact-faq p {
+  color: var(--oncc-muted);
+  margin: 12px 0 0;
+}
