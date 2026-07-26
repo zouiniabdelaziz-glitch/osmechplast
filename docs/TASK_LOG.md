@@ -1,6 +1,6 @@
 # Task Log OS.MECHPLAST Website
 
-Stand: 2026-07-22
+Stand: 2026-07-24
 
 Dieses Log dokumentiert Arbeiten am Projekt. Nach jeder erledigten Aufgabe hier eintragen:
 
@@ -12,6 +12,43 @@ Dieses Log dokumentiert Arbeiten am Projekt. Nach jeder erledigten Aufgabe hier 
 - offene Punkte
 
 ## Abgeschlossene Aufgaben
+
+### 2026-07-24 — Website-Unterseiten über Clean URLs direkt erreichbar gemacht
+
+**Auftrag:** Die OS.MECHPLAST-Webseite reparieren, weil mehrere Unterseiten über Clean URLs als unerreichbar wirkten. ERP ausdrücklich nicht weiter bearbeiten.
+
+**Geänderte Dateien:**
+
+- `_redirects`
+- `leistungen/index.html`
+- `qualitaet/index.html`
+- `technologie/index.html`
+- `unternehmen/index.html`
+- `werkstoffe/index.html`
+- `kontakt/index.html`
+- `impressum/index.html`
+- `docs/PROJECT_STATUS.md`
+- `docs/TASK_LOG.md`
+
+**Ergebnis:**
+
+- Für alle acht öffentlichen Clean URLs existieren jetzt echte statische Seiten.
+- Alte `.html`-URLs bleiben in `_redirects` als 301-Weiterleitungen auf die kanonischen Clean URLs erhalten.
+- Die früheren internen 200-Rewrites von `/seite/` auf `/seite.html` wurden entfernt, damit die Clean URLs echte Zielseiten sind.
+- Inhalte, Design, Formulare, Tracking, Consent, Header, Footer und Navigation wurden nicht umgebaut.
+
+**Tests / Prüfung:**
+
+- Lokaler statischer Server ohne Cloudflare-Speziallogik: `/`, `/leistungen/`, `/qualitaet/`, `/technologie/`, `/unternehmen/`, `/werkstoffe/`, `/kontakt/`, `/impressum/` liefern 200.
+- Ressourcen geprüft: `/css/main.css`, `/js/app.js`, `/modules/header.html` liefern 200.
+- Canonical-Tags aller acht öffentlichen Seiten geprüft; alle zeigen auf die jeweilige kanonische HTTPS-Clean-URL.
+- Sitemap gegen echte Dateien geprüft; alle acht Sitemap-URLs zeigen auf vorhandene Dateien.
+- Interne Links in öffentlichen Seiten und Modulen geprüft; keine öffentlichen internen `.html`-Links gefunden.
+
+**Offene Punkte:**
+
+- Live-Website nach Deployment separat prüfen.
+- Git-Status bleibt unklar, weil der sichtbare Arbeitsbereich nicht als gültiges Git-Repository erkannt wird.
 
 ### 2026-07-22 — Thematische Überschneidungen zwischen Unterseiten reduziert
 

@@ -27,7 +27,7 @@ const T = {
     assistant_note: 'Keine Preisautomatik: Wir prüfen Zeichnung und Machbarkeit technisch.',
 
     hero_eyebrow: 'CNC-Lohnfertigung · Italien',
-    hero_h1_html: 'CNC-Drehteile nach Zeichnung <br><em>aus Italien.</em>',
+    hero_h1_html: 'CNC-Drehteile nach Zeichnung<br><em>aus Italien.</em>',
     hero_sub: 'CNC-Drehteile nach Zeichnung aus Italien sind unser Schwerpunkt: Wellen, Buchsen, Bolzen, Flansche, Adapter und Dreh-Frästeile aus Kunststoff, Aluminium und zerspanbaren Stählen. Vor dem Angebot prüfen wir Material, Toleranzen, Menge und Zieltermin — damit CNC-Lohnfertigung und Bauteilanforderung zusammenpassen.',
     hero_cta1: 'Zeichnung senden', hero_cta2: 'Leistungen ansehen',
     trust1: 'Toleranzen nach Zeichnung', trust2: 'Rückmeldung nach technischer Prüfung', trust3: 'Erstmuster möglich',
@@ -94,7 +94,7 @@ const T = {
     g2_t: 'Gefertigte Teile', g2_p: 'Werkstückfotos werden später durch eigene Referenzbilder ersetzt.',
     g3_t: 'Messung & Dokumentation', g3_p: 'Messprotokoll und Prüfmerkmale auf Anfrage und nach Auftrag.',
 
-    c_kicker: 'Anfrage', contact_h2: 'CNC Anfrage vorbereiten. <br><em>Zeichnung senden.</em>',
+    c_kicker: 'Anfrage', contact_h2: 'CNC Anfrage vorbereiten.<br><em>Zeichnung senden.</em>',
     c_lead: 'Senden Sie Zeichnung, Material, Menge und Zieltermin. Wir prüfen die Daten technisch und melden uns mit Rückfragen oder einem Angebot.',
     cp1_t: 'Technische Rückmeldung', cp1_s: 'Nach Prüfung der Zeichnung und Machbarkeit.',
     cp2_t: 'Alle Formate', cp2_s: 'PDF, DXF, STEP — oder Handskizze.',
@@ -755,7 +755,7 @@ const T = {
    keine 24h-Garantie, keine 22-Kunststoff-Liste, keine Lebensmittel-/Medizin-Versprechen. */
 Object.assign(T.it, {
   hero_eyebrow: 'Lavorazioni CNC conto terzi · Italia',
-  hero_h1_html: 'Particolari torniti CNC su disegno <br><em>dall’Italia.</em>',
+  hero_h1_html: 'Particolari torniti CNC su disegno<br><em>dall’Italia.</em>',
   hero_sub: 'Realizziamo particolari torniti e tornio-fresati CNC secondo il vostro disegno: alberi, boccole, perni, flange, adattatori e componenti tecnici più complessi in plastica, alluminio e acciai lavorabili. Prima dell’offerta verifichiamo materiale, tolleranze, quantità e tempi richiesti.',
   hero_cta1: 'Invia disegno',
   trust1: 'Tolleranze secondo disegno',
@@ -821,7 +821,7 @@ Object.assign(T.it, {
 
 Object.assign(T.en, {
   hero_eyebrow: 'CNC contract manufacturing · Italy',
-  hero_h1_html: 'CNC turned parts to drawing <br><em>from Italy.</em>',
+  hero_h1_html: 'CNC turned parts to drawing<br><em>from Italy.</em>',
   hero_sub: 'We manufacture CNC turned and turn-milled parts to your drawing: shafts, bushings, pins, flanges, adapters and more complex technical components in plastics, aluminium and machinable steels. Before quoting, we check material, tolerances, quantity and target date.',
   hero_cta1: 'Send drawing',
   trust1: 'Tolerances to drawing',
@@ -887,7 +887,7 @@ Object.assign(T.en, {
 
 Object.assign(T.fr, {
   hero_eyebrow: 'Usinage CNC en sous-traitance · Italie',
-  hero_h1_html: 'Pièces tournées CNC sur plan <br><em>depuis l’Italie.</em>',
+  hero_h1_html: 'Pièces tournées CNC sur plan<br><em>depuis l’Italie.</em>',
   hero_sub: 'Nous fabriquons des pièces tournées et tournées-fraisées CNC selon votre plan : arbres, bagues, axes, brides, adaptateurs et composants techniques plus complexes en plastique, aluminium et aciers usinables. Avant l’offre, nous vérifions matière, tolérances, quantité et délai souhaité.',
   hero_cta1: 'Envoyer le plan',
   trust1: 'Tolérances selon plan',

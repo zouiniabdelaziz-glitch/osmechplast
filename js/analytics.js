@@ -169,17 +169,6 @@
     if (choice === 'denied') deleteTrackingCookies();
   }
 
-  function track(name, params) {
-    if (!name || getChoice() !== 'granted') return;
-    const payload = Object.assign({}, params || {});
-    if (typeof window.gtag === 'function') {
-      window.gtag('event', name, payload);
-    }
-    if (typeof window.clarity === 'function') {
-      window.clarity('event', name);
-    }
-  }
-
   function injectStyles() {
     if (document.getElementById(STYLE_ID)) return;
 
@@ -370,7 +359,6 @@
 
   window.OSMPAnalytics = {
     open: () => renderBanner(true),
-    track,
     setLang: lang => {
       window.OSMP_ANALYTICS_CONFIG = window.OSMP_ANALYTICS_CONFIG || {};
       window.OSMP_ANALYTICS_CONFIG.lang = lang;

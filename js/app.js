@@ -7,7 +7,7 @@
 /* â”€â”€ KONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const CONFIG = {
   defaultLang: 'de',
-  siteVersion: '20260724-seo-structure-v1',
+  siteVersion: '20260722-topic-map-v1',
   analyticsMeasurementId: 'G-KFFN0VWBGK',
   clarityProjectId: 'xlwutfjzhw',
 };
@@ -140,52 +140,26 @@ function buildStaticTranslationDictionary(lang) {
 
 /* â”€â”€ CLOUDFLARE D1 LEAD SPEICHERN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function saveLead(payload) {
-  try {
-    const res = await fetch("/api/leads", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
+  const res = await fetch("/api/leads", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error("Lead konnte nicht gespeichert werden:", errorText);
-      return { ok: false, error: errorText || "HTTP " + res.status };
-    }
-
-    const data = await res.json().catch(() => ({ ok: true }));
-    return { ok: data.ok !== false, data };
-  } catch (error) {
-    console.error("Lead konnte nicht gespeichert werden:", error);
-    return { ok: false, error: error.message };
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("Lead konnte nicht gespeichert werden:", errorText);
+    return false;
   }
-}
 
-function selectedDrawingFiles() {
-  const input = document.getElementById('sketchFile');
-  return Array.from(input?.files || []).map(file => ({
-    name: file.name,
-    size: file.size,
-    type: file.type || 'unbekannt',
-    lastModified: file.lastModified || null
-  }));
-}
-
-function trackWebsiteEvent(name, params) {
-  if (window.OSMPAnalytics?.track) {
-    window.OSMPAnalytics.track(name, Object.assign({
-      page_path: normalizePagePath(location.pathname),
-      language: currentLang
-    }, params || {}));
-  }
+  return true;
 }
 
 /* â”€â”€ FORMULAR ABSENDEN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function submitForm(e) {
   e.preventDefault();
-  const drawingFiles = selectedDrawingFiles();
   const payload = {
     company:     document.getElementById('f_company')?.value || '',
     name:        document.getElementById('f_name')?.value || '',
@@ -193,38 +167,17 @@ async function submitForm(e) {
     phone:       document.getElementById('f_phone')?.value || '',
     service:     document.getElementById('f_service')?.value || '',
     message:     document.getElementById('f_msg')?.value || '',
-    ai_analysis: drawingFiles.length ? JSON.stringify({ drawing_files: drawingFiles }) : null,
+    ai_analysis: null,
     language:    currentLang,
     source:      'website',
     status:      'new',
     created_at:  new Date().toISOString()
   };
-  trackWebsiteEvent('rfq_submit_attempt', {
-    service: payload.service || 'nicht_angegeben',
-    has_drawing_file: drawingFiles.length > 0
-  });
-  const result = await saveLead(payload);
+  await saveLead(payload);
   const banner = document.getElementById('successBanner');
-  if (!result.ok) {
-    trackWebsiteEvent('rfq_submit_error', {
-      service: payload.service || 'nicht_angegeben',
-      has_drawing_file: drawingFiles.length > 0
-    });
-    if (banner) {
-      banner.textContent = 'Die Anfrage konnte nicht gespeichert werden. Bitte versuchen Sie es erneut oder senden Sie die Zeichnung direkt per E-Mail an info@osmechplast.com.';
-      banner.style.display = 'block';
-      banner.setAttribute('role', 'alert');
-    }
-    return;
-  }
-  trackWebsiteEvent('rfq_submit_success', {
-    service: payload.service || 'nicht_angegeben',
-    has_drawing_file: drawingFiles.length > 0
-  });
   if (banner) {
     banner.textContent = T[currentLang]?.f_success || 'âœ“ Danke!';
     banner.style.display = 'block';
-    banner.setAttribute('role', 'status');
     setTimeout(() => banner.style.display = 'none', 5000);
   }
   e.target.reset();
@@ -240,10 +193,6 @@ function handleFileUpload(event) {
   const selected = document.getElementById('uploadSelected');
   if (uploadText) uploadText.textContent = 'Datei ausgewählt';
   if (selected) selected.textContent = file.name + ' ist für die Anfrage vorgemerkt.';
-  trackWebsiteEvent('rfq_file_selected', {
-    file_extension: file.name.includes('.') ? file.name.split('.').pop().toLowerCase() : 'unbekannt',
-    file_size: file.size || 0
-  });
 }
 
 /* â”€â”€ DRAG & DROP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -413,23 +362,6 @@ function initAnalyticsConsent() {
   document.body.appendChild(script);
 }
 
-function initContactActionTracking() {
-  document.body.addEventListener('click', event => {
-    const link = event.target.closest('a[href]');
-    if (!link) return;
-    const href = link.getAttribute('href') || '';
-    if (href.startsWith('tel:')) {
-      trackWebsiteEvent('phone_click', { target: href.replace(/^tel:/, '') });
-    } else if (href.startsWith('mailto:')) {
-      trackWebsiteEvent('email_click', { target: href.replace(/^mailto:/, '') });
-    } else if (href.includes('google.com/maps')) {
-      trackWebsiteEvent('maps_click', { target: 'google_maps' });
-    } else if (normalizePagePath(href) === '/kontakt/') {
-      trackWebsiteEvent('contact_cta_click', { label: link.textContent.trim() });
-    }
-  });
-}
-
 /* â”€â”€ SCROLL-REVEAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function initReveal() {
   const els = document.querySelectorAll(
@@ -453,7 +385,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   initLanguageSelects();
   setLang(currentLang);
   initAnalyticsConsent();
-  initContactActionTracking();
   initHeaderNav();
   initDragDrop();
   initRequestAssistant();

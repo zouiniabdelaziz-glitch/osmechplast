@@ -1,6 +1,6 @@
 # Projektstatus OS.MECHPLAST Website
 
-Stand: 2026-07-22
+Stand: 2026-07-24
 
 ## Kurzbeschreibung
 
@@ -24,6 +24,8 @@ Indexierbare bzw. kanonisch in `sitemap.xml` geführte Seiten:
 - `/werkstoffe/` aus `werkstoffe.html`
 - `/kontakt/` aus `kontakt.html`
 - `/impressum/` aus `impressum.html`
+
+Hinweis 2026-07-24: Für diese acht öffentlichen Clean URLs existieren zusätzlich echte Ordnerseiten (`leistungen/index.html`, `qualitaet/index.html`, `technologie/index.html`, `unternehmen/index.html`, `werkstoffe/index.html`, `kontakt/index.html`, `impressum/index.html`). Dadurch sind die Unterseiten auch ohne interne `.html`-Rewrite-Regeln direkt erreichbar.
 
 Weitere vorhandene HTML-Dateien mit noindex- oder Hilfsstatus:
 
@@ -98,7 +100,8 @@ Wichtig: Tracking- und Consent-Code nicht ohne ausdrücklichen Auftrag ändern.
 - Impressum-Seite mit vorhandenen Unternehmensangaben und Platzhalter-/TODO-Charakter für fehlende rechtliche Details.
 - Robots.txt vorhanden.
 - Sitemap mit acht kanonischen Clean URLs vorhanden.
-- Clean-URL-Weiterleitungen in `_redirects` vorhanden.
+- Clean-URL-Weiterleitungen in `_redirects` vorhanden; alte `.html`-URLs leiten per 301 auf die Clean URLs weiter.
+- Echte Clean-URL-Ordnerseiten wurden am 2026-07-24 ergänzt; die früheren internen 200-Rewrites von `/seite/` auf `/seite.html` wurden entfernt.
 - X-Robots-Regeln für technische und alte Seiten in `_headers` vorhanden.
 - SEO-Dokumente `SEO_KEYWORD_MATRIX.md` und `SEO_SPRACHKONZEPT.md` vorhanden.
 - Thematische Trennung der Hauptseiten wurde am 2026-07-22 nachgeschärft: Leistungen bleibt Leistungsübersicht, Werkstoffe bleibt Materialseite, Technologie bleibt Technik/Maschinenpark, Qualität bleibt Prüf-/Dokumentationsseite, Unternehmen bleibt Standort/Team, Kontakt bleibt Anfrage.
