@@ -1382,6 +1382,17 @@ h2.sec-title,
   }
 }
 
+/* Semantische Footer-Überschriften behalten die bisherige H4-Optik. */
+.footer .footer-heading {
+  color: #fff !important;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 1rem;
+}
+
 /* WEDIREKT-INSPIRED FINAL SYSTEM - dark technical top, white content. */
 :root {
   --ink: #1D252D;
