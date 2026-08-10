@@ -11,10 +11,20 @@
       <div class="cp"><div class="cp-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v5h5"/><path d="M5 3h9l5 5v13H5V3z"/><path d="M9 13h6M9 17h6"/></svg></div><div><b data-key="cp2_t"></b><span data-key="cp2_s"></span></div></div>
       <div class="cp"><div class="cp-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-5"/><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></div><div><b data-key="cp3_t"></b><span data-key="cp3_s"></span></div></div>
     </div>
+    <section class="contact-company-details" aria-labelledby="contact-company-title">
+      <h3 id="contact-company-title">OS.MECHPLAST SRLS</h3>
+      <address>
+        Via Strada Romana n. 19<br>
+        38061 Ala (TN), Italien
+      </address>
+      <p><strong>Telefon</strong><br><a href="tel:+390464667981">+39 0464 667981</a></p>
+      <p><strong>E-Mail</strong><br><a href="mailto:info@osmechplast.com">info@osmechplast.com</a></p>
+      <p class="contact-company-details__todo"><strong>Kontaktzeiten</strong><br>TODO: Reale Kontaktzeiten ergänzen.</p>
+    </section>
     <p>F&uuml;r Ihre Anfrage k&ouml;nnen Sie vorab die <a href="/leistungen/">CNC-Fertigungsverfahren</a>, <a href="/werkstoffe/">Werkstoffangaben f&uuml;r CNC-Drehteile</a> und <a href="/qualitaet/">Pr&uuml;fanforderungen</a> einordnen.</p>
   </div>
   <div class="form-card">
-    <form id="leadForm" onsubmit="submitForm(event)">
+    <form id="leadForm" data-form="lead-form" onsubmit="submitForm(event)">
       <div class="form-grid">
         <div class="form-row">
           <div class="form-group"><label for="f_company" data-key="f_company"></label><input id="f_company" required></div>
@@ -38,8 +48,9 @@
           <input type="file" id="sketchFile" accept="image/*,.pdf,.dxf,.step,.stp" style="display:none" onchange="handleFileUpload(event)">
           <div class="upload-selected" id="uploadSelected" aria-live="polite"></div>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg" data-key="f_submit"></button>
-        <div class="success-banner" id="successBanner"></div>
+        <p class="form-privacy-note"><strong>Datenschutzhinweis:</strong> Die von Ihnen übermittelten Angaben werden zur Bearbeitung Ihrer Anfrage verarbeitet. Details zur Datenverarbeitung: TODO – Datenschutzhinweis ergänzen.</p>
+        <button id="cta-contact-submit" type="submit" class="btn btn-primary btn-lg" data-key="f_submit" data-cta="contact-form-submit" data-track-event="lead_form_submit"></button>
+        <div class="success-banner" id="successBanner" role="status" aria-live="polite" data-form-success="lead-form" data-track-event="lead_form_success"></div>
       </div>
     </form>
   </div>

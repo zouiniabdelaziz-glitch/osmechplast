@@ -7,7 +7,7 @@
 /* â”€â”€ KONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const CONFIG = {
   defaultLang: 'de',
-  siteVersion: '20260722-topic-map-v1',
+  siteVersion: '20260810-faq-v1',
   analyticsMeasurementId: 'G-KFFN0VWBGK',
   clarityProjectId: 'xlwutfjzhw',
 };
@@ -284,7 +284,7 @@ function initRequestAssistant() {
       quantity: document.getElementById('assistantQuantity')?.value || 'Noch offen',
       drawing: document.getElementById('assistantDrawing')?.value || 'Noch in Vorbereitung'
     });
-    window.location.href = '/kontakt/?' + params.toString();
+    window.location.href = '/kontakt/?' + params.toString() + '#leadForm';
   });
 }
 

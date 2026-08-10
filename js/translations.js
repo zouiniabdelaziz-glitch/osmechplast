@@ -23,7 +23,7 @@ const T = {
     assistant_qty_single: 'Einzelteil / Erstmuster', assistant_qty_small: 'Kleinserie', assistant_qty_repeat: 'Wiederkehrende Serie', assistant_qty_open: 'Noch offen',
     assistant_drawing_label: 'Zeichnungsstand',
     assistant_drawing_ready: 'Zeichnung liegt vor (PDF, DXF oder STEP)', assistant_drawing_sample: 'Skizze oder Muster liegt vor', assistant_drawing_prepare: 'Noch in Vorbereitung',
-    assistant_submit: 'CNC-Drehteil anfragen',
+    assistant_submit: 'Anfrage vorbereiten',
     assistant_note: 'Keine Preisautomatik: Wir prüfen Zeichnung und Machbarkeit technisch.',
 
     hero_eyebrow: 'CNC-Lohnfertigung · Italien',
@@ -150,10 +150,10 @@ const T = {
     /* Overflow-Band */
     band_t: 'Zeichnung oder Bauteil klären?',
     band_p: 'Senden Sie Zeichnung, Materialangabe und Menge. Wir prüfen die Anfrage technisch und melden uns mit Rückfragen oder dem nächsten Schritt.',
-    band_cta: 'Anfrage starten',
+    band_cta: 'CNC-Anfrage starten',
     home_band_t: 'CNC-Drehteil oder Dreh-Frästeil nach Zeichnung?',
     home_band_p: 'Senden Sie Zeichnung, Werkstoff und Menge. Wir prüfen, ob die CNC-Lohnfertigung technisch sinnvoll abbildbar ist.',
-    home_band_cta: 'CNC-Drehteil anfragen',
+ home_band_cta: 'Zeichnung senden', home_band_contact: 'Kontakt aufnehmen',
 
     /* FAQ */
     faq_title: 'Häufige Fragen.',
@@ -338,10 +338,10 @@ const T = {
 
     band_t: 'Chiarire un disegno o un componente?',
     band_p: 'Inviate disegno, materiale e quantità. Verifichiamo tecnicamente la richiesta e rispondiamo con eventuali domande o con il passaggio successivo.',
-    band_cta: 'Avvia richiesta',
+    band_cta: 'Avvia una richiesta CNC',
     home_band_t: 'Particolare tornito o tornio-fresato su disegno?',
     home_band_p: 'Inviate disegno, materiale e quantità. Verifichiamo se la lavorazione CNC conto terzi è tecnicamente realizzabile.',
-    home_band_cta: 'Richiedi un particolare CNC',
+ home_band_cta: 'Invia disegno', home_band_contact: 'Contattaci',
 
     faq_title: 'Domande frequenti.',
     fq1_q: 'Da quanti pezzi producete?',
@@ -522,10 +522,10 @@ const T = {
 
     band_t: 'Clarify a drawing or component?',
     band_p: 'Send drawing, material information and quantity. We review the inquiry technically and respond with questions or the next step.',
-    band_cta: 'Start inquiry',
+    band_cta: 'Start CNC inquiry',
     home_band_t: 'Turned or turn-milled part to drawing?',
     home_band_p: 'Send drawing, material and quantity. We check whether CNC contract manufacturing is technically feasible.',
-    home_band_cta: 'Request a CNC turned part',
+ home_band_cta: 'Send drawing', home_band_contact: 'Contact us',
 
     faq_title: 'Frequently asked questions.',
     fq1_q: 'What is your minimum quantity?',
@@ -706,10 +706,10 @@ const T = {
 
     band_t: 'Clarifier un plan ou une pièce ?',
     band_p: 'Envoyez le plan, la matière et la quantité. Nous vérifions techniquement la demande et revenons avec des questions ou l’étape suivante.',
-    band_cta: 'Démarrer la demande',
+    band_cta: 'Démarrer une demande CNC',
     home_band_t: 'Pièce tournée ou tournée-fraisée sur plan ?',
     home_band_p: 'Envoyez le plan, la matière et la quantité. Nous vérifions si l’usinage CNC en sous-traitance est techniquement réalisable.',
-    home_band_cta: 'Demander une pièce CNC',
+ home_band_cta: 'Envoyer le plan', home_band_contact: 'Nous contacter',
 
     faq_title: 'Questions fréquentes.',
     fq1_q: 'Quelle est votre quantité minimale ?',
@@ -1861,4 +1861,493 @@ Object.assign(T.fr, {
   i3_p: 'Rouleaux, guidages et éléments de glissement selon plan et matière vérifiée.',
   i5_t: 'Équipements industriels',
   i7_p: 'Composants de précision selon plan et exigences techniques vérifiées.'
+});
+
+Object.assign(T.de, {
+  home_content_kicker: 'Leistung im Überblick',
+  home_content_title: 'CNC-Fertigung nach Zeichnung – vom Drehteil bis zur Serie.',
+  home_content_lead: 'OS.MECHPLAST fertigt CNC-Drehteile und Dreh-Frästeile nach Kundenzeichnung. Die Startseite gibt den Überblick über Verfahren, typische Teile, Werkstoffe und den Weg von der technischen Anfrage bis zum Versand. Welche Lösung passt, wird nicht pauschal zugesagt: Zeichnung, Bauteilfunktion, Material, Menge und Prüfanforderungen werden gemeinsam betrachtet. Für Detailfragen führen die Fachseiten weiter.',
+  home_content_note: 'Für Einkauf und Konstruktion geht es nicht um eine allgemeine Maschinenliste, sondern um nachvollziehbare Angaben zum konkreten Teil. Diese Übersicht führt deshalb gezielt zu den Fachseiten weiter, auf denen einzelne Fragen getrennt beschrieben sind.',
+  home_content_turning_title: 'CNC-Drehen und Dreh-Fräsen',
+  home_content_turning_text: 'Für rotationssymmetrische Teile wie Wellen, Buchsen, Bolzen, Flansche und Adapter ist CNC-Drehen der Ausgangspunkt. Werden zusätzliche Flächen, Bohrungen oder Konturen benötigt, kann Dreh-Fräsbearbeitung den Bearbeitungsweg ergänzen. Welche Arbeitsschritte sinnvoll sind, richtet sich nach Geometrie, Zugänglichkeit und Zeichnungsangaben. Die Entscheidung wird nicht aus einer Bezeichnung, sondern am konkreten Bauteil getroffen.',
+  home_content_turning_link: 'CNC-Drehen und Dreh-Fräsen ansehen',
+  home_content_materials_title: 'Kunststoff, Aluminium und zerspanbare Stähle',
+  home_content_materials_text: 'Gefertigt wird nach Zeichnung aus technischen Kunststoffen, Aluminium und zerspanbaren Stahlwerkstoffen. Werkstoff und Lieferzustand wirken auf Spannung, Werkzeugwahl und Bearbeitungsstrategie. Bei Kunststoff sind Funktion und Einsatz wichtig; bei Aluminium und Stahl fließen etwa Legierung, Oberflächenanforderung und die vorhandenen Zeichnungsdaten in die technische Einordnung ein. Offene Materialangaben werden vor der Angebotsvorbereitung geklärt.',
+  home_content_materials_link: 'Werkstoffe für CNC-Drehteile einordnen',
+  home_content_series_title: 'Prototypen, kleine und mittlere Serien',
+  home_content_series_text: 'Prototypen, Erstmuster sowie kleine und mittlere Serien verlangen nicht dieselbe Planung. Bei einem einzelnen Bauteil steht die technische Einordnung der Zeichnung im Vordergrund. Bei wiederkehrenden Mengen werden zusätzlich Wiederholbarkeit, Arbeitsfolge und Prüfumfang betrachtet. So bleibt die Anfrage auf den tatsächlichen Bedarf ausgerichtet, statt eine Serienfähigkeit pauschal zu behaupten.',
+  home_content_series_link: 'Prototypen und Serien als Leistungsumfang ansehen',
+  home_content_machine_title: 'Maschinen und Messmöglichkeiten nach Aufgabe',
+  home_content_machine_text: 'Der Maschinenpark wird passend zur Aufgabe ausgewählt, nicht als allgemeines Leistungsversprechen eingesetzt. Entscheidend sind Bauteilgeometrie, Werkstoff und die erforderlichen Bearbeitungsschritte. Kritische Maße und gewünschte Prüfpunkte werden vor der Fertigung abgestimmt. Die Messung und Dokumentation richten sich nach dem vereinbarten Umfang; ein Messprotokoll kann bei der Anfrage angegeben werden.',
+  home_content_machine_link: 'Maschinenpark und Bearbeitungsweg ansehen',
+  home_content_quality_link: 'Prüfumfang und Dokumentation einordnen',
+  home_content_request_title: 'Technische Anfrage Schritt für Schritt',
+  home_content_request_text: 'Eine technische Anfrage beginnt mit den Informationen, die für das Bauteil bereits vorliegen: Zeichnung oder Skizze, Werkstoff, Menge und Zieltermin. Danach werden Rückfragen, der Bearbeitungsweg und gegebenenfalls der gewünschte Prüfumfang geklärt. Erst auf dieser Grundlage wird ein Angebot vorbereitet. Der Ablauf auf dieser Seite zeigt die Schritte von der Zeichnung bis zu Prüfung und Versand.',
+  home_content_request_link: 'Technische Anfrage vorbereiten',
+  home_content_region_title: 'Aus Ala in die DACH-Region',
+  home_content_region_text: 'Der Werkstandort befindet sich in Ala, Trentino. OS.MECHPLAST richtet die Zusammenarbeit auf Kunden in Italien sowie in Deutschland, Österreich und der Schweiz aus. Für die Belieferung der DACH-Region bleiben Zeichnung, technische Abstimmung und der vereinbarte Versandumfang die Grundlage. Den Standort, die Gründer und die Kundenregionen erläutert die Unternehmensseite.',
+  home_content_region_link: 'Standort und Kundenregionen ansehen'
+});
+
+Object.assign(T.it, {
+  home_content_kicker: 'Panoramica dei servizi',
+  home_content_title: 'Lavorazioni CNC su disegno – dal particolare tornito alla serie.',
+  home_content_lead: 'OS.MECHPLAST realizza particolari torniti CNC e pezzi tornio-fresati su disegno del cliente. La pagina iniziale offre una panoramica di lavorazioni, componenti tipici, materiali e del percorso dalla richiesta tecnica alla spedizione. La soluzione adatta non viene promessa in modo generico: disegno, funzione del componente, materiale, quantità e requisiti di controllo vengono valutati insieme. Le pagine di approfondimento trattano i singoli temi.',
+  home_content_note: 'Per acquisti e progettazione non si tratta di un elenco generale di macchine, ma di indicazioni comprensibili sul componente concreto. Per questo questa panoramica rimanda in modo mirato alle pagine specialistiche, dove le singole questioni sono descritte separatamente.',
+  home_content_turning_title: 'Tornitura CNC e tornio-fresatura',
+  home_content_turning_text: 'Per componenti a simmetria rotazionale come alberi, boccole, perni, flange e adattatori, la tornitura CNC è il punto di partenza. Quando sono necessarie anche superfici, fori o contorni, la lavorazione tornio-fresatura può integrare il ciclo. Quali operazioni siano appropriate viene valutato in base a geometria, accessibilità e indicazioni del disegno. La decisione nasce dal componente concreto, non dalla sola denominazione.',
+  home_content_turning_link: 'Vedere tornitura CNC e tornio-fresatura',
+  home_content_materials_title: 'Plastica, alluminio e acciai lavorabili',
+  home_content_materials_text: 'Lavoriamo, secondo disegno, tecnopolimeri, alluminio e acciai lavorabili. Materiale e stato di fornitura influenzano serraggio, scelta dell\'utensile e strategia di lavorazione. Per la plastica sono importanti funzione e impiego; per alluminio e acciaio entrano nella valutazione tecnica, tra l\'altro, lega, superficie e dati disponibili sul disegno. Le indicazioni sul materiale ancora aperte vengono chiarite prima della preparazione dell\'offerta.',
+  home_content_materials_link: 'Valutare i materiali per particolari torniti CNC',
+  home_content_series_title: 'Prototipi, piccole e medie serie',
+  home_content_series_text: 'Prototipi, primi campioni e piccole o medie serie non richiedono la stessa pianificazione. Per un componente singolo è centrale la valutazione tecnica del disegno. Per quantità ricorrenti vengono considerate anche ripetibilità, sequenza di lavorazione e ambito di controllo. La richiesta resta così riferita al fabbisogno effettivo, senza promettere genericamente una capacità di serie.',
+  home_content_series_link: 'Vedere prototipi e serie tra i servizi',
+  home_content_machine_title: 'Macchine e controlli in base al compito',
+  home_content_machine_text: 'Il parco macchine viene scelto in base al compito, non presentato come una promessa generica. Sono decisive la geometria del componente, il materiale e le lavorazioni necessarie. Quote critiche e punti di controllo desiderati vengono concordati prima della produzione. Misurazione e documentazione seguono l\'ambito concordato; un rapporto di misura può essere indicato nella richiesta.',
+  home_content_machine_link: 'Vedere parco macchine e percorso di lavorazione',
+  home_content_quality_link: 'Valutare ambito di controllo e documentazione',
+  home_content_request_title: 'Richiesta tecnica passo dopo passo',
+  home_content_request_text: 'Una richiesta tecnica inizia dalle informazioni già disponibili per il componente: disegno o schizzo, materiale, quantità e data obiettivo. Seguono chiarimenti, percorso di lavorazione ed eventualmente l\'ambito di controllo richiesto. Solo su questa base viene preparata un\'offerta. Il processo in questa pagina mostra i passaggi dal disegno fino al controllo e alla spedizione.',
+  home_content_request_link: 'Preparare una richiesta tecnica',
+  home_content_region_title: 'Da Ala verso la regione DACH',
+  home_content_region_text: 'Il sito produttivo si trova ad Ala, Trentino. OS.MECHPLAST rivolge la collaborazione a clienti in Italia, Germania, Austria e Svizzera. Per le forniture nella regione DACH, disegno, coordinamento tecnico e ambito di spedizione concordato restano la base. La pagina aziendale presenta sede, fondatori e regioni dei clienti.',
+  home_content_region_link: 'Vedere sede e regioni dei clienti'
+});
+
+Object.assign(T.en, {
+  home_content_kicker: 'Service overview',
+  home_content_title: 'CNC machining to drawing – from turned part to series.',
+  home_content_lead: 'OS.MECHPLAST manufactures CNC turned and turn-milled parts to customer drawings. This page provides an overview of processes, typical parts, materials and the route from a technical inquiry to dispatch. A suitable solution is not promised in general terms: drawing, component function, material, quantity and inspection requirements are reviewed together. The specialist pages cover each topic in more detail.',
+  home_content_note: 'For purchasing and design, this is not about a general machine list but about traceable information for the actual component. This overview therefore directs visitors to the specialist pages, where individual questions are described separately.',
+  home_content_turning_title: 'CNC turning and turn-milling',
+  home_content_turning_text: 'For rotationally symmetrical parts such as shafts, bushings, pins, flanges and adapters, CNC turning is the starting point. Where additional flats, holes or contours are needed, turn-milling can complement the machining route. Appropriate steps are assessed from geometry, accessibility and drawing information. The decision is made for the actual component, not from its name alone.',
+  home_content_turning_link: 'View CNC turning and turn-milling',
+  home_content_materials_title: 'Plastics, aluminium and machinable steels',
+  home_content_materials_text: 'Manufacturing is carried out to drawing in engineering plastics, aluminium and machinable steels. Material and delivery condition affect clamping, tool selection and machining strategy. For plastics, function and use are important; for aluminium and steel, alloy, surface requirement and the available drawing data form part of the technical assessment. Open material details are clarified before an offer is prepared.',
+  home_content_materials_link: 'Assess materials for CNC turned parts',
+  home_content_series_title: 'Prototypes, small and medium series',
+  home_content_series_text: 'Prototypes, first samples and small or medium series do not require the same planning. For an individual component, the technical assessment of the drawing is central. For recurring quantities, repeatability, work sequence and inspection scope are also considered. This keeps the inquiry focused on the actual requirement instead of making a blanket series-capability claim.',
+  home_content_series_link: 'View prototypes and series as services',
+  home_content_machine_title: 'Machines and measurement by task',
+  home_content_machine_text: 'The machine park is selected for the task rather than presented as a general capability promise. Component geometry, material and required machining steps are decisive. Critical dimensions and requested inspection points are agreed before manufacturing. Measurement and documentation follow the agreed scope; a measurement report can be specified with the inquiry.',
+  home_content_machine_link: 'View machine park and machining route',
+  home_content_quality_link: 'Assess inspection scope and documentation',
+  home_content_request_title: 'Technical inquiry step by step',
+  home_content_request_text: 'A technical inquiry starts with the information already available for the component: drawing or sketch, material, quantity and target date. Questions, machining route and, if required, the requested inspection scope are then clarified. An offer is prepared only on this basis. The process on this page shows the steps from drawing to inspection and dispatch.',
+  home_content_request_link: 'Prepare a technical inquiry',
+  home_content_region_title: 'From Ala to the DACH region',
+  home_content_region_text: 'The production site is located in Ala, Trentino. OS.MECHPLAST focuses its collaboration on customers in Italy as well as Germany, Austria and Switzerland. For deliveries to the DACH region, drawing, technical coordination and the agreed dispatch scope remain the basis. The company page explains the site, founders and customer regions.',
+  home_content_region_link: 'View site and customer regions'
+});
+
+Object.assign(T.fr, {
+  home_content_kicker: 'Aperçu des prestations',
+  home_content_title: 'Usinage CNC sur plan – de la pièce tournée à la série.',
+  home_content_lead: 'OS.MECHPLAST fabrique des pièces tournées et tournées-fraisées CNC selon les plans clients. Cette page donne un aperçu des procédés, des pièces typiques, des matières et du cheminement entre la demande technique et l’expédition. Aucune solution n’est promise de manière générale : le plan, la fonction de la pièce, la matière, la quantité et les exigences de contrôle sont examinés ensemble. Les pages spécialisées approfondissent chaque sujet.',
+  home_content_note: 'Pour les achats et la conception, il ne s’agit pas d’une liste générale de machines, mais d’informations compréhensibles sur la pièce concrète. Cet aperçu renvoie donc de manière ciblée aux pages spécialisées, où chaque question est décrite séparément.',
+  home_content_turning_title: 'Tournage CNC et tournage-fraisage',
+  home_content_turning_text: 'Pour les pièces de révolution telles que les arbres, bagues, axes, brides et adaptateurs, le tournage CNC est le point de départ. Lorsque des faces, perçages ou contours supplémentaires sont nécessaires, le tournage-fraisage peut compléter le parcours d’usinage. Les opérations appropriées sont évaluées selon la géométrie, l’accessibilité et les indications du plan. La décision concerne la pièce réelle, pas son seul intitulé.',
+  home_content_turning_link: 'Voir le tournage CNC et le tournage-fraisage',
+  home_content_materials_title: 'Plastiques, aluminium et aciers usinables',
+  home_content_materials_text: 'La fabrication est réalisée sur plan en plastiques techniques, aluminium et aciers usinables. La matière et l’état de livraison influencent le serrage, le choix de l’outil et la stratégie d’usinage. Pour les plastiques, la fonction et l’usage sont importants ; pour l’aluminium et l’acier, l’alliage, l’exigence de surface et les données de plan disponibles font partie de l’évaluation technique. Les indications matière ouvertes sont clarifiées avant la préparation de l’offre.',
+  home_content_materials_link: 'Examiner les matières pour pièces tournées CNC',
+  home_content_series_title: 'Prototypes, petites et moyennes séries',
+  home_content_series_text: 'Les prototypes, premiers échantillons et petites ou moyennes séries ne demandent pas la même planification. Pour une pièce unique, l’évaluation technique du plan est centrale. Pour des quantités récurrentes, la répétabilité, la gamme de fabrication et le périmètre de contrôle sont aussi pris en compte. La demande reste ainsi liée au besoin réel, sans promesse générale de capacité série.',
+  home_content_series_link: 'Voir prototypes et séries parmi les prestations',
+  home_content_machine_title: 'Machines et mesures selon la tâche',
+  home_content_machine_text: 'Le parc machines est choisi pour la tâche et non présenté comme une promesse générale. La géométrie de la pièce, la matière et les opérations nécessaires sont décisives. Les cotes critiques et les points de contrôle souhaités sont convenus avant fabrication. Mesure et documentation suivent le périmètre convenu ; un rapport de mesure peut être indiqué dans la demande.',
+  home_content_machine_link: 'Voir parc machines et parcours d’usinage',
+  home_content_quality_link: 'Examiner contrôle et documentation',
+  home_content_request_title: 'Demande technique, étape par étape',
+  home_content_request_text: 'Une demande technique commence par les informations déjà disponibles : plan ou croquis, matière, quantité et délai cible. Les questions, le parcours d’usinage et, si besoin, le périmètre de contrôle souhaité sont ensuite clarifiés. Une offre n’est préparée que sur cette base. Le processus de cette page montre les étapes du plan au contrôle et à l’expédition.',
+  home_content_request_link: 'Préparer une demande technique',
+  home_content_region_title: 'D’Ala vers la région DACH',
+  home_content_region_text: 'Le site de production se trouve à Ala, Trentin. OS.MECHPLAST concentre sa collaboration sur des clients en Italie, en Allemagne, en Autriche et en Suisse. Pour les livraisons vers la région DACH, le plan, la coordination technique et le périmètre d’expédition convenu restent la base. La page entreprise présente le site, les fondateurs et les régions clients.',
+  home_content_region_link: 'Voir le site et les régions clients'
+});
+
+Object.assign(T.de, {
+  services_nav_prototypes: 'Prototypen',
+  services_nav_small_series: 'Kleinserien',
+  services_nav_medium_series: 'Mittlere Serien',
+  services_nav_spare_parts: 'Ersatzteile',
+  services_turning_technology_link: 'CNC-Technologie und Maschinenpark ansehen',
+  services_turnmill_technology_link: 'Technologie für Dreh-Frästeile ansehen',
+  services_prototypes_title: 'Prototypen und Erstmuster',
+  services_prototypes_lead: 'Für neue Bauteile, Funktionsmuster und einzelne Zeichnungsteile.',
+  services_prototypes_text: 'Bei Prototypen und Erstmustern steht die technische Einordnung des konkreten Teils im Vordergrund. Zeichnung oder Skizze, Werkstoff, Funktion und gewünschte Bearbeitungsmerkmale bilden die Grundlage für die Anfrage.',
+  services_prototypes_link: 'Zeichnung für einen Prototyp vorbereiten',
+  services_small_series_title: 'Kleinserien',
+  services_small_series_lead: 'Für überschaubare Mengen gleichartiger Teile.',
+  services_small_series_text: 'Bei Kleinserien werden Zeichnungsstand, Werkstoff, Menge und notwendige Arbeitsschritte gemeinsam betrachtet. Typische Teile sind beispielsweise Wellen, Buchsen, Hülsen, Bolzen, Adapter, Flansche und Distanzstücke, sofern Geometrie und Unterlagen zur Anfrage passen.',
+  services_small_series_link: 'Prüfanforderungen für Kleinserien einordnen',
+  services_medium_series_title: 'Mittlere Serien und wiederkehrende Teile',
+  services_medium_series_lead: 'Für wiederkehrenden Bedarf und stabile Zeichnungsstände.',
+  services_medium_series_text: 'Bei mittleren Serien und wiederkehrenden Teilen wird der Bearbeitungsweg je Bauteil auf Grundlage von Zeichnung, Werkstoff, Menge und vereinbartem Prüfumfang eingeordnet. Wiederholbarkeit wird nicht pauschal zugesagt, sondern mit den tatsächlichen Anforderungen geprüft.',
+  services_medium_series_link: 'Bearbeitungsweg und Maschinenpark einordnen',
+  services_spare_parts_title: 'Ersatzteile',
+  services_spare_parts_lead: 'Wenn ein Ersatzteil nach Zeichnung oder Muster benötigt wird.',
+  services_spare_parts_text: 'Ersatzteile werden anhand der verfügbaren Unterlagen eingeordnet. Eine Zeichnung ist die verlässlichste Grundlage; bei einem Muster helfen zusätzliche Angaben zu Funktion, Werkstoff und Einbausituation, offene Punkte vor der Anfrage zu klären.',
+  services_spare_parts_link: 'Ersatzteil-Anfrage mit vorhandenen Unterlagen vorbereiten'
+});
+
+Object.assign(T.it, {
+  services_nav_prototypes: 'Prototipi',
+  services_nav_small_series: 'Piccole serie',
+  services_nav_medium_series: 'Medie serie',
+  services_nav_spare_parts: 'Ricambi',
+  services_turning_technology_link: 'Vedere tecnologia CNC e parco macchine',
+  services_turnmill_technology_link: 'Vedere la tecnologia per pezzi tornio-fresati',
+  services_prototypes_title: 'Prototipi e primi campioni',
+  services_prototypes_lead: 'Per nuovi componenti, campioni funzionali e singoli pezzi su disegno.',
+  services_prototypes_text: 'Per prototipi e primi campioni, la valutazione tecnica del componente concreto è centrale. Disegno o schizzo, materiale, funzione e caratteristiche di lavorazione desiderate costituiscono la base della richiesta.',
+  services_prototypes_link: 'Preparare il disegno per un prototipo',
+  services_small_series_title: 'Piccole serie',
+  services_small_series_lead: 'Per quantità contenute di componenti uguali.',
+  services_small_series_text: 'Per le piccole serie vengono valutati insieme stato del disegno, materiale, quantità e lavorazioni necessarie. Componenti tipici sono, ad esempio, alberi, boccole, bussole, perni, adattatori, flange e distanziali, se geometria e documentazione sono adatte alla richiesta.',
+  services_small_series_link: 'Valutare i requisiti di controllo per piccole serie',
+  services_medium_series_title: 'Medie serie e componenti ricorrenti',
+  services_medium_series_lead: 'Per fabbisogni ricorrenti e disegni stabili.',
+  services_medium_series_text: 'Per le medie serie e i componenti ricorrenti, il ciclo di lavorazione viene valutato per ogni componente in base a disegno, materiale, quantità e ambito di controllo concordato. La ripetibilità non viene promessa in modo generico, ma verificata rispetto ai requisiti effettivi.',
+  services_medium_series_link: 'Valutare ciclo di lavorazione e parco macchine',
+  services_spare_parts_title: 'Ricambi',
+  services_spare_parts_lead: 'Quando è necessario un ricambio su disegno o campione.',
+  services_spare_parts_text: 'I ricambi vengono valutati in base alla documentazione disponibile. Un disegno è la base più affidabile; nel caso di un campione, indicazioni aggiuntive su funzione, materiale e situazione di montaggio aiutano a chiarire i punti aperti prima della richiesta.',
+  services_spare_parts_link: 'Preparare una richiesta ricambio con la documentazione disponibile'
+});
+
+Object.assign(T.en, {
+  services_nav_prototypes: 'Prototypes',
+  services_nav_small_series: 'Small series',
+  services_nav_medium_series: 'Medium series',
+  services_nav_spare_parts: 'Spare parts',
+  services_turning_technology_link: 'View CNC technology and machine park',
+  services_turnmill_technology_link: 'View technology for turn-milled parts',
+  services_prototypes_title: 'Prototypes and first samples',
+  services_prototypes_lead: 'For new components, functional samples and individual drawing parts.',
+  services_prototypes_text: 'For prototypes and first samples, the technical assessment of the actual component is central. A drawing or sketch, material, function and requested machining features form the basis of the inquiry.',
+  services_prototypes_link: 'Prepare a drawing for a prototype',
+  services_small_series_title: 'Small series',
+  services_small_series_lead: 'For manageable quantities of identical parts.',
+  services_small_series_text: 'For small series, drawing status, material, quantity and the necessary machining steps are reviewed together. Typical parts include shafts, bushings, sleeves, pins, adapters, flanges and spacers, provided the geometry and documents fit the inquiry.',
+  services_small_series_link: 'Assess inspection requirements for small series',
+  services_medium_series_title: 'Medium series and recurring parts',
+  services_medium_series_lead: 'For recurring demand and stable drawing revisions.',
+  services_medium_series_text: 'For medium series and recurring parts, the machining route is assessed for each component based on drawing, material, quantity and the agreed inspection scope. Repeatability is not promised generally; it is checked against the actual requirements.',
+  services_medium_series_link: 'Assess machining route and machine park',
+  services_spare_parts_title: 'Spare parts',
+  services_spare_parts_lead: 'When a spare part is needed to a drawing or sample.',
+  services_spare_parts_text: 'Spare parts are assessed from the available documentation. A drawing is the most reliable basis; where a sample is available, additional information on function, material and installation context helps clarify open points before the inquiry.',
+  services_spare_parts_link: 'Prepare a spare-parts inquiry with available documents'
+});
+
+Object.assign(T.fr, {
+  services_nav_prototypes: 'Prototypes',
+  services_nav_small_series: 'Petites séries',
+  services_nav_medium_series: 'Séries moyennes',
+  services_nav_spare_parts: 'Pièces de rechange',
+  services_turning_technology_link: 'Voir technologie CNC et parc machines',
+  services_turnmill_technology_link: 'Voir la technologie des pièces tournées-fraisées',
+  services_prototypes_title: 'Prototypes et premiers échantillons',
+  services_prototypes_lead: 'Pour de nouveaux composants, des échantillons fonctionnels et des pièces unitaires sur plan.',
+  services_prototypes_text: 'Pour les prototypes et premiers échantillons, l’évaluation technique de la pièce concrète est centrale. Plan ou croquis, matière, fonction et caractéristiques d’usinage souhaitées constituent la base de la demande.',
+  services_prototypes_link: 'Préparer un plan pour un prototype',
+  services_small_series_title: 'Petites séries',
+  services_small_series_lead: 'Pour des quantités limitées de pièces identiques.',
+  services_small_series_text: 'Pour les petites séries, l’état du plan, la matière, la quantité et les opérations nécessaires sont examinés ensemble. Les pièces typiques comprennent par exemple arbres, bagues, douilles, axes, adaptateurs, brides et entretoises, lorsque la géométrie et les documents correspondent à la demande.',
+  services_small_series_link: 'Examiner les exigences de contrôle des petites séries',
+  services_medium_series_title: 'Séries moyennes et pièces récurrentes',
+  services_medium_series_lead: 'Pour des besoins récurrents et des plans stables.',
+  services_medium_series_text: 'Pour les séries moyennes et les pièces récurrentes, le parcours d’usinage est évalué pour chaque pièce à partir du plan, de la matière, de la quantité et du périmètre de contrôle convenu. La répétabilité n’est pas promise de manière générale ; elle est vérifiée au regard des exigences réelles.',
+  services_medium_series_link: 'Examiner le parcours d’usinage et le parc machines',
+  services_spare_parts_title: 'Pièces de rechange',
+  services_spare_parts_lead: 'Lorsqu’une pièce de rechange est requise sur plan ou à partir d’un échantillon.',
+  services_spare_parts_text: 'Les pièces de rechange sont évaluées à partir des documents disponibles. Un plan est la base la plus fiable ; lorsqu’un échantillon est disponible, des informations complémentaires sur la fonction, la matière et le contexte de montage aident à clarifier les points ouverts avant la demande.',
+  services_spare_parts_link: 'Préparer une demande de pièce de rechange avec les documents disponibles'
+});
+
+Object.assign(T.de, {
+  materials_plastics_kicker: 'Technische Kunststoffe nach Anfrage',
+  materials_plastics_title: 'Machbare Kunststoffe prüfen wir nach Zeichnung.',
+  materials_plastics_text: 'Technische Kunststoffe prüfen wir nach Anfrage. Machbarkeit und geeigneter Werkstoff werden anhand von Zeichnung, Geometrie, Einsatzbedingungen und verfügbaren Materialangaben bewertet.',
+  materials_plastics_detail_1: 'Für die Prüfung: Werkstoffbezeichnung, Lieferzustand und vorhandene Materialangaben, falls verfügbar.',
+  materials_plastics_detail_2: 'Typisch: Adapter, Führungen, Gleitteile und technische Komponenten.',
+  materials_plastics_detail_3: 'Werkstoff und Machbarkeit bestätigen wir erst nach technischer Prüfung.',
+  materials_steel_kicker: 'Zerspanbare Stahlwerkstoffe',
+  materials_steel_title: 'Für Wellen, Bolzen und belastete Drehteile.',
+  materials_steel_text: 'Bei zerspanbaren Stahlwerkstoffen entscheiden Legierung, Lieferzustand, Toleranzen und Oberfläche über den passenden Bearbeitungsweg. Wir prüfen, ob Zeichnung und Material fertigungstechnisch zusammenpassen.',
+  materials_steel_detail_1: 'Typisch: Wellen, Bolzen, Buchsen und belastete Bauteile.',
+  materials_steel_detail_2: 'Wichtig: Legierung, Materialzustand, Oberfläche und Normangabe.',
+  materials_steel_detail_3: 'Edelstahl und weitere Sonderwerkstoffe prüfen wir nur nach technischer Anfrage.',
+  materials_special_note: 'Sondermaterialien prüfen wir nach Anfrage anhand der verfügbaren Unterlagen und der vorgesehenen Anwendung.'
+});
+
+Object.assign(T.it, {
+  materials_plastics_kicker: 'Tecnopolimeri su richiesta',
+  materials_plastics_title: 'Verifichiamo le plastiche lavorabili in base al disegno.',
+  materials_plastics_text: 'Valutiamo i tecnopolimeri su richiesta. Fattibilità e materiale adatto vengono esaminati in base a disegno, geometria, condizioni d’impiego e dati del materiale disponibili.',
+  materials_plastics_detail_1: 'Per la verifica: denominazione del materiale, stato di fornitura e dati disponibili, se presenti.',
+  materials_plastics_detail_2: 'Tipici: adattatori, guide, elementi di scorrimento e componenti tecnici.',
+  materials_plastics_detail_3: 'Confermiamo materiale e fattibilità solo dopo la verifica tecnica.',
+  materials_steel_kicker: 'Acciai lavorabili',
+  materials_steel_title: 'Per alberi, perni e particolari torniti sottoposti a carico.',
+  materials_steel_text: 'Per gli acciai lavorabili, lega, stato di fornitura, tolleranze e superficie definiscono il ciclo di lavorazione. Verifichiamo se disegno e materiale sono compatibili dal punto di vista produttivo.',
+  materials_steel_detail_1: 'Tipici: alberi, perni, boccole e componenti sottoposti a carico.',
+  materials_steel_detail_2: 'Importanti: lega, stato del materiale, superficie e indicazione della norma.',
+  materials_steel_detail_3: 'Acciaio inox e altri materiali speciali vengono verificati solo su richiesta tecnica.',
+  materials_special_note: 'I materiali speciali vengono verificati su richiesta in base alla documentazione disponibile e all’applicazione prevista.'
+});
+
+Object.assign(T.en, {
+  materials_plastics_kicker: 'Engineering plastics on request',
+  materials_plastics_title: 'We review machinable plastics against the drawing.',
+  materials_plastics_text: 'Engineering plastics are reviewed on request. Feasibility and the suitable material are assessed against the drawing, geometry, operating conditions and available material information.',
+  materials_plastics_detail_1: 'For the review: material designation, delivery condition and available material data, where available.',
+  materials_plastics_detail_2: 'Typical: adapters, guides, sliding parts and technical components.',
+  materials_plastics_detail_3: 'Material and feasibility are confirmed only after technical review.',
+  materials_steel_kicker: 'Machinable steels',
+  materials_steel_title: 'For shafts, pins and loaded turned parts.',
+  materials_steel_text: 'For machinable steels, alloy, delivery condition, tolerances and surface determine the appropriate machining route. We review whether drawing and material fit together from a manufacturing perspective.',
+  materials_steel_detail_1: 'Typical: shafts, pins, bushings and loaded components.',
+  materials_steel_detail_2: 'Important: alloy, material condition, surface and standard designation.',
+  materials_steel_detail_3: 'Stainless steel and further special materials are reviewed only after a technical inquiry.',
+  materials_special_note: 'Special materials are reviewed on request against the available documentation and intended application.'
+});
+
+Object.assign(T.fr, {
+  materials_plastics_kicker: 'Plastiques techniques sur demande',
+  materials_plastics_title: 'Nous vérifions les plastiques usinables à partir du plan.',
+  materials_plastics_text: 'Les plastiques techniques sont vérifiés sur demande. La faisabilité et la matière adaptée sont évaluées selon le plan, la géométrie, les conditions d’utilisation et les données matière disponibles.',
+  materials_plastics_detail_1: 'Pour la vérification : désignation de la matière, état de livraison et données disponibles, si elles existent.',
+  materials_plastics_detail_2: 'Typiques : adaptateurs, guidages, pièces de glissement et composants techniques.',
+  materials_plastics_detail_3: 'La matière et la faisabilité sont confirmées uniquement après vérification technique.',
+  materials_steel_kicker: 'Aciers usinables',
+  materials_steel_title: 'Pour arbres, axes et pièces tournées soumises à charge.',
+  materials_steel_text: 'Pour les aciers usinables, l’alliage, l’état de livraison, les tolérances et la surface déterminent le processus d’usinage. Nous vérifions si le plan et la matière sont compatibles du point de vue de la fabrication.',
+  materials_steel_detail_1: 'Typiques : arbres, axes, bagues et composants soumis à charge.',
+  materials_steel_detail_2: 'Importants : alliage, état de la matière, surface et indication de norme.',
+  materials_steel_detail_3: 'L’acier inoxydable et les autres matériaux spéciaux sont vérifiés uniquement après une demande technique.',
+  materials_special_note: 'Les matériaux spéciaux sont vérifiés sur demande à partir des documents disponibles et de l’application prévue.'
+});
+
+Object.assign(STATIC_TRANSLATIONS.it, {
+  'Messmittel': 'Strumenti di misura',
+  'Zertifikate': 'Certificati',
+  'Messmittel passend zum Prüfumfang.': 'Strumenti di misura in base all’ambito di controllo.',
+  'Das Prüfmittel richtet sich nach Zeichnung, Merkmal und vereinbarter Dokumentation.': 'Lo strumento di misura dipende da disegno, caratteristica e documentazione concordata.',
+  'Für die Prüfung setzen wir die vorhandenen Messmittel passend zu den vereinbarten Prüfmerkmalen ein. Welche Messung und welche Dokumentation erforderlich sind, klären wir vor dem Auftrag anhand von Zeichnung und Funktion des Bauteils.': 'Per il controllo utilizziamo gli strumenti di misura disponibili in base alle caratteristiche concordate. Quale misurazione e quale documentazione siano necessarie viene chiarito prima dell’ordine in base a disegno e funzione del componente.',
+  'Messmittel und Prüfmethode vor dem Auftrag abstimmen': 'Concordare strumenti di misura e metodo di controllo prima dell’ordine',
+  'Kritische Maße und Funktionsmerkmale in der Zeichnung benennen': 'Indicare nel disegno quote critiche e caratteristiche funzionali',
+  'Besondere Prüfanforderungen mit der Anfrage mitsenden': 'Inviare requisiti di controllo speciali con la richiesta',
+  'Messprotokolle sind auf Anfrage und nach vereinbartem Umfang möglich. Der gewünschte Umfang sollte bereits bei der Anfrage genannt werden. So können Prüfmerkmale, Stichprobe und Dokumentationsform sinnvoll eingeplant werden.': 'I rapporti di misura sono possibili su richiesta e nell’ambito concordato. L’ambito desiderato dovrebbe essere indicato già nella richiesta. Così caratteristiche di controllo, campionamento e forma della documentazione possono essere pianificati correttamente.',
+  'Materialzertifikate und Zertifizierungsstand.': 'Certificati del materiale e stato della certificazione.',
+  'Nachweise werden vor Angebot und Auftrag klar eingeordnet.': 'Le evidenze vengono chiarite prima dell’offerta e dell’ordine.',
+  'Wenn ein Materialzertifikat des Lieferanten benötigt wird, sollte dies mit der Anfrage angegeben werden. Wir klären vor dem Angebot, ob ein entsprechender Nachweis für den angefragten Werkstoff verfügbar ist und wie er dem Auftrag zugeordnet werden soll. ISO 9001 ist für OS.MECHPLAST geplant; eine bestehende ISO-9001-Zertifizierung wird nicht behauptet.': 'Se è necessario un certificato del materiale del fornitore, va indicato nella richiesta. Prima dell’offerta chiariamo se un documento corrispondente è disponibile per il materiale richiesto e come deve essere associato all’ordine. ISO 9001 è prevista per OS.MECHPLAST; non viene dichiarata una certificazione ISO 9001 già esistente.',
+  'Materialzertifikat des Lieferanten vor dem Auftrag anfragen': 'Richiedere il certificato del materiale del fornitore prima dell’ordine',
+  'Verfügbarkeit und Auftragszuordnung vorab klären': 'Chiarire in anticipo disponibilità e associazione all’ordine',
+  'ISO 9001: geplant, derzeit nicht als Zertifizierung ausgewiesen': 'ISO 9001: prevista, attualmente non dichiarata come certificazione'
+});
+
+Object.assign(STATIC_TRANSLATIONS.en, {
+  'Messmittel': 'Measuring equipment',
+  'Zertifikate': 'Certificates',
+  'Messmittel passend zum Prüfumfang.': 'Measuring equipment matched to the inspection scope.',
+  'Das Prüfmittel richtet sich nach Zeichnung, Merkmal und vereinbarter Dokumentation.': 'The measuring instrument is selected according to the drawing, feature and agreed documentation.',
+  'Für die Prüfung setzen wir die vorhandenen Messmittel passend zu den vereinbarten Prüfmerkmalen ein. Welche Messung und welche Dokumentation erforderlich sind, klären wir vor dem Auftrag anhand von Zeichnung und Funktion des Bauteils.': 'For inspection, we use the available measuring equipment in line with the agreed inspection features. The required measurement and documentation are clarified before the order from the drawing and the component function.',
+  'Messmittel und Prüfmethode vor dem Auftrag abstimmen': 'Agree measuring equipment and inspection method before the order',
+  'Kritische Maße und Funktionsmerkmale in der Zeichnung benennen': 'Identify critical dimensions and functional features in the drawing',
+  'Besondere Prüfanforderungen mit der Anfrage mitsenden': 'Send special inspection requirements with the inquiry',
+  'Messprotokolle sind auf Anfrage und nach vereinbartem Umfang möglich. Der gewünschte Umfang sollte bereits bei der Anfrage genannt werden. So können Prüfmerkmale, Stichprobe und Dokumentationsform sinnvoll eingeplant werden.': 'Measurement reports are available on request and for the agreed scope. The required scope should be stated with the inquiry so that inspection features, sampling and the documentation format can be planned properly.',
+  'Materialzertifikate und Zertifizierungsstand.': 'Material certificates and certification status.',
+  'Nachweise werden vor Angebot und Auftrag klar eingeordnet.': 'Supporting documents are clarified before quotation and order.',
+  'Wenn ein Materialzertifikat des Lieferanten benötigt wird, sollte dies mit der Anfrage angegeben werden. Wir klären vor dem Angebot, ob ein entsprechender Nachweis für den angefragten Werkstoff verfügbar ist und wie er dem Auftrag zugeordnet werden soll. ISO 9001 ist für OS.MECHPLAST geplant; eine bestehende ISO-9001-Zertifizierung wird nicht behauptet.': 'If a supplier material certificate is required, please state this with the inquiry. Before quotation, we clarify whether the required evidence is available for the requested material and how it is assigned to the order. ISO 9001 is planned for OS.MECHPLAST; no existing ISO 9001 certification is claimed.',
+  'Materialzertifikat des Lieferanten vor dem Auftrag anfragen': 'Request the supplier material certificate before the order',
+  'Verfügbarkeit und Auftragszuordnung vorab klären': 'Clarify availability and order assignment in advance',
+  'ISO 9001: geplant, derzeit nicht als Zertifizierung ausgewiesen': 'ISO 9001: planned, not currently stated as a certification'
+});
+
+Object.assign(STATIC_TRANSLATIONS.fr, {
+  'Messmittel': 'Moyens de mesure',
+  'Zertifikate': 'Certificats',
+  'Messmittel passend zum Prüfumfang.': 'Moyens de mesure adaptés au périmètre de contrôle.',
+  'Das Prüfmittel richtet sich nach Zeichnung, Merkmal und vereinbarter Dokumentation.': 'Le moyen de mesure est choisi selon le plan, la caractéristique et la documentation convenue.',
+  'Für die Prüfung setzen wir die vorhandenen Messmittel passend zu den vereinbarten Prüfmerkmalen ein. Welche Messung und welche Dokumentation erforderlich sind, klären wir vor dem Auftrag anhand von Zeichnung und Funktion des Bauteils.': 'Pour le contrôle, nous utilisons les moyens de mesure disponibles selon les caractéristiques de contrôle convenues. La mesure et la documentation nécessaires sont clarifiées avant la commande à partir du plan et de la fonction de la pièce.',
+  'Messmittel und Prüfmethode vor dem Auftrag abstimmen': 'Définir les moyens de mesure et la méthode de contrôle avant la commande',
+  'Kritische Maße und Funktionsmerkmale in der Zeichnung benennen': 'Indiquer les cotes critiques et les caractéristiques fonctionnelles sur le plan',
+  'Besondere Prüfanforderungen mit der Anfrage mitsenden': 'Joindre les exigences de contrôle particulières à la demande',
+  'Messprotokolle sind auf Anfrage und nach vereinbartem Umfang möglich. Der gewünschte Umfang sollte bereits bei der Anfrage genannt werden. So können Prüfmerkmale, Stichprobe und Dokumentationsform sinnvoll eingeplant werden.': 'Des rapports de mesure sont possibles sur demande et selon le périmètre convenu. Le périmètre souhaité doit être indiqué dès la demande afin de planifier correctement les caractéristiques de contrôle, l’échantillonnage et le format de documentation.',
+  'Materialzertifikate und Zertifizierungsstand.': 'Certificats matière et statut de certification.',
+  'Nachweise werden vor Angebot und Auftrag klar eingeordnet.': 'Les justificatifs sont clarifiés avant l’offre et la commande.',
+  'Wenn ein Materialzertifikat des Lieferanten benötigt wird, sollte dies mit der Anfrage angegeben werden. Wir klären vor dem Angebot, ob ein entsprechender Nachweis für den angefragten Werkstoff verfügbar ist und wie er dem Auftrag zugeordnet werden soll. ISO 9001 ist für OS.MECHPLAST geplant; eine bestehende ISO-9001-Zertifizierung wird nicht behauptet.': 'Si un certificat matière du fournisseur est nécessaire, merci de l’indiquer dans la demande. Avant l’offre, nous clarifions si le justificatif correspondant est disponible pour la matière demandée et comment il doit être associé à la commande. ISO 9001 est prévue pour OS.MECHPLAST ; aucune certification ISO 9001 existante n’est revendiquée.',
+  'Materialzertifikat des Lieferanten vor dem Auftrag anfragen': 'Demander le certificat matière du fournisseur avant la commande',
+  'Verfügbarkeit und Auftragszuordnung vorab klären': 'Clarifier à l’avance la disponibilité et l’association à la commande',
+  'ISO 9001: geplant, derzeit nicht als Zertifizierung ausgewiesen': 'ISO 9001 : prévue, non déclarée actuellement comme certification'
+});
+
+Object.assign(STATIC_TRANSLATIONS.it, {
+  'CNC-Lohnfertigung aus Ala, Trentino.': 'Lavorazioni CNC conto terzi da Ala, Trentino.',
+  'OSMP ist die Marke der OS.MECHPLAST SRLS in Ala, Trentino. Das Unternehmen bietet CNC-Lohnfertigung für Drehteile und Dreh-Frästeile nach Zeichnung für Kunden in Italien und der DACH-Region an.': 'OSMP è il marchio di OS.MECHPLAST SRLS ad Ala, Trentino. L’azienda offre lavorazioni CNC conto terzi per particolari torniti e tornio-fresati su disegno per clienti in Italia e nella regione DACH.'
+});
+
+Object.assign(STATIC_TRANSLATIONS.en, {
+  'CNC-Lohnfertigung aus Ala, Trentino.': 'CNC contract manufacturing from Ala, Trentino.',
+  'OSMP ist die Marke der OS.MECHPLAST SRLS in Ala, Trentino. Das Unternehmen bietet CNC-Lohnfertigung für Drehteile und Dreh-Frästeile nach Zeichnung für Kunden in Italien und der DACH-Region an.': 'OSMP is the brand of OS.MECHPLAST SRLS in Ala, Trentino. The company provides CNC contract manufacturing for turned and turn-milled parts to drawing for customers in Italy and the DACH region.'
+});
+
+Object.assign(STATIC_TRANSLATIONS.fr, {
+  'CNC-Lohnfertigung aus Ala, Trentino.': 'Usinage CNC en sous-traitance depuis Ala, Trentin.',
+  'OSMP ist die Marke der OS.MECHPLAST SRLS in Ala, Trentino. Das Unternehmen bietet CNC-Lohnfertigung für Drehteile und Dreh-Frästeile nach Zeichnung für Kunden in Italien und der DACH-Region an.': 'OSMP est la marque de OS.MECHPLAST SRLS à Ala, Trentin. L’entreprise propose de l’usinage CNC en sous-traitance pour des pièces tournées et tournées-fraisées sur plan, pour des clients en Italie et dans la région DACH.'
+});
+
+Object.assign(STATIC_TRANSLATIONS.it, {
+  'Telefon': 'Telefono',
+  'Kontaktzeiten': 'Orari di contatto',
+  'TODO: Reale Kontaktzeiten ergänzen.': 'TODO: aggiungere gli orari di contatto effettivi.',
+  'Datenschutzhinweis:': 'Informativa sulla privacy:',
+  'Die von Ihnen übermittelten Angaben werden zur Bearbeitung Ihrer Anfrage verarbeitet. Details zur Datenverarbeitung: TODO – Datenschutzhinweis ergänzen.': 'I dati trasmessi vengono trattati per gestire la vostra richiesta. Dettagli sul trattamento dei dati: TODO – aggiungere l’informativa sulla privacy.'
+});
+
+Object.assign(STATIC_TRANSLATIONS.en, {
+  'Telefon': 'Telephone',
+  'Kontaktzeiten': 'Contact hours',
+  'TODO: Reale Kontaktzeiten ergänzen.': 'TODO: add actual contact hours.',
+  'Datenschutzhinweis:': 'Privacy notice:',
+  'Die von Ihnen übermittelten Angaben werden zur Bearbeitung Ihrer Anfrage verarbeitet. Details zur Datenverarbeitung: TODO – Datenschutzhinweis ergänzen.': 'The details you submit are processed to handle your inquiry. Details about data processing: TODO – add privacy notice.'
+});
+
+Object.assign(STATIC_TRANSLATIONS.fr, {
+  'Telefon': 'Téléphone',
+  'Kontaktzeiten': 'Horaires de contact',
+  'TODO: Reale Kontaktzeiten ergänzen.': 'TODO : ajouter les horaires de contact effectifs.',
+  'Datenschutzhinweis:': 'Information sur la confidentialité :',
+  'Die von Ihnen übermittelten Angaben werden zur Bearbeitung Ihrer Anfrage verarbeitet. Details zur Datenverarbeitung: TODO – Datenschutzhinweis ergänzen.': 'Les informations transmises sont traitées afin de gérer votre demande. Détails du traitement des données : TODO – ajouter l’information sur la confidentialité.'
+});
+
+Object.assign(T.de, {
+  faq_section_kicker: 'FAQ',
+  faq_section_title: 'Häufige Fragen zur CNC-Anfrage.',
+  faq_section_lead: 'Kurz beantwortet: von Zeichnungsdaten und Werkstoffen bis zu Prüfung, Lieferung und Angebot.',
+  faq_drawing_q: 'Welche Angaben benötigt OSMP für eine CNC-Anfrage?',
+  faq_drawing_a: 'Für die technische Prüfung sind Zeichnungsstand, Werkstoff oder Materialangabe, Menge sowie bekannte Anforderungen an Funktion, Oberfläche oder Prüfung hilfreich. Offene Angaben werden vor dem Angebot geklärt.',
+  faq_drawing_link: 'Zeichnungsdaten und CNC-Technologie ansehen',
+  faq_files_q: 'Welche Dateiformate können mit der Anfrage ausgewählt werden?',
+  faq_files_a: 'Im Anfrageformular sind PDF, DXF, STEP, STP und Bilddateien auswählbar. Für die technische Einordnung sind vollständige Zeichnungsdaten besonders hilfreich.',
+  faq_prototypes_q: 'Fertigt OSMP Prototypen und Erstmuster?',
+  faq_prototypes_a: 'Ja. Für Prototypen und Erstmuster prüfen wir Zeichnung, Werkstoff, Funktion und die gewünschten Bearbeitungsmerkmale des konkreten Teils.',
+  faq_prototypes_link: 'Prototypen und Erstmuster einordnen',
+  faq_series_q: 'Sind Kleinserien und mittlere Serien möglich?',
+  faq_series_a: 'Kleinserien, mittlere Serien und wiederkehrende Teile werden anhand von Zeichnungsstand, Werkstoff, Menge und notwendigen Arbeitsschritten eingeordnet. Die technische Prüfung bestimmt den passenden Fertigungsweg.',
+  faq_series_link: 'Kleinserien und wiederkehrende Teile ansehen',
+  faq_materials_q: 'Welche Werkstoffe werden bearbeitet?',
+  faq_materials_a: 'OSMP bearbeitet Aluminium und zerspanbare Stahlwerkstoffe. Technische Kunststoffe und weitere Sondermaterialien werden nach Anfrage anhand von Zeichnung, Geometrie und Einsatz geprüft.',
+  faq_materials_link: 'Werkstoffe für CNC-Drehteile prüfen',
+  faq_reports_q: 'Sind Messprotokolle möglich?',
+  faq_reports_a: 'Messprotokolle sind auf Anfrage und nach vereinbartem Umfang möglich. Gewünschte Prüfmerkmale und die Dokumentationsform sollten bereits mit der Anfrage genannt werden.',
+  faq_reports_link: 'Messprotokolle und Prüfablauf ansehen',
+  faq_certificates_q: 'Können Materialzertifikate bereitgestellt werden?',
+  faq_certificates_a: 'Wenn ein Materialzertifikat des Lieferanten benötigt wird, sollte dies mit der Anfrage angegeben werden. Vor dem Angebot wird geklärt, ob der Nachweis für den angefragten Werkstoff verfügbar ist und wie er dem Auftrag zugeordnet wird.',
+  faq_certificates_link: 'Materialzertifikate vor dem Auftrag klären',
+  faq_delivery_q: 'In welche Regionen liefert OSMP?',
+  faq_delivery_a: 'Der Schwerpunkt liegt auf Kunden in Italien sowie in Deutschland, Österreich und der Schweiz. Den konkreten Versandumfang stimmen wir mit der Anfrage ab.',
+  faq_delivery_link: 'Standort und Kundenregionen ansehen',
+  faq_quote_q: 'Wie läuft die Angebotsvorbereitung ab?',
+  faq_quote_a: 'Senden Sie Zeichnung, Materialangabe und Menge. Wir prüfen die technische Machbarkeit, klären offene Punkte und bereiten das Angebot auf Basis der technisch eingeordneten Anfrage vor.',
+  faq_quote_link: 'CNC-Anfrage mit Zeichnung starten'
+});
+
+Object.assign(T.it, {
+  faq_section_kicker: 'FAQ',
+  faq_section_title: 'Domande frequenti sulla richiesta CNC.',
+  faq_section_lead: 'Risposte brevi: dai dati di disegno e materiali fino a controllo, consegna e offerta.',
+  faq_drawing_q: 'Quali dati servono a OSMP per una richiesta CNC?',
+  faq_drawing_a: 'Per la verifica tecnica sono utili la versione del disegno, il materiale o la relativa indicazione, la quantità e i requisiti noti relativi a funzione, superficie o controllo. Le informazioni mancanti vengono chiarite prima dell’offerta.',
+  faq_drawing_link: 'Vedere dati di disegno e tecnologia CNC',
+  faq_files_q: 'Quali formati di file possono essere selezionati con la richiesta?',
+  faq_files_a: 'Nel modulo di richiesta si possono selezionare PDF, DXF, STEP, STP e file immagine. Per la valutazione tecnica sono particolarmente utili dati di disegno completi.',
+  faq_prototypes_q: 'OSMP realizza prototipi e primi campioni?',
+  faq_prototypes_a: 'Sì. Per prototipi e primi campioni verifichiamo disegno, materiale, funzione e le caratteristiche di lavorazione richieste per il componente specifico.',
+  faq_prototypes_link: 'Inquadrare prototipi e primi campioni',
+  faq_series_q: 'Sono possibili piccole e medie serie?',
+  faq_series_a: 'Piccole serie, medie serie e particolari ricorrenti vengono valutati in base alla versione del disegno, al materiale, alla quantità e alle lavorazioni necessarie. La verifica tecnica determina il percorso produttivo adatto.',
+  faq_series_link: 'Vedere piccole serie e particolari ricorrenti',
+  faq_materials_q: 'Quali materiali vengono lavorati?',
+  faq_materials_a: 'OSMP lavora alluminio e acciai lavorabili. I tecnopolimeri e altri materiali speciali vengono verificati su richiesta in base a disegno, geometria e applicazione.',
+  faq_materials_link: 'Verificare materiali per particolari torniti CNC',
+  faq_reports_q: 'Sono possibili rapporti di misura?',
+  faq_reports_a: 'I rapporti di misura sono possibili su richiesta e nell’ambito concordato. Le caratteristiche da controllare e la forma della documentazione dovrebbero essere indicate già nella richiesta.',
+  faq_reports_link: 'Vedere rapporti di misura e processo di controllo',
+  faq_certificates_q: 'Possono essere forniti certificati del materiale?',
+  faq_certificates_a: 'Se è necessario un certificato del materiale del fornitore, va indicato nella richiesta. Prima dell’offerta viene chiarito se il documento è disponibile per il materiale richiesto e come viene associato all’ordine.',
+  faq_certificates_link: 'Chiarire i certificati del materiale prima dell’ordine',
+  faq_delivery_q: 'In quali regioni consegna OSMP?',
+  faq_delivery_a: 'L’attenzione è rivolta a clienti in Italia, Germania, Austria e Svizzera. L’ambito concreto della spedizione viene concordato con la richiesta.',
+  faq_delivery_link: 'Vedere sede e regioni clienti',
+  faq_quote_q: 'Come si prepara un’offerta?',
+  faq_quote_a: 'Inviate disegno, indicazione del materiale e quantità. Verifichiamo la fattibilità tecnica, chiarendo i punti aperti e preparando l’offerta sulla base della richiesta tecnicamente valutata.',
+  faq_quote_link: 'Avviare una richiesta CNC con disegno'
+});
+
+Object.assign(T.en, {
+  faq_section_kicker: 'FAQ',
+  faq_section_title: 'Frequently asked questions about CNC inquiries.',
+  faq_section_lead: 'Brief answers: from drawing data and materials to inspection, delivery and quotation.',
+  faq_drawing_q: 'What information does OSMP need for a CNC inquiry?',
+  faq_drawing_a: 'For the technical review, the drawing revision, material or material specification, quantity and known requirements for function, surface or inspection are helpful. Open information is clarified before quotation.',
+  faq_drawing_link: 'View drawing data and CNC technology',
+  faq_files_q: 'Which file formats can be selected with the inquiry?',
+  faq_files_a: 'The inquiry form allows PDF, DXF, STEP, STP and image files to be selected. Complete drawing data is especially helpful for technical evaluation.',
+  faq_prototypes_q: 'Does OSMP manufacture prototypes and first samples?',
+  faq_prototypes_a: 'Yes. For prototypes and first samples, we review the drawing, material, function and requested machining features of the specific part.',
+  faq_prototypes_link: 'Review prototypes and first samples',
+  faq_series_q: 'Are small and medium series possible?',
+  faq_series_a: 'Small series, medium series and recurring parts are assessed from the drawing revision, material, quantity and required work steps. The technical review determines the appropriate manufacturing route.',
+  faq_series_link: 'View small series and recurring parts',
+  faq_materials_q: 'Which materials are machined?',
+  faq_materials_a: 'OSMP machines aluminium and machinable steels. Engineering plastics and further special materials are reviewed on request against the drawing, geometry and application.',
+  faq_materials_link: 'Review materials for CNC turned parts',
+  faq_reports_q: 'Are measurement reports possible?',
+  faq_reports_a: 'Measurement reports are possible on request and for the agreed scope. Required inspection features and the documentation format should be stated with the inquiry.',
+  faq_reports_link: 'View measurement reports and inspection process',
+  faq_certificates_q: 'Can material certificates be provided?',
+  faq_certificates_a: 'If a supplier material certificate is required, please state this with the inquiry. Before quotation, we clarify whether the document is available for the requested material and how it is assigned to the order.',
+  faq_certificates_link: 'Clarify material certificates before the order',
+  faq_delivery_q: 'Which regions does OSMP serve?',
+  faq_delivery_a: 'The focus is on customers in Italy, Germany, Austria and Switzerland. The concrete shipping scope is agreed with the inquiry.',
+  faq_delivery_link: 'View location and customer regions',
+  faq_quote_q: 'How is a quotation prepared?',
+  faq_quote_a: 'Send the drawing, material specification and quantity. We review technical feasibility, clarify open points and prepare the quotation from the technically assessed inquiry.',
+  faq_quote_link: 'Start a CNC inquiry with a drawing'
+});
+
+Object.assign(T.fr, {
+  faq_section_kicker: 'FAQ',
+  faq_section_title: 'Questions fréquentes sur la demande CNC.',
+  faq_section_lead: 'Réponses courtes : des données de plan et matières jusqu’au contrôle, à la livraison et à l’offre.',
+  faq_drawing_q: 'Quelles informations OSMP nécessite-t-elle pour une demande CNC ?',
+  faq_drawing_a: 'Pour la vérification technique, la révision du plan, la matière ou sa désignation, la quantité et les exigences connues de fonction, surface ou contrôle sont utiles. Les informations ouvertes sont clarifiées avant l’offre.',
+  faq_drawing_link: 'Voir les données de plan et la technologie CNC',
+  faq_files_q: 'Quels formats de fichier peuvent être sélectionnés avec la demande ?',
+  faq_files_a: 'Le formulaire de demande permet de sélectionner des fichiers PDF, DXF, STEP, STP et image. Des données de plan complètes sont particulièrement utiles pour l’évaluation technique.',
+  faq_prototypes_q: 'OSMP fabrique-t-elle des prototypes et premiers échantillons ?',
+  faq_prototypes_a: 'Oui. Pour les prototypes et premiers échantillons, nous vérifions le plan, la matière, la fonction et les caractéristiques d’usinage demandées pour la pièce concernée.',
+  faq_prototypes_link: 'Évaluer prototypes et premiers échantillons',
+  faq_series_q: 'Les petites et moyennes séries sont-elles possibles ?',
+  faq_series_a: 'Les petites séries, moyennes séries et pièces récurrentes sont évaluées à partir de la révision du plan, de la matière, de la quantité et des étapes de travail nécessaires. La vérification technique détermine le parcours de fabrication adapté.',
+  faq_series_link: 'Voir petites séries et pièces récurrentes',
+  faq_materials_q: 'Quelles matières sont usinées ?',
+  faq_materials_a: 'OSMP usine l’aluminium et les aciers usinables. Les plastiques techniques et autres matières spéciales sont vérifiés sur demande selon le plan, la géométrie et l’application.',
+  faq_materials_link: 'Vérifier les matières pour pièces tournées CNC',
+  faq_reports_q: 'Des rapports de mesure sont-ils possibles ?',
+  faq_reports_a: 'Des rapports de mesure sont possibles sur demande et selon le périmètre convenu. Les caractéristiques à contrôler et le format de documentation doivent être indiqués avec la demande.',
+  faq_reports_link: 'Voir rapports de mesure et processus de contrôle',
+  faq_certificates_q: 'Des certificats matière peuvent-ils être fournis ?',
+  faq_certificates_a: 'Si un certificat matière du fournisseur est requis, merci de l’indiquer dans la demande. Avant l’offre, nous clarifions si le document est disponible pour la matière demandée et comment il est associé à la commande.',
+  faq_certificates_link: 'Clarifier les certificats matière avant la commande',
+  faq_delivery_q: 'Dans quelles régions OSMP livre-t-elle ?',
+  faq_delivery_a: 'L’accent est mis sur les clients en Italie, Allemagne, Autriche et Suisse. Le périmètre concret d’expédition est convenu avec la demande.',
+  faq_delivery_link: 'Voir le site et les régions clients',
+  faq_quote_q: 'Comment une offre est-elle préparée ?',
+  faq_quote_a: 'Envoyez le plan, l’indication de matière et la quantité. Nous vérifions la faisabilité technique, clarifions les points ouverts et préparons l’offre à partir de la demande évaluée techniquement.',
+  faq_quote_link: 'Démarrer une demande CNC avec un plan'
 });

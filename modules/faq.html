@@ -1,16 +1,63 @@
-﻿<!-- ════════ MODUL: FAQ ════════
-     Neue Frage: <details>-Block duplizieren, Keys fq6_q/fq6_a in translations.js ergänzen. -->
+<!-- FAQ zur CNC-Anfrage. -->
 <div class="container">
   <div class="sec-head">
-    <span class="kicker">FAQ</span>
-    <h2 class="sec-title" data-key="faq_title"></h2>
+    <span class="kicker" data-key="faq_section_kicker">FAQ</span>
+    <h2 class="sec-title" id="faq-title" data-key="faq_section_title">Häufige Fragen zur CNC-Anfrage.</h2>
+    <p class="sec-lead" data-key="faq_section_lead">Kurz beantwortet: von Zeichnungsdaten und Werkstoffen bis zu Prüfung, Lieferung und Angebot.</p>
   </div>
-  <div class="faq">
-    <details><summary data-key="fq1_q"></summary><p data-key="fq1_a"></p></details>
-    <details><summary data-key="fq2_q"></summary><p data-key="fq2_a"></p></details>
-    <details><summary data-key="fq3_q"></summary><p data-key="fq3_a"></p></details>
-    <details><summary data-key="fq4_q"></summary><p data-key="fq4_a"></p></details>
-    <details><summary data-key="fq5_q"></summary><p data-key="fq5_a"></p></details>
+
+  <div class="faq" aria-labelledby="faq-title">
+    <details>
+      <summary data-key="faq_drawing_q">Welche Angaben benötigt OSMP für eine CNC-Anfrage?</summary>
+      <p data-key="faq_drawing_a">Für die technische Prüfung sind Zeichnungsstand, Werkstoff oder Materialangabe, Menge sowie bekannte Anforderungen an Funktion, Oberfläche oder Prüfung hilfreich. Offene Angaben werden vor dem Angebot geklärt.</p>
+      <p><a href="/technologie/" data-key="faq_drawing_link">Zeichnungsdaten und CNC-Technologie ansehen</a></p>
+    </details>
+
+    <details>
+      <summary data-key="faq_files_q">Welche Dateiformate können mit der Anfrage ausgewählt werden?</summary>
+      <p data-key="faq_files_a">Im Anfrageformular sind PDF, DXF, STEP, STP und Bilddateien auswählbar. Für die technische Einordnung sind vollständige Zeichnungsdaten besonders hilfreich.</p>
+    </details>
+
+    <details>
+      <summary data-key="faq_prototypes_q">Fertigt OSMP Prototypen und Erstmuster?</summary>
+      <p data-key="faq_prototypes_a">Ja. Für Prototypen und Erstmuster prüfen wir Zeichnung, Werkstoff, Funktion und die gewünschten Bearbeitungsmerkmale des konkreten Teils.</p>
+      <p><a href="/leistungen/#prototypen" data-key="faq_prototypes_link">Prototypen und Erstmuster einordnen</a></p>
+    </details>
+
+    <details>
+      <summary data-key="faq_series_q">Sind Kleinserien und mittlere Serien möglich?</summary>
+      <p data-key="faq_series_a">Kleinserien, mittlere Serien und wiederkehrende Teile werden anhand von Zeichnungsstand, Werkstoff, Menge und notwendigen Arbeitsschritten eingeordnet. Die technische Prüfung bestimmt den passenden Fertigungsweg.</p>
+      <p><a href="/leistungen/#kleinserien" data-key="faq_series_link">Kleinserien und wiederkehrende Teile ansehen</a></p>
+    </details>
+
+    <details>
+      <summary data-key="faq_materials_q">Welche Werkstoffe werden bearbeitet?</summary>
+      <p data-key="faq_materials_a">OSMP bearbeitet Aluminium und zerspanbare Stahlwerkstoffe. Technische Kunststoffe und weitere Sondermaterialien werden nach Anfrage anhand von Zeichnung, Geometrie und Einsatz geprüft.</p>
+      <p><a href="/werkstoffe/" data-key="faq_materials_link">Werkstoffe für CNC-Drehteile prüfen</a></p>
+    </details>
+
+    <details>
+      <summary data-key="faq_reports_q">Sind Messprotokolle möglich?</summary>
+      <p data-key="faq_reports_a">Messprotokolle sind auf Anfrage und nach vereinbartem Umfang möglich. Gewünschte Prüfmerkmale und die Dokumentationsform sollten bereits mit der Anfrage genannt werden.</p>
+      <p><a href="/qualitaet/" data-key="faq_reports_link">Messprotokolle und Prüfablauf ansehen</a></p>
+    </details>
+
+    <details>
+      <summary data-key="faq_certificates_q">Können Materialzertifikate bereitgestellt werden?</summary>
+      <p data-key="faq_certificates_a">Wenn ein Materialzertifikat des Lieferanten benötigt wird, sollte dies mit der Anfrage angegeben werden. Vor dem Angebot wird geklärt, ob der Nachweis für den angefragten Werkstoff verfügbar ist und wie er dem Auftrag zugeordnet wird.</p>
+      <p><a href="/qualitaet/" data-key="faq_certificates_link">Materialzertifikate vor dem Auftrag klären</a></p>
+    </details>
+
+    <details>
+      <summary data-key="faq_delivery_q">In welche Regionen liefert OSMP?</summary>
+      <p data-key="faq_delivery_a">Der Schwerpunkt liegt auf Kunden in Italien sowie in Deutschland, Österreich und der Schweiz. Den konkreten Versandumfang stimmen wir mit der Anfrage ab.</p>
+      <p><a href="/unternehmen/" data-key="faq_delivery_link">Standort und Kundenregionen ansehen</a></p>
+    </details>
+
+    <details>
+      <summary data-key="faq_quote_q">Wie läuft die Angebotsvorbereitung ab?</summary>
+      <p data-key="faq_quote_a">Senden Sie Zeichnung, Materialangabe und Menge. Wir prüfen die technische Machbarkeit, klären offene Punkte und bereiten das Angebot auf Basis der technisch eingeordneten Anfrage vor.</p>
+      <p><a href="#leadForm" data-key="faq_quote_link">CNC-Anfrage mit Zeichnung starten</a></p>
+    </details>
   </div>
 </div>
-
