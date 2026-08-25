@@ -48,3 +48,6 @@
 
 /start-website-8099.bat
   X-Robots-Tag: noindex, nofollow
+
+/*.md
+  X-Robots-Tag: noindex, nofollow

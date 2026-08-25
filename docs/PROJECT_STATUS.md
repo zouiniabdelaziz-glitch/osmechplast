@@ -90,6 +90,10 @@ Wichtig: Tracking- und Consent-Code nicht ohne ausdrücklichen Auftrag ändern.
 
 ## Bereits erkennbare abgeschlossene Arbeiten
 
+- SEO-Grundüberarbeitung am 2026-08-25: kanonische Seiten enthalten statische Modul-Fallbacks für crawlbares Initial-HTML, eindeutige Titles/Open-Graph-Daten und valide JSON-LD-Grundstruktur. Details stehen in `SEO_AUDIT.md` und `SEO_FINAL_REPORT.md`.
+- Sichtbare NAP-Daten (OS.MECHPLAST SRLS, Adresse, Telefon, E-Mail) stehen im Footer; die Kontaktseite enthält zusätzlich einen nutzerinitiierten Google-Maps-Routenlink.
+- Consent-gebundene Analytics-Ereignisse für CTA-Klicks, Telefon, E-Mail, Uploadstart und erfolgreich gespeicherte Leads sind implementiert. Es werden keine Formularinhalte als Eventparameter übertragen.
+
 - Website-Design mit dunklem Navy, Rot-Akzent und OSMP-Logo integriert.
 - Header-Logo und Footer-Logo vorhanden.
 - Startseite mit Hero, Anfrage-Assistent, Ablauf und CTA-Band.
@@ -117,6 +121,8 @@ Wichtig: Tracking- und Consent-Code nicht ohne ausdrücklichen Auftrag ändern.
 - In `js/translations.js` existieren in IT/EN/FR noch ältere Übersetzungs-Keys mit 24h-/Toleranz-/Materiallisten-Formulierungen; diese wurden bei der thematischen Seitenabgrenzung nicht pauschal überarbeitet.
 - Mehrere alte HTML-Dateien existieren weiterhin mit `noindex` oder Redirect-Ziel.
 - Allgemeines CTA-Band und Startseiten-CTA-Band sind getrennt; bei künftigen CTA-Änderungen trotzdem prüfen, auf welchen Seiten das jeweilige Modul eingebunden ist.
+- Die im jüngsten Auftrag verwendete Marke `ONCC` widerspricht dem aktuellen sichtbaren Quellstand `OSMP`; erst nach ausdrücklicher Markenfreigabe ändern.
+- SEO-Live-Prüfung nach Deployment: Redirects, Search Console, Schema Validator, Analytics/Clarity und Lighthouse-Messwerte.
 
 ## Bereiche mit unklarem Stand
 

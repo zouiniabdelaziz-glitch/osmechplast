@@ -106,6 +106,16 @@
     });
   }
 
+  function track(eventName, parameters) {
+    if (getChoice() !== 'granted') return;
+    if (!eventName || !/^[-_a-z0-9]+$/i.test(eventName)) return;
+
+    window.gtag('event', eventName, {
+      page_path: location.pathname,
+      ...parameters
+    });
+  }
+
   function ensureClarityQueue() {
     window.clarity = window.clarity || function () {
       (window.clarity.q = window.clarity.q || []).push(arguments);
@@ -357,8 +367,32 @@
     button.textContent = text.settings;
   }
 
+  function initInteractionTracking() {
+    if (document.documentElement.dataset.osmpAnalyticsTracking === 'ready') return;
+    document.documentElement.dataset.osmpAnalyticsTracking = 'ready';
+
+    document.addEventListener('click', event => {
+      const target = event.target.closest('[data-track-event]');
+      if (!target) return;
+
+      const eventName = target.getAttribute('data-track-event');
+      if (!eventName || target.dataset.analyticsTracked === 'true') return;
+
+      target.dataset.analyticsTracked = 'true';
+      track(eventName, target.dataset.cta ? { cta: target.dataset.cta } : {});
+      window.setTimeout(() => { delete target.dataset.analyticsTracked; }, 800);
+    });
+
+    document.addEventListener('change', event => {
+      if (!(event.target instanceof HTMLInputElement) || event.target.id !== 'sketchFile') return;
+      if (!event.target.files || !event.target.files.length) return;
+      track('drawing_upload_started');
+    });
+  }
+
   window.OSMPAnalytics = {
     open: () => renderBanner(true),
+    track,
     setLang: lang => {
       window.OSMP_ANALYTICS_CONFIG = window.OSMP_ANALYTICS_CONFIG || {};
       window.OSMP_ANALYTICS_CONFIG.lang = lang;
@@ -371,4 +405,5 @@
   if (choice) updateConsent(choice);
   renderBanner(false);
   renderSettingsButton();
+  initInteractionTracking();
 })();

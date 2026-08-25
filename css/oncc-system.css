@@ -319,6 +319,22 @@ textarea:focus {
   text-underline-offset: 3px;
 }
 
+.footer-contact {
+  color: #9fb0c3;
+  font-size: 13.5px;
+  font-style: normal;
+  line-height: 1.65;
+}
+
+.footer-contact strong,
+.footer-contact a {
+  color: #fff;
+}
+
+.footer-contact a:hover {
+  color: var(--oncc-red);
+}
+
 .contact-company-details__todo {
   border-left: 2px solid var(--oncc-red);
   padding-left: 12px;

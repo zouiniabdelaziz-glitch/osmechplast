@@ -5,6 +5,7 @@ Disallow: /api/
 Disallow: /functions/
 Disallow: /scripts/
 Disallow: /outputs/
+Disallow: /*.md$
 
 # Local work, test and project files.
 Disallow: /business-card-preview.html

@@ -123,7 +123,36 @@ Dieses Log dokumentiert Arbeiten am Projekt. Nach jeder erledigten Aufgabe hier 
 
 ## Aktuell bearbeitete Aufgabe
 
-Keine weitere Aufgabe nach Abschluss dieser Dokumentation gestartet.
+### 2026-08-25 — SEO-Audit und technische/on-page SEO-Grundüberarbeitung
+
+**Auftrag:** Vollständiger SEO-Audit mit priorisierten Korrekturen für die acht kanonischen öffentlichen Seiten; keine erfundenen Unternehmens- oder Leistungsangaben.
+
+**Geänderte Dateien:**
+
+- `index.html`, `leistungen/index.html`, `qualitaet/index.html`, `technologie/index.html`, `unternehmen/index.html`, `werkstoffe/index.html`, `kontakt/index.html`, `impressum/index.html`
+- `modules/footer.html`, `modules/kontakt.html`, `css/oncc-system.css`
+- `js/analytics.js`, `js/app.js`
+- `robots.txt`, `_headers`, `sitemap.xml`
+- `SEO_AUDIT.md`, `SEO_KEYWORDS.md`, `SEO_COMPETITORS.md`, `SEO_INTERNAL_LINKS.md`, `SEO_BACKLINK_PLAN.md`, `SEO_SEARCH_CONSOLE.md`, `SEO_FINAL_REPORT.md`
+- `docs/PROJECT_STATUS.md`, `docs/TASK_LOG.md`
+
+**Ergebnis:**
+
+- Kerninhalte sind neben dem bestehenden dynamischen Modulsystem im Initial-HTML vorhanden.
+- Acht eindeutige Titles/Descriptions, korrekte Canonicals, statische Open-Graph-Daten und parsebare JSON-LD-Graphen eingerichtet.
+- Vollständige sichtbare NAP-Daten im Footer und Klicktracking ohne personenbezogene Eventdaten ergänzt.
+- Sitemap auf acht kanonische URLs begrenzt und technische Markdown-Dokumente gegen Indexierung abgesichert.
+
+**Tests / Prüfung:**
+
+- Lokaler HTTP-Test: acht Zielseiten sowie `robots.txt`/`sitemap.xml` mit 200.
+- Sitemap per XML-Parser, JSON-LD per JSON-Parser, Canonical/Title/Description/H1 und First-Party-Links per Skript geprüft.
+- `node --check` für `js/app.js` und `js/analytics.js` erfolgreich.
+
+**Offene Punkte:**
+
+- Live-Deployment, Redirects, Search Console, Schema Validator, GA4/Clarity und Lighthouse müssen nach Veröffentlichung geprüft werden.
+- OSMP/ONCC-Markenfrage ist zu bestätigen; keine automatische Umbenennung vorgenommen.
 
 ## Offene Aufgaben
 

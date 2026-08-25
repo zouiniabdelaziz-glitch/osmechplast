@@ -7,7 +7,7 @@
 /* â”€â”€ KONFIGURATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const CONFIG = {
   defaultLang: 'de',
-  siteVersion: '20260810-faq-v1',
+  siteVersion: '20260825-seo-v1',
   analyticsMeasurementId: 'G-KFFN0VWBGK',
   clarityProjectId: 'xlwutfjzhw',
 };
@@ -160,6 +160,9 @@ async function saveLead(payload) {
 /* â”€â”€ FORMULAR ABSENDEN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function submitForm(e) {
   e.preventDefault();
+  const form = e.target;
+  if (form.dataset.submitting === 'true') return;
+  form.dataset.submitting = 'true';
   const payload = {
     company:     document.getElementById('f_company')?.value || '',
     name:        document.getElementById('f_name')?.value || '',
@@ -173,16 +176,21 @@ async function submitForm(e) {
     status:      'new',
     created_at:  new Date().toISOString()
   };
-  await saveLead(payload);
-  const banner = document.getElementById('successBanner');
-  if (banner) {
-    banner.textContent = T[currentLang]?.f_success || 'âœ“ Danke!';
-    banner.style.display = 'block';
-    setTimeout(() => banner.style.display = 'none', 5000);
+  try {
+    await saveLead(payload);
+    window.OSMPAnalytics?.track?.('lead_form_success');
+    const banner = document.getElementById('successBanner');
+    if (banner) {
+      banner.textContent = T[currentLang]?.f_success || 'âœ“ Danke!';
+      banner.style.display = 'block';
+      setTimeout(() => banner.style.display = 'none', 5000);
+    }
+    form.reset();
+    const uploadSelected = document.getElementById('uploadSelected');
+    if (uploadSelected) uploadSelected.textContent = '';
+  } finally {
+    delete form.dataset.submitting;
   }
-  e.target.reset();
-  const uploadSelected = document.getElementById('uploadSelected');
-  if (uploadSelected) uploadSelected.textContent = '';
 }
 
 /* â”€â”€ DATEI-UPLOAD HINWEIS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
