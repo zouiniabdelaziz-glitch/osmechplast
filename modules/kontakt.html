@@ -37,21 +37,13 @@
         </div>
         <div class="form-group">
           <label for="f_service" data-key="f_service"></label>
-          <select id="f_service"><option></option><option></option><option></option><option></option><option></option></select>
+          <select id="f_service"><option value=""></option><option value="cnc-drehen"></option><option value="drehfraesen"></option><option value="prototypen-serien"></option><option value="unsicher"></option></select>
         </div>
         <div class="form-group"><label for="f_msg" data-key="f_msg"></label><textarea id="f_msg"></textarea></div>
-        <div class="form-group">
-          <label for="sketchFile" data-key="f_sketch"></label>
-          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('sketchFile').click()">
-            <div class="upload-text" data-key="upload_text"></div>
-            <div class="upload-sub" data-key="upload_sub"></div>
-          </div>
-          <input type="file" id="sketchFile" accept="image/*,.pdf,.dxf,.step,.stp" style="display:none" onchange="handleFileUpload(event)">
-          <div class="upload-selected" id="uploadSelected" aria-live="polite"></div>
-        </div>
-        <p class="form-privacy-note"><strong>Datenschutzhinweis:</strong> Die von Ihnen übermittelten Angaben werden zur Bearbeitung Ihrer Anfrage verarbeitet. Details zur Datenverarbeitung: TODO – Datenschutzhinweis ergänzen.</p>
+        <p class="form-privacy-note"><strong>Datenschutzhinweis:</strong> Die von Ihnen übermittelten Angaben werden zur Bearbeitung Ihrer Anfrage verarbeitet. Weitere Informationen finden Sie in unserer <a href="/datenschutz/">Datenschutzerklärung</a>.</p>
         <button id="cta-contact-submit" type="submit" class="btn btn-primary btn-lg" data-key="f_submit" data-cta="contact-form-submit" data-track-event="lead_form_submit"></button>
-        <div class="success-banner" id="successBanner" role="status" aria-live="polite" data-form-success="lead-form" data-track-event="lead_form_success"></div>
+        <div class="success-banner" id="successBanner" role="status" aria-live="polite" data-form-success="lead-form" data-track-event="lead_form_success" hidden></div>
+        <div class="error-banner" id="errorBanner" role="alert" aria-live="assertive" hidden></div>
       </div>
     </form>
   </div>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datenschutz – Entwurf | OSMP</title>
+  <meta name="description" content="Technischer Entwurf der Datenschutzerklärung von OS.MECHPLAST SRLS. Juristische Prüfung steht noch aus.">
+  <link rel="canonical" href="https://osmechplast.com/datenschutz/">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;600;700&amp;family=Bebas+Neue&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css?v=20260618-light-industrial-logo-v2">
+  <link rel="stylesheet" href="/css/oncc-system.css?v=20260712-header-font-v1">
+</head>
+<body>
+<header class="header" data-include="header" data-module-fallback="true">
+  <div class="container oncc-header__inner">
+    <a href="/" class="oncc-brand" aria-label="OSMP Startseite"><img src="/assets/brand/osmechplast-logo-header.svg" alt="OSMP" class="oncc-brand__logo"></a>
+    <nav class="oncc-nav" aria-label="Hauptnavigation">
+      <a href="/leistungen/">Leistungen</a><a href="/technologie/">Technologie</a><a href="/werkstoffe/">Materialien</a><a href="/qualitaet/">Qualität</a><a href="/unternehmen/">Unternehmen</a><a href="/kontakt/">Kontakt</a>
+    </nav>
+    <a href="/kontakt/#leadForm" class="btn btn-primary oncc-header__cta">Anfrage senden</a>
+  </div>
+</header>
+
+<main>
+  <section class="page-hero" aria-labelledby="privacy-title">
+    <div class="container">
+      <div class="crumbs"><a href="/">Startseite</a> <span>/</span> <span>Datenschutz</span></div>
+      <span class="kicker">Datenschutz</span>
+      <h1 id="privacy-title">Datenschutzerklärung – technischer Entwurf.</h1>
+      <p>Nachvollziehbare Angaben zu den derzeit technisch festgestellten Datenflüssen dieser Website.</p>
+    </div>
+  </section>
+
+  <section class="sec legal-page">
+    <div class="container legal-page__container">
+      <div class="legal-notice">
+        <strong>Entwurf – juristische Prüfung erforderlich.</strong>
+        Dieser Zwischenstand beschreibt die im Website-Code verifizierten Datenflüsse. Rechtsgrundlagen, Aufbewahrungsfristen, Empfängerangaben und Betroffenenprozesse müssen vor einer rechtlichen Freigabe ergänzt beziehungsweise bestätigt werden.
+      </div>
+
+      <article class="legal-card">
+        <h2>1. Verantwortlicher</h2>
+        <p><strong>OS.MECHPLAST SRLS</strong><br>Via Strada Romana n. 19<br>38061 Ala (TN), Italien</p>
+        <p>Telefon: <a href="tel:+390464667981">+39 0464 667981</a><br>E-Mail: <a href="mailto:info@osmechplast.com">info@osmechplast.com</a></p>
+        <p><strong>Prüfstatus:</strong> Firmenname und Standort sind bestätigt. Anschrift, allgemeiner Kontakt und ein eigener Datenschutz-Kontakt sind intern beziehungsweise juristisch zu bestätigen.</p>
+      </article>
+
+      <article class="legal-card">
+        <h2>2. Hosting und Cloudflare</h2>
+        <p>Die Website und der Endpunkt des Kontaktformulars werden über Cloudflare bereitgestellt. Bei Abrufen können technisch erforderliche Verbindungs- und Sicherheitsdaten, insbesondere IP-Adresse, Zeitpunkt, angeforderte Ressource, Browser- und Geräteinformationen, verarbeitet werden.</p>
+        <p><strong>Prüfstatus:</strong> Cloudflare als technische Plattform ist verifiziert. Vertragsgrundlage, Verarbeitungsregionen, konkrete Protokollierung und Aufbewahrungsfristen sind außerhalb des Repositorys zu prüfen.</p>
+      </article>
+
+      <article class="legal-card">
+        <h2>3. Kontaktformular und D1</h2>
+        <p>Beim Absenden des Kontaktformulars werden Firma, Ansprechpartner, E-Mail-Adresse, optional Telefonnummer, gewählte Leistung, Nachricht und Seitensprache an den Same-Origin-Endpunkt <code>/api/leads</code> übertragen und in einer Cloudflare-D1-Datenbank gespeichert. Die Serverfunktion ergänzt Quelle, Bearbeitungsstatus und einen serverseitigen Zeitstempel.</p>
+        <p>Es gibt derzeit keinen Zeichnungs- oder Datei-Upload. Über das Formular werden keine Dateien übertragen.</p>
+        <p><strong>Prüfstatus:</strong> Kontaktformular, API und D1-Datenfelder sind technisch verifiziert. Zweck, Rechtsgrundlage, Zugriffsberechtigungen, Aufbewahrungs- und Löschfristen sind juristisch und organisatorisch festzulegen.</p>
+      </article>
+
+      <article class="legal-card">
+        <h2>4. Local Storage und Einwilligung</h2>
+        <p>Die Sprachwahl wird unter <code>oscnc_lang</code> im Local Storage des Browsers gespeichert. Die Entscheidung zu Analyse-Diensten wird unter <code>osmp_analytics_clarity_consent</code> als Zustimmung oder Ablehnung gespeichert.</p>
+        <p><strong>Prüfstatus:</strong> Beide Speichervorgänge sind im Code verifiziert. Einordnung und Speicherdauer sind juristisch zu prüfen.</p>
+      </article>
+
+      <article class="legal-card">
+        <h2>5. Google Analytics und Microsoft Clarity</h2>
+        <p>Google Analytics 4 und Microsoft Clarity werden erst geladen, nachdem der Nutzer zugestimmt hat. Ohne Zustimmung oder nach Ablehnung werden die Dienste nicht geladen. Bei Ablehnung versucht die Website zusätzlich, bekannte Analyse-Cookies zu entfernen.</p>
+        <p>Google-Analytics-Kennung: <code>G-KFFN0VWBGK</code>. Microsoft-Clarity-Projektkennung: <code>xlwutfjzhw</code>.</p>
+        <p><strong>Prüfstatus:</strong> Die technische Ladeblockade vor Zustimmung ist automatisiert getestet. Anbieterinformationen, Rechtsgrundlage, Drittlandtransfers, Verträge, konkrete Cookies, Ereignisse und Aufbewahrung benötigen eine juristische und Live-technische Prüfung.</p>
+      </article>
+
+      <article class="legal-card">
+        <h2>6. Google Fonts</h2>
+        <p>Schriftarten werden derzeit von <code>fonts.googleapis.com</code> und <code>fonts.gstatic.com</code> geladen. Dabei werden technisch bedingt Abrufdaten an Google übertragen.</p>
+        <p><strong>Prüfstatus:</strong> Die externe Einbindung ist im Quelltext verifiziert. Rechtsgrundlage und eine mögliche lokale Bereitstellung sind zu prüfen.</p>
+      </article>
+
+      <article class="legal-card">
+        <h2>7. Externe Links</h2>
+        <p>Ein Routenlink führt zu Google Maps. Daten werden erst beim bewussten Öffnen des externen Links an Google übertragen; auf der Website ist keine Google-Karte eingebettet.</p>
+        <p><strong>Prüfstatus:</strong> Die technische Ausführung als externer Link ist verifiziert. Anbieterhinweis und rechtliche Einordnung sind zu prüfen.</p>
+      </article>
+
+      <article class="legal-card">
+        <h2>8. Betroffenenrechte</h2>
+        <p>Je nach anwendbarem Datenschutzrecht können insbesondere Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit, Widerspruch und Widerruf einer Einwilligung sowie ein Beschwerderecht bei einer Aufsichtsbehörde bestehen.</p>
+        <p><strong>Prüfstatus:</strong> Zuständige Kontaktstelle, Identitätsprüfung, Fristen, zuständige Aufsichtsbehörde und vollständige Formulierung der Betroffenenrechte müssen juristisch festgelegt werden.</p>
+      </article>
+
+      <article class="legal-card">
+        <h2>9. Stand und Änderungen</h2>
+        <p>Technischer Stand dieses Entwurfs: 29. August 2026. Eine rechtlich freigegebene Fassung liegt noch nicht vor.</p>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer class="footer" data-include="footer" data-module-fallback="true">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 OS.MECHPLAST SRLS</span>
+      <nav class="footer-legal" aria-label="Rechtliche Links"><a href="/impressum/">Impressum</a><span aria-hidden="true">·</span><a href="/datenschutz/">Datenschutz</a></nav>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/translations.js?v=20260714-i18n-v2"></script>
+<script src="/js/app.js?v=20260825-seo-v1"></script>
+</body>
+</html>

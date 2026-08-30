@@ -383,11 +383,6 @@
       window.setTimeout(() => { delete target.dataset.analyticsTracked; }, 800);
     });
 
-    document.addEventListener('change', event => {
-      if (!(event.target instanceof HTMLInputElement) || event.target.id !== 'sketchFile') return;
-      if (!event.target.files || !event.target.files.length) return;
-      track('drawing_upload_started');
-    });
   }
 
   window.OSMPAnalytics = {

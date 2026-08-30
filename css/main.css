@@ -295,6 +295,10 @@ h2.sec-title {
   display:none; background:#E9F7F0; border:1px solid #BCE5D2; color:var(--green);
   border-radius:10px; padding:1rem; text-align:center; font-size:14.5px; font-weight:500;
 }
+.error-banner {
+  display:none; background:#FFF1F0; border:1px solid #E3AAA5; color:#8C221B;
+  border-radius:10px; padding:1rem; text-align:center; font-size:14.5px; font-weight:500;
+}
 
 /* ── Footer ─────────────────────────────────── */
 .footer { background:var(--bg-deep); color:#9FB0C3; padding:4rem 0 2rem; }

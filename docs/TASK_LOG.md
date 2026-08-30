@@ -123,6 +123,76 @@ Dieses Log dokumentiert Arbeiten am Projekt. Nach jeder erledigten Aufgabe hier 
 
 ## Aktuell bearbeitete Aufgabe
 
+### 2026-08-29 — Phase 0 und technische Phase 1 umgesetzt; Freigabestopp aktiv
+
+**Auftrag:** Die freigegebenen Entscheidungen (Marke OSMP, juristischer Name OS.MECHPLAST SRLS, Zeichnungs-Upload vorläufig vollständig entfernen) dokumentieren und Phase 0 sowie Phase 1 des Website-Plans testgetrieben ausführen. Danach vor Phase 2 stoppen.
+
+**Geänderte Dateien:**
+
+- Planung/Nachweise: `docs/WEBSITE_IMPLEMENTATION_PLAN.md`, `docs/PUBLIC_CLAIMS_REGISTER.md`, `docs/EXTERNAL_ACTIONS.md`, `docs/PRIVACY_DATA_FLOW.md`, `docs/PROJECT_STATUS.md`, `docs/TASK_LOG.md`
+- Formular/API: `js/app.js`, `js/translations.js`, `js/analytics.js`, `functions/api/leads.js`, `css/main.css`
+- Kontakt/Datenschutz: `modules/kontakt.html`, `kontakt/index.html`, `datenschutz/index.html`
+- Rechtliche Footerlinks: `modules/footer.html`, `index.html`, `leistungen/index.html`, `werkstoffe/index.html`, `qualitaet/index.html`, `technologie/index.html`, `unternehmen/index.html`, `kontakt/index.html`, `impressum/index.html`
+- Tests: `tests/helpers/load-browser-script.mjs`, `tests/lead-form.test.mjs`, `tests/leads-api.test.mjs`, `tests/site-integrity.test.mjs`, `tests/analytics-consent.test.mjs`
+
+**Ergebnis:**
+
+- Entscheidungen D01–D03 und das öffentliche Behauptungsregister sind dokumentiert; externe Konto-, Fakten- und Rechtsprüfungen haben klare Besitzer/Nachweise.
+- Formular zeigt Erfolg nur nach 2xx, behält Eingaben bei 4xx/5xx/Netzfehlern, verhindert Doppelversand und stellt zugängliche Lade-/Fehlerzustände bereit.
+- Lead-API begrenzt JSON-Body/Felder, normalisiert Werte, verlangt Firma/Name/E-Mail, validiert E-Mail, Sprache und stabile Servicewerte, vertraut keinen Client-Metadaten und gibt keine D1-Fehlerdetails oder CORS-Wildcard aus.
+- Zeichnungs-Upload, Dateinamensanzeige, Drag-and-drop-Logik und Upload-Analytics sind aus den aktiven Kontaktquellen entfernt.
+- Technischer Datenschutzentwurf und Datenflussdokumentation sind vorhanden; rechtliche Finalität bleibt ausdrücklich ungeprüft. Alle kanonischen Footer und das Kontaktformular verlinken `/datenschutz/`.
+- Consent-Ladeverhalten wurde charakterisiert: vor Zustimmung und nach Ablehnung keine GA-/Clarity-Skripte, nach Zustimmung beide genau einmal.
+- Phase 2 wurde nicht begonnen; kein Commit und kein Deployment.
+
+**Tests / Prüfung:**
+
+- TDD-Rotlauf vor Produktionsänderungen: 22 Tests, 5 PASS und 17 erwartete FAIL.
+- Review-Rotlauf für zwei nachträglich gefundene Lücken: 16 Tests, 14 PASS und 2 erwartete FAIL; nach Fix 16/16 PASS.
+- Vollsuite: 24/24 PASS, 0 FAIL.
+- Syntax: `node --check` für `js/app.js`, `js/analytics.js`, `js/translations.js`, `functions/api/leads.js`: 4/4 PASS.
+- `git diff --check`: Exit 0; nur projektweite CRLF-Hinweise.
+- Lokaler HTTP-Smoke-Test: Startseite, Kontakt, Datenschutz, Kontakt-/Footermodule, App-JavaScript und Function-Quellpfad jeweils HTTP 200.
+- Upload-Restsuche in aktiven Kontakt-/App-/Analytics-Dateien: keine Treffer.
+
+**Offene Punkte / Risiken:**
+
+- Keine Browser-Instanz war verfügbar. Visuelle, responsive, Tastatur-, Fokus- und Screenreader-Abnahme E12 bleibt offen; dieser Punkt verhindert die Phase-2-Freigabe.
+- Datenschutzentwurf ist `noindex, nofollow` und benötigt juristische Prüfung; Verantwortlicher/Kontakt, Rechtsgrundlagen, Empfänger, Drittlandtransfers, Fristen und Betroffenenprozess sind nicht final.
+- Cloudflare WAF/Rate-Limit/D1-/Deploymentkonfiguration, GSC und GA4 sind ohne Kontonachweise extern blockiert.
+- Fremde Voränderungen an SEO-Dokumenten, `sitemap.xml` und unversionierten Audit-/Archivdateien wurden nicht überschrieben.
+
+### 2026-08-29 — Phasenweisen Website-Umsetzungsplan erstellt
+
+**Auftrag:** Den freigegebenen `docs/WEBSITE_MASTER_PLAN.md` ohne neue allgemeine Analyse in einen vollständigen, testgetriebenen Umsetzungsplan überführen und vor jeder Implementierung nur die zwingenden Inhaberentscheidungen sammeln.
+
+**Geänderte Dateien:**
+
+- `docs/WEBSITE_IMPLEMENTATION_PLAN.md`
+- `docs/PROJECT_STATUS.md`
+- `docs/TASK_LOG.md`
+
+**Ergebnis:**
+
+- Alle 26 Maßnahmen M0.1 bis M5.6 sind sechs Phasen, Abhängigkeiten, betroffenen Dateien/Systemen, vorgesehenen Tests, Abnahmekriterien und zulässigen Statuswerten zugeordnet.
+- Phase 1 enthält testgetriebene Arbeitspakete für Formularlogik, API-Validierung, beide Uploadentscheidungen, Datenschutz, Zugänglichkeit und Missbrauchsschutz.
+- Freigabestopps nach jeder Phase sowie externe Arbeiten für Cloudflare, Google Search Console, GA4 und juristische Prüfung sind dokumentiert.
+- Es wurden keine Website-, Marken-, Formular-, Routing-, Analytics- oder Deploymentänderungen vorgenommen.
+
+**Tests / Prüfung:**
+
+- Maßnahmenabgleich Masterplan gegen Implementierungsplan: 26/26 IDs vorhanden.
+- Pflichtspalten für Dateien, Tests/Nachweise und Abnahmekriterien geprüft.
+- Sechs Phasen, D01–D03, zulässiges Statusvokabular und verbotene Planplatzhalter automatisiert geprüft.
+- Vorhandenen Git-Status vor und nach der Dokumentationsarbeit kontrolliert; fremde Änderungen nicht überschrieben.
+
+**Offene Punkte:**
+
+- Verbindliche Marke ONCC oder OSMP festlegen.
+- Verhältnis der Marke zum juristischen Namen OS.MECHPLAST SRLS festlegen.
+- Zeichnungs-Upload als echte sichere Funktion freigeben oder vorläufig vollständig entfernen; bei echtem Upload zusätzlich Formate, Maximalgröße, Aufbewahrung und Zugriffsrollen festlegen.
+- Keine Implementierung vor Beantwortung und Dokumentation dieser Entscheidungen.
+
 ### 2026-08-25 — SEO-Audit und technische/on-page SEO-Grundüberarbeitung
 
 **Auftrag:** Vollständiger SEO-Audit mit priorisierten Korrekturen für die acht kanonischen öffentlichen Seiten; keine erfundenen Unternehmens- oder Leistungsangaben.

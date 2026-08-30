@@ -110,6 +110,10 @@ const T = {
     ai_loading: 'Datei wird vorgemerkt…', ai_result_title: 'Dateihinweis',
     f_submit: 'Anfrage senden →',
     f_success: '✓ Danke! Ihre Anfrage ist angekommen. Wir prüfen die Daten und melden uns.',
+    f_submitting: 'Anfrage wird gesendet…',
+    f_error_validation: 'Bitte prüfen Sie Ihre Angaben.',
+    f_error_network: 'Die Verbindung ist fehlgeschlagen.',
+    f_error_server: 'Die Anfrage konnte nicht gespeichert werden.',
 
     ft_about: 'CNC-Lohnfertigung aus Italien: Drehen und Dreh-Fräs-Komplettbearbeitung in technischen Kunststoffen, Aluminium und Stahl.',
     ft_nav_t: 'Navigation', ft_svc_t: 'Leistungen', ft_contact_t: 'Kontakt',
@@ -303,6 +307,10 @@ const T = {
     ai_loading: '⏳ L\'AI sta analizzando il disegno…', ai_result_title: 'Prima valutazione AI',
     f_submit: 'Invia richiesta →',
     f_success: '✓ Grazie! Vi risponderemo entro 24 ore con il preventivo.',
+    f_submitting: 'Invio della richiesta…',
+    f_error_validation: 'Controllate i dati inseriti.',
+    f_error_network: 'Connessione non riuscita.',
+    f_error_server: 'Non è stato possibile salvare la richiesta.',
 
     ft_about: 'Lavorazioni CNC conto terzi dall\'Italia: tornitura e tornio-fresatura completa in tecnopolimeri, alluminio e acciaio.',
     ft_nav_t: 'Navigazione', ft_svc_t: 'Servizi', ft_contact_t: 'Contatti',
@@ -487,6 +495,10 @@ const T = {
     ai_loading: '⏳ AI is analysing your drawing…', ai_result_title: 'AI first assessment',
     f_submit: 'Send inquiry →',
     f_success: '✓ Thank you! We will reply with your quote within 24 hours.',
+    f_submitting: 'Sending inquiry…',
+    f_error_validation: 'Please check the information provided.',
+    f_error_network: 'The connection failed.',
+    f_error_server: 'The inquiry could not be saved.',
 
     ft_about: 'CNC contract manufacturing from Italy: turning and turn-mill complete machining in engineering plastics, aluminium and steel.',
     ft_nav_t: 'Navigation', ft_svc_t: 'Services', ft_contact_t: 'Contact',
@@ -671,6 +683,10 @@ const T = {
     ai_loading: '⏳ L\'IA analyse votre plan…', ai_result_title: 'Première évaluation IA',
     f_submit: 'Envoyer la demande →',
     f_success: '✓ Merci ! Nous revenons vers vous sous 24 heures avec votre devis.',
+    f_submitting: 'Envoi de la demande…',
+    f_error_validation: 'Veuillez vérifier les informations saisies.',
+    f_error_network: 'La connexion a échoué.',
+    f_error_server: 'La demande n’a pas pu être enregistrée.',
 
     ft_about: 'Usinage CNC en sous-traitance depuis l\'Italie : tournage et tournage-fraisage complet en plastiques techniques, aluminium et acier.',
     ft_nav_t: 'Navigation', ft_svc_t: 'Services', ft_contact_t: 'Contact',

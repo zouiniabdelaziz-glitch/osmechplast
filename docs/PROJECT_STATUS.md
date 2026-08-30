@@ -1,6 +1,6 @@
 # Projektstatus OS.MECHPLAST Website
 
-Stand: 2026-07-24
+Stand: 2026-08-29
 
 ## Kurzbeschreibung
 
@@ -92,7 +92,7 @@ Wichtig: Tracking- und Consent-Code nicht ohne ausdrücklichen Auftrag ändern.
 
 - SEO-Grundüberarbeitung am 2026-08-25: kanonische Seiten enthalten statische Modul-Fallbacks für crawlbares Initial-HTML, eindeutige Titles/Open-Graph-Daten und valide JSON-LD-Grundstruktur. Details stehen in `SEO_AUDIT.md` und `SEO_FINAL_REPORT.md`.
 - Sichtbare NAP-Daten (OS.MECHPLAST SRLS, Adresse, Telefon, E-Mail) stehen im Footer; die Kontaktseite enthält zusätzlich einen nutzerinitiierten Google-Maps-Routenlink.
-- Consent-gebundene Analytics-Ereignisse für CTA-Klicks, Telefon, E-Mail, Uploadstart und erfolgreich gespeicherte Leads sind implementiert. Es werden keine Formularinhalte als Eventparameter übertragen.
+- Consent-gebundene Analytics-Ereignisse für CTA-Klicks, Telefon, E-Mail und erfolgreich gespeicherte Leads sind implementiert. Das frühere Uploadstart-Ereignis wurde mit dem vorläufig entfernten Uploadpfad gelöscht. Es werden keine Formularinhalte als Eventparameter übertragen.
 
 - Website-Design mit dunklem Navy, Rot-Akzent und OSMP-Logo integriert.
 - Header-Logo und Footer-Logo vorhanden.
@@ -103,7 +103,7 @@ Wichtig: Tracking- und Consent-Code nicht ohne ausdrücklichen Auftrag ändern.
 - Unternehmensseite mit Gründerprofilen, Standort und Zielmarktbereich.
 - Impressum-Seite mit vorhandenen Unternehmensangaben und Platzhalter-/TODO-Charakter für fehlende rechtliche Details.
 - Robots.txt vorhanden.
-- Sitemap mit acht kanonischen Clean URLs vorhanden.
+- Sitemap mit sieben kanonischen Clean URLs vorhanden; `/impressum/` ist im aktuellen lokalen `sitemap.xml` nicht enthalten. Die Indexierungsentscheidung für Impressum und eine künftige Datenschutzseite bleibt dem Inhaber vorbehalten.
 - Clean-URL-Weiterleitungen in `_redirects` vorhanden; alte `.html`-URLs leiten per 301 auf die Clean URLs weiter.
 - Echte Clean-URL-Ordnerseiten wurden am 2026-07-24 ergänzt; die früheren internen 200-Rewrites von `/seite/` auf `/seite.html` wurden entfernt.
 - X-Robots-Regeln für technische und alte Seiten in `_headers` vorhanden.
@@ -113,16 +113,19 @@ Wichtig: Tracking- und Consent-Code nicht ohne ausdrücklichen Auftrag ändern.
 
 ## Aktuell offene Punkte
 
-- Datenschutzseite ist noch nicht final; Footer zeigt „Datenschutz folgt“.
+- Ein technischer Datenschutzentwurf ist unter `/datenschutz/` vorhanden, als juristisch ungeprüfter Entwurf gekennzeichnet und aus allen kanonischen Footern sowie dem Kontaktformular verlinkt. Die Seite bleibt bis zur rechtlichen Freigabe `noindex, nofollow`.
 - Rechtliche Angaben im Impressum können noch juristisch geprüft bzw. ergänzt werden.
 - Live-Deployment und Live-Status sind aus dem lokalen Code nicht sicher bestätigbar.
-- Git-Status ist unklar, da `git` im sichtbaren Arbeitsbereich kein gültiges Repository erkennt.
+- Git ist im aktuellen Arbeitsbereich verfügbar. Der Arbeitsbaum enthält bereits vor der Umsetzungsplanung fremde Änderungen an SEO-Reports und `sitemap.xml` sowie unversionierte Audit-/Archivdateien; diese sind zu bewahren.
 - Übersetzungsqualität wurde vom Nutzer als teilweise schlecht beschrieben; keine pauschale Übersetzungsüberarbeitung ohne konkreten Auftrag.
 - In `js/translations.js` existieren in IT/EN/FR noch ältere Übersetzungs-Keys mit 24h-/Toleranz-/Materiallisten-Formulierungen; diese wurden bei der thematischen Seitenabgrenzung nicht pauschal überarbeitet.
 - Mehrere alte HTML-Dateien existieren weiterhin mit `noindex` oder Redirect-Ziel.
 - Allgemeines CTA-Band und Startseiten-CTA-Band sind getrennt; bei künftigen CTA-Änderungen trotzdem prüfen, auf welchen Seiten das jeweilige Modul eingebunden ist.
-- Die im jüngsten Auftrag verwendete Marke `ONCC` widerspricht dem aktuellen sichtbaren Quellstand `OSMP`; erst nach ausdrücklicher Markenfreigabe ändern.
+- Die öffentliche Marke **OSMP** und der juristische Name **OS.MECHPLAST SRLS** wurden vom Inhaber am 2026-08-29 bestätigt; keine Umbenennung auf ONCC.
 - SEO-Live-Prüfung nach Deployment: Redirects, Search Console, Schema Validator, Analytics/Clarity und Lighthouse-Messwerte.
+- Der geprüfte Masterplan liegt in `docs/WEBSITE_MASTER_PLAN.md`; der phasenweise technische Plan liegt in `docs/WEBSITE_IMPLEMENTATION_PLAN.md`.
+- Der Zeichnungs-Upload wurde gemäß Inhaberentscheidung vom 2026-08-29 vorläufig vollständig aus aktivem Kontakt-HTML, Formularlogik und Analytics entfernt. Ein späterer echter Upload benötigt einen neuen Auftrag.
+- Phase 1 hat automatisiert 24/24 Tests bestanden; die reale visuelle Browser-/Assistive-Technik-Abnahme bleibt offen, weil in der Sitzung keine Browser-Instanz verfügbar war.
 
 ## Bereiche mit unklarem Stand
 

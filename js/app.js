@@ -140,21 +140,43 @@ function buildStaticTranslationDictionary(lang) {
 
 /* â”€â”€ CLOUDFLARE D1 LEAD SPEICHERN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function saveLead(payload) {
-  const res = await fetch("/api/leads", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  });
+  let res;
+  try {
+    res = await fetch("/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+  } catch (error) {
+    const requestError = new Error('network_error');
+    requestError.kind = 'network';
+    throw requestError;
+  }
 
   if (!res.ok) {
-    const errorText = await res.text();
-    console.error("Lead konnte nicht gespeichert werden:", errorText);
-    return false;
+    const requestError = new Error('request_failed');
+    requestError.kind = res.status >= 400 && res.status < 500 ? 'validation' : 'server';
+    requestError.status = res.status;
+    throw requestError;
   }
 
   return true;
+}
+
+function showFormBanner(banner, message) {
+  if (!banner) return;
+  banner.textContent = message;
+  banner.hidden = false;
+  banner.style.display = 'block';
+}
+
+function hideFormBanner(banner) {
+  if (!banner) return;
+  banner.textContent = '';
+  banner.hidden = true;
+  banner.style.display = 'none';
 }
 
 /* â”€â”€ FORMULAR ABSENDEN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -163,6 +185,17 @@ async function submitForm(e) {
   const form = e.target;
   if (form.dataset.submitting === 'true') return;
   form.dataset.submitting = 'true';
+  form.setAttribute('aria-busy', 'true');
+  const submitButton = form.querySelector('[type="submit"]');
+  const originalButtonText = submitButton?.textContent || '';
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = T[currentLang]?.f_submitting || 'Anfrage wird gesendet…';
+  }
+  const successBanner = document.getElementById('successBanner');
+  const errorBanner = document.getElementById('errorBanner');
+  hideFormBanner(successBanner);
+  hideFormBanner(errorBanner);
   const payload = {
     company:     document.getElementById('f_company')?.value || '',
     name:        document.getElementById('f_name')?.value || '',
@@ -179,44 +212,29 @@ async function submitForm(e) {
   try {
     await saveLead(payload);
     window.OSMPAnalytics?.track?.('lead_form_success');
-    const banner = document.getElementById('successBanner');
-    if (banner) {
-      banner.textContent = T[currentLang]?.f_success || 'âœ“ Danke!';
-      banner.style.display = 'block';
-      setTimeout(() => banner.style.display = 'none', 5000);
-    }
+    showFormBanner(successBanner, T[currentLang]?.f_success || '✓ Danke!');
+    setTimeout(() => hideFormBanner(successBanner), 5000);
     form.reset();
-    const uploadSelected = document.getElementById('uploadSelected');
-    if (uploadSelected) uploadSelected.textContent = '';
+  } catch (error) {
+    const errorKey = error.kind === 'validation'
+      ? 'f_error_validation'
+      : error.kind === 'network'
+        ? 'f_error_network'
+        : 'f_error_server';
+    const fallback = error.kind === 'validation'
+      ? 'Bitte prüfen Sie Ihre Angaben.'
+      : error.kind === 'network'
+        ? 'Die Verbindung ist fehlgeschlagen.'
+        : 'Die Anfrage konnte nicht gespeichert werden.';
+    showFormBanner(errorBanner, T[currentLang]?.[errorKey] || fallback);
   } finally {
     delete form.dataset.submitting;
-  }
-}
-
-/* â”€â”€ DATEI-UPLOAD HINWEIS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-function handleFileUpload(event) {
-  const file = event.target.files?.[0];
-  if (!file) return;
-  const uploadText = document.querySelector('.upload-text');
-  const selected = document.getElementById('uploadSelected');
-  if (uploadText) uploadText.textContent = 'Datei ausgewählt';
-  if (selected) selected.textContent = file.name + ' ist für die Anfrage vorgemerkt.';
-}
-
-/* â”€â”€ DRAG & DROP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-function initDragDrop() {
-  const zone = document.getElementById('uploadZone');
-  if (!zone) return;
-  zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('dragover'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault(); zone.classList.remove('dragover');
-    const f = e.dataTransfer.files[0];
-    if (f) {
-      document.getElementById('sketchFile').files = e.dataTransfer.files;
-      handleFileUpload({ target: { files: [f] } });
+    form.removeAttribute('aria-busy');
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
     }
-  });
+  }
 }
 
 /* â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -394,7 +412,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   setLang(currentLang);
   initAnalyticsConsent();
   initHeaderNav();
-  initDragDrop();
   initRequestAssistant();
   prefillContactFormFromAssistant();
   initReveal();
