@@ -1,6 +1,6 @@
 # Task Log OS.MECHPLAST Website
 
-Stand: 2026-07-24
+Stand: 2026-08-31
 
 Dieses Log dokumentiert Arbeiten am Projekt. Nach jeder erledigten Aufgabe hier eintragen:
 
@@ -12,6 +12,42 @@ Dieses Log dokumentiert Arbeiten am Projekt. Nach jeder erledigten Aufgabe hier 
 - offene Punkte
 
 ## Abgeschlossene Aufgaben
+
+### 2026-08-31 — Pages CMS und Wissensbereich technisch eingerichtet
+
+**Auftrag:** Die vollständige technische Struktur für `/wissen/`, Pages CMS, Eleventy-Build, Navigation, Footer, Sitemap, Artikelvorlage und Bildverwaltung einrichten, jedoch noch keinen Artikel anlegen oder veröffentlichen.
+
+**Geänderte bzw. erstellte Dateien:**
+
+- Build/CMS: `.pages.yml`, `package.json`, `package-lock.json`, `eleventy.config.mjs`, `.gitignore`
+- Wissensquellen/Templates: `content/_data/site.mjs`, `content/wissen-index.njk`, `content/sitemap.njk`, `content/wissen/wissen.11tydata.mjs`, `content/_includes/wissen/base.njk`, `article.njk`, `article-card.njk`
+- Logik/Bilder: `scripts/wissen-content.mjs`, `scripts/wissen-image.mjs`, `assets/images/wissen/.gitkeep`, `css/oncc-system.css`
+- Navigation/Sitemap: `modules/header.html`, `modules/footer.html`, `js/translations.js`, `sitemap.xml` sowie die statischen Fallbacks der kanonischen HTML-Seiten und `datenschutz/index.html`
+- Tests/Plan: `tests/wissen-content.test.mjs`, `tests/wissen-image.test.mjs`, `tests/wissen-build.test.mjs`, `docs/superpowers/plans/2026-08-31-wissen-pages-cms.md`
+- Statusdokumentation: `docs/PROJECT_STATUS.md`, `docs/TASK_LOG.md`
+
+**Ergebnis:**
+
+- Pages CMS kann Artikel-Metadaten, Markdown, Quellen, verwandte Beiträge und freigegebene Bilder im Repository pflegen.
+- Eleventy erzeugt die leere Übersicht `/wissen/` und künftig ausschließlich explizit veröffentlichte Artikel unter `/wissen/{slug}/`.
+- Entwürfe bleiben ohne HTML-Ausgabe und ohne Sitemap-Eintrag; veröffentlichte Datensätze werden streng validiert.
+- Bestehende statische Seiten, Styles, Scripts, Formulare, Analytics/Consent und die Cloudflare Function bleiben erhalten.
+- Es wurde kein erster Artikel erstellt oder veröffentlicht.
+
+**Tests / Prüfung:**
+
+- TDD-Nachweise für fehlende Content- und Bildmodule vor der Implementierung durchgeführt.
+- Wissen-Suite: 15/15 Tests bestanden (CMS-Felder, sechs Cluster, Entwürfe, Validierung, Clean URLs, Navigation, Sitemap, JSON-LD, responsive Bildausgabe, Build-Freigabeliste).
+- Lokaler Eleventy-Produktionsbuild erfolgreich; `/wissen/` enthält den vorgesehenen Leerzustand und keinen Artikel.
+- Browserprüfung Desktop und 390-Pixel-Mobilansicht: H1, sechs Cluster, Leerzustand, Navigation und Footer sichtbar; keine horizontale Überbreite und keine Browserfehler.
+- Gesamtsuite und abschließender Build werden vor Übergabe erneut ausgeführt.
+
+**Offene Punkte:**
+
+- Cloudflare Pages auf Buildbefehl `npm run build`, Ausgabeverzeichnis `_site` und Node.js 22 oder neuer einstellen.
+- Pages CMS mit dem richtigen GitHub-Repository und Produktionsbranch verbinden.
+- Der erste Artikel wird laut Auftrag später durch den Nutzer in Pages CMS angelegt; Bild- und Inhaltsfreigaben bleiben redaktionelle Verantwortung.
+- Kein Commit und kein Deployment ausgeführt.
 
 ### 2026-07-24 — Website-Unterseiten über Clean URLs direkt erreichbar gemacht
 

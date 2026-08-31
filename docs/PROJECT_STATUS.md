@@ -1,6 +1,6 @@
 # Projektstatus OS.MECHPLAST Website
 
-Stand: 2026-08-29
+Stand: 2026-08-31
 
 ## Kurzbeschreibung
 
@@ -8,9 +8,9 @@ Die Website ist eine statische HTML-, CSS- und JavaScript-Website für OS.MECHPL
 
 Die aktuelle Arbeitskopie liegt unter:
 
-`work/oscnc-logo-integrated-20260704-005043`
+`C:\Users\Director\Documents\Italien Firma\oscnc - Kopie`
 
-Hinweis: Diese Arbeitskopie meldet selbst kein eigenes Git-Repository. Im übergeordneten Codex-Ordner ist ein `.git`-Ordner sichtbar, `git status` und `git diff --stat` liefern dort aktuell jedoch „not a git repository“. Dieser Git-Stand ist unklar und darf nicht als sauberer Repository-Status interpretiert werden.
+Hinweis: Diese Arbeitskopie ist ein Git-Arbeitsbaum mit zahlreichen bereits vor dem Wissensbereich vorhandenen Änderungen und unversionierten Audit-/Archivdateien. Diese fremden Änderungen wurden bei der Umsetzung nicht bereinigt oder überschrieben.
 
 ## Aktuelle Hauptseiten
 
@@ -24,6 +24,7 @@ Indexierbare bzw. kanonisch in `sitemap.xml` geführte Seiten:
 - `/werkstoffe/` aus `werkstoffe.html`
 - `/kontakt/` aus `kontakt.html`
 - `/impressum/` aus `impressum.html`
+- `/wissen/` wird beim Eleventy-Build aus `content/wissen-index.njk` erzeugt
 
 Hinweis 2026-07-24: Für diese acht öffentlichen Clean URLs existieren zusätzlich echte Ordnerseiten (`leistungen/index.html`, `qualitaet/index.html`, `technologie/index.html`, `unternehmen/index.html`, `werkstoffe/index.html`, `kontakt/index.html`, `impressum/index.html`). Dadurch sind die Unterseiten auch ohne interne `.html`-Rewrite-Regeln direkt erreichbar.
 
@@ -74,6 +75,9 @@ Vorhandene HTML-Module in `modules/`:
 - Mobile Navigation mit Menübutton.
 - Interne Clean-URL-Struktur über `_redirects`.
 - Header- und X-Robots-Regeln über `_headers`.
+- Eleventy-Build mit Ausgabe nach `_site`; bestehende öffentliche Seiten und Assets werden über eine explizite Freigabeliste unverändert übernommen.
+- Pages-CMS-Konfiguration in `.pages.yml`; Artikelquelle ist `content/wissen/`, Bilder liegen ausschließlich unter `assets/images/wissen/`.
+- Veröffentlichte Wissen-Artikel erhalten Clean URLs, statisches HTML, Article-/WebPage-/Breadcrumb-Schema und responsive WebP-/JPEG-Bilder. Entwürfe erzeugen keine öffentliche Seite und keinen Sitemap-Eintrag.
 
 ## Analytics und Consent
 
@@ -103,7 +107,7 @@ Wichtig: Tracking- und Consent-Code nicht ohne ausdrücklichen Auftrag ändern.
 - Unternehmensseite mit Gründerprofilen, Standort und Zielmarktbereich.
 - Impressum-Seite mit vorhandenen Unternehmensangaben und Platzhalter-/TODO-Charakter für fehlende rechtliche Details.
 - Robots.txt vorhanden.
-- Sitemap mit sieben kanonischen Clean URLs vorhanden; `/impressum/` ist im aktuellen lokalen `sitemap.xml` nicht enthalten. Die Indexierungsentscheidung für Impressum und eine künftige Datenschutzseite bleibt dem Inhaber vorbehalten.
+- Sitemap enthält die bestehenden kanonischen URLs sowie `/wissen/`; veröffentlichte Artikel werden beim Build automatisch ergänzt. `/impressum/` ist im aktuellen lokalen `sitemap.xml` nicht enthalten. Die Indexierungsentscheidung für Impressum und Datenschutz bleibt dem Inhaber vorbehalten.
 - Clean-URL-Weiterleitungen in `_redirects` vorhanden; alte `.html`-URLs leiten per 301 auf die Clean URLs weiter.
 - Echte Clean-URL-Ordnerseiten wurden am 2026-07-24 ergänzt; die früheren internen 200-Rewrites von `/seite/` auf `/seite.html` wurden entfernt.
 - X-Robots-Regeln für technische und alte Seiten in `_headers` vorhanden.
@@ -126,6 +130,7 @@ Wichtig: Tracking- und Consent-Code nicht ohne ausdrücklichen Auftrag ändern.
 - Der geprüfte Masterplan liegt in `docs/WEBSITE_MASTER_PLAN.md`; der phasenweise technische Plan liegt in `docs/WEBSITE_IMPLEMENTATION_PLAN.md`.
 - Der Zeichnungs-Upload wurde gemäß Inhaberentscheidung vom 2026-08-29 vorläufig vollständig aus aktivem Kontakt-HTML, Formularlogik und Analytics entfernt. Ein späterer echter Upload benötigt einen neuen Auftrag.
 - Phase 1 hat automatisiert 24/24 Tests bestanden; die reale visuelle Browser-/Assistive-Technik-Abnahme bleibt offen, weil in der Sitzung keine Browser-Instanz verfügbar war.
+- Der Wissensbereich und Pages CMS sind technisch eingerichtet. Es wurde bewusst kein Artikel angelegt oder veröffentlicht. Vor Live-Nutzung müssen Cloudflare Pages auf `npm run build`/`_site` und Pages CMS auf das richtige GitHub-Repository sowie den Produktionsbranch eingestellt werden.
 
 ## Bereiche mit unklarem Stand
 

@@ -1,0 +1,85 @@
+---
+layout: wissen/base.njk
+---
+<main id="main-content">
+  <article class="knowledge-article">
+    <header class="knowledge-article__header">
+      <div class="container">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/">Startseite</a><span aria-hidden="true">/</span><a href="/wissen/">Wissen</a><span aria-hidden="true">/</span><span>{{ title }}</span>
+        </nav>
+        <span class="knowledge-article__cluster">{{ cluster }}</span>
+        <h1>{{ title }}</h1>
+        <p class="knowledge-article__summary">{{ summary }}</p>
+        <div class="knowledge-article__meta">
+          <span>{{ author }}</span>
+          <time datetime="{{ published_at }}">Veröffentlicht am {{ published_at | dateDE }}</time>
+          {% if updated_at %}<time datetime="{{ updated_at }}">Aktualisiert am {{ updated_at | dateDE }}</time>{% endif %}
+        </div>
+      </div>
+    </header>
+
+    <figure class="container knowledge-article__hero">
+      {% knowledgeImage hero_image, hero_alt, "hero" %}
+      {% if hero_caption or hero_credit %}
+        <figcaption>{{ hero_caption }}{% if hero_caption and hero_credit %} · {% endif %}{% if hero_credit %}Quelle: {{ hero_credit }}{% endif %}</figcaption>
+      {% endif %}
+    </figure>
+
+    <div class="container knowledge-article__layout">
+      <div class="knowledge-article__body">
+        {{ content | safe }}
+
+        {% if content_images and content_images.length %}
+          <section class="knowledge-article__images" aria-label="Weitere Abbildungen">
+            {% for image in content_images %}
+              <figure>
+                {% knowledgeImage image.image, image.alt, "content" %}
+                {% if image.caption or image.credit %}
+                  <figcaption>{{ image.caption }}{% if image.caption and image.credit %} · {% endif %}{% if image.credit %}Quelle: {{ image.credit }}{% endif %}</figcaption>
+                {% endif %}
+              </figure>
+            {% endfor %}
+          </section>
+        {% endif %}
+
+        {% if sources and sources.length %}
+          <section class="knowledge-article__sources" aria-labelledby="article-sources-title">
+            <h2 id="article-sources-title">Quellen</h2>
+            <ol>
+              {% for source in sources %}<li><a href="{{ source.url }}" target="_blank" rel="noopener noreferrer">{{ source.label }}</a></li>{% endfor %}
+            </ol>
+          </section>
+        {% endif %}
+      </div>
+
+      <aside class="knowledge-article__aside" aria-label="Artikelzuordnung">
+        <span>Passende Fachseite</span>
+        <a href="{{ service_link }}">Fachseite öffnen</a>
+        <span>Themencluster</span>
+        <strong>{{ cluster }}</strong>
+      </aside>
+    </div>
+
+    {% set related = collections.wissenPublished | relatedKnowledge(related_articles) %}
+    {% if related.length %}
+      <section class="sec sec-soft knowledge-related" aria-labelledby="related-title">
+        <div class="container">
+          <h2 id="related-title">Verwandte Artikel</h2>
+          <div class="knowledge-grid">
+            {% for article in related %}{% include "wissen/article-card.njk" %}{% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    <section class="sec knowledge-article__cta">
+      <div class="container">
+        <span class="kicker">Nächster Schritt</span>
+        <h2>Technische Anfrage konkretisieren</h2>
+        <a class="btn btn-primary" href="{{ cta_url }}">{{ cta_label }}</a>
+      </div>
+    </section>
+  </article>
+</main>
+

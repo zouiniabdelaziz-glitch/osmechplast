@@ -1,0 +1,226 @@
+media:
+  - name: wissen_images
+    label: Bilder für Wissen
+    input: assets/images/wissen
+    output: /assets/images/wissen
+    rename: safe
+    categories: [image]
+    extensions: [jpg, jpeg, png, webp]
+    commit:
+      templates:
+        create: "Wissen: Bild {filename} hinzufügen"
+        update: "Wissen: Bild {filename} aktualisieren"
+        delete: "Wissen: Bild {filename} entfernen"
+        rename: "Wissen: Bild {oldFilename} in {newFilename} umbenennen"
+
+content:
+  - name: wissen
+    label: Wissen
+    type: collection
+    path: content/wissen
+    format: yaml-frontmatter
+    filename: "{slug}.md"
+    subfolders: false
+    exclude: [README.md]
+    view:
+      primary: title
+      fields: [draft, cluster, published_at, updated_at]
+      sort: published_at
+      order: desc
+      search: [title, summary, cluster, author]
+    commit:
+      identity: user
+    fields:
+      - name: title
+        label: Titel
+        type: string
+        required: true
+        options:
+          maxlength: 90
+      - name: slug
+        label: URL-Name
+        description: Nur Kleinbuchstaben, Zahlen und Bindestriche verwenden.
+        type: string
+        required: true
+        options:
+          maxlength: 80
+      - name: meta_description
+        label: Meta Description
+        type: text
+        required: true
+        options:
+          maxlength: 160
+      - name: summary
+        label: Kurze Zusammenfassung
+        type: text
+        required: true
+        options:
+          maxlength: 320
+      - name: cluster
+        label: Themencluster
+        type: select
+        required: true
+        options:
+          values:
+            - Fertigungsgerechte Konstruktion
+            - Werkstoffe für CNC-Drehteile
+            - CNC-Drehen und Dreh-Fräsen
+            - Toleranzen, Oberflächen und Qualität
+            - Prototypen, Serien und Fertigungsplanung
+            - CNC-Anfragen, Einkauf und Kosten
+      - name: author
+        label: Autor
+        type: string
+        required: true
+        options:
+          maxlength: 100
+      - name: published_at
+        label: Veröffentlichungsdatum
+        type: date
+        required: true
+      - name: updated_at
+        label: Aktualisierungsdatum
+        type: date
+      - name: hero_image
+        label: Titelbild
+        type: image
+        required: true
+        options:
+          media: wissen_images
+          extensions: [jpg, jpeg, png, webp]
+          rename: safe
+      - name: hero_alt
+        label: Alternativtext des Titelbildes
+        type: string
+        required: true
+        options:
+          maxlength: 240
+      - name: hero_caption
+        label: Bildunterschrift des Titelbildes
+        type: text
+      - name: hero_credit
+        label: Quelle oder Fotograf des Titelbildes
+        type: string
+      - name: hero_approval
+        label: Freigabestatus des Titelbildes
+        type: select
+        required: true
+        default: intern
+        options:
+          values: [intern, freigegeben]
+      - name: body
+        label: Vollständiger Artikeltext
+        description: Zwischenüberschriften, Tabellen, Listen und Checklisten werden hier gepflegt. Bilder werden im Feld „Weitere Bilder“ verwaltet.
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+          switcher: true
+          media: false
+      - name: content_images
+        label: Weitere Bilder
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{alt} ({index})"
+        fields:
+          - name: image
+            label: Datei
+            type: image
+            required: true
+            options:
+              media: wissen_images
+              extensions: [jpg, jpeg, png, webp]
+              rename: safe
+          - name: alt
+            label: Alternativtext
+            type: string
+            required: true
+            options:
+              maxlength: 240
+          - name: caption
+            label: Bildunterschrift
+            type: text
+          - name: credit
+            label: Quelle oder Fotograf
+            type: string
+          - name: approval
+            label: Freigabestatus
+            type: select
+            required: true
+            default: intern
+            options:
+              values: [intern, freigegeben]
+      - name: sources
+        label: Quellen
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{label} ({index})"
+        fields:
+          - name: label
+            label: Bezeichnung
+            type: string
+            required: true
+          - name: url
+            label: HTTPS-URL
+            type: string
+            required: true
+      - name: related_articles
+        label: Verwandte Artikel
+        type: reference
+        options:
+          collection: wissen
+          multiple: true
+          max: 6
+          search: "title,summary,cluster"
+          value: "{slug}"
+          label: "{title}"
+      - name: service_link
+        label: Passende Leistungsseite
+        type: select
+        required: true
+        options:
+          values:
+            - name: /leistungen/
+              label: Leistungen
+            - name: /werkstoffe/
+              label: Werkstoffe
+            - name: /technologie/
+              label: Technologie
+            - name: /qualitaet/
+              label: Qualität
+            - name: /unternehmen/
+              label: Unternehmen
+            - name: /kontakt/
+              label: Kontakt
+      - name: cta_label
+        label: Handlungsaufforderung
+        type: string
+        required: true
+        options:
+          maxlength: 80
+      - name: cta_url
+        label: Ziel der Handlungsaufforderung
+        type: select
+        required: true
+        options:
+          values:
+            - name: /kontakt/
+              label: Kontakt
+            - name: /leistungen/
+              label: Leistungen
+            - name: /werkstoffe/
+              label: Werkstoffe
+            - name: /technologie/
+              label: Technologie
+            - name: /qualitaet/
+              label: Qualität
+      - name: draft
+        label: Entwurf
+        description: Aktivierte Entwürfe werden nicht als HTML erzeugt und erscheinen weder in Übersicht noch Sitemap.
+        type: boolean
+        default: true
+

@@ -1,0 +1,19 @@
+{
+  "name": "osmechplast-website",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node --input-type=module -e \"import { rmSync } from 'node:fs'; rmSync('_site', { recursive: true, force: true });\" && eleventy",
+    "dev": "eleventy --serve",
+    "test": "node --test tests/*.test.mjs",
+    "verify": "npm run build && npm test"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "3.1.6",
+    "@11ty/eleventy-img": "7.0.0"
+  }
+}
+

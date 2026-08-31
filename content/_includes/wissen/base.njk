@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} | OS.MECHPLAST</title>
+  <meta name="description" content="{{ meta_description }}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+  <link rel="alternate" hreflang="de" href="{{ site.url }}{{ page.url }}">
+  <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ page.url }}">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:site_name" content="OS.MECHPLAST">
+  <meta property="og:type" content="{% if pageType == 'article' %}article{% else %}website{% endif %}">
+  <meta property="og:title" content="{{ title }} | OS.MECHPLAST">
+  <meta property="og:description" content="{{ meta_description }}">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  {% if pageType == 'article' %}<meta property="og:image" content="{{ site.url }}{{ hero_image }}">{% endif %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css?v=20260618-light-industrial-logo-v2">
+  <link rel="stylesheet" href="/css/oncc-system.css?v=20260831-wissen-v1">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": {{ (site.url + page.url + "#webpage") | json | safe }},
+        "url": {{ (site.url + page.url) | json | safe }},
+        "name": {{ title | json | safe }},
+        "description": {{ meta_description | json | safe }},
+        "inLanguage": "de-DE",
+        "isPartOf": { "@id": {{ site.websiteId | json | safe }} },
+        "about": { "@id": {{ site.organizationId | json | safe }} }
+      },
+      {% if pageType == 'article' %}
+      {
+        "@type": "Article",
+        "@id": {{ (site.url + page.url + "#article") | json | safe }},
+        "headline": {{ title | json | safe }},
+        "description": {{ meta_description | json | safe }},
+        "image": {{ (site.url + hero_image) | json | safe }},
+        "datePublished": {{ published_at | json | safe }},
+        "dateModified": {{ (updated_at or published_at) | json | safe }},
+        "inLanguage": "de-DE",
+        "author": { "@type": "Person", "name": {{ author | json | safe }} },
+        "publisher": { "@id": {{ site.organizationId | json | safe }} },
+        "mainEntityOfPage": { "@id": {{ (site.url + page.url + "#webpage") | json | safe }} },
+        "about": {{ cluster | json | safe }}
+      },
+      {% endif %}
+      {
+        "@type": "BreadcrumbList",
+        "@id": {{ (site.url + page.url + "#breadcrumb") | json | safe }},
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://osmechplast.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Wissen", "item": "https://osmechplast.com/wissen/" }{% if pageType == 'article' %},
+          { "@type": "ListItem", "position": 3, "name": {{ title | json | safe }}, "item": {{ (site.url + page.url) | json | safe }} }{% endif %}
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="header" data-include="header" data-module-fallback="true">
+    {{ site.headerHtml | safe }}
+  </header>
+  {{ content | safe }}
+  <footer class="footer" data-include="footer" data-module-fallback="true">
+    {{ site.footerHtml | safe }}
+  </footer>
+  <script src="/js/translations.js?v=20260831-wissen-v1"></script>
+  <script src="/js/app.js?v=20260825-seo-v1"></script>
+</body>
+</html>
+

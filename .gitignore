@@ -10,3 +10,9 @@ Desktop.ini
 
 # Editor
 .vscode/
+
+# Lokale Build-Ausgabe und npm-Cache
+_site/
+.cache/
+.npm-cache/
+node_modules/

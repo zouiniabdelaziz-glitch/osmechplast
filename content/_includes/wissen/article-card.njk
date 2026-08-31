@@ -1,0 +1,10 @@
+<article class="knowledge-card">
+  <span class="knowledge-card__cluster">{{ article.data.cluster }}</span>
+  <h3><a href="{{ article.url }}">{{ article.data.title }}</a></h3>
+  <p>{{ article.data.summary }}</p>
+  <div class="knowledge-card__meta">
+    <span>{{ article.data.author }}</span>
+    <time datetime="{{ article.data.updated_at or article.data.published_at }}">{{ (article.data.updated_at or article.data.published_at) | dateDE }}</time>
+  </div>
+</article>
+

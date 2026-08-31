@@ -1,0 +1,55 @@
+---
+layout: wissen/base.njk
+permalink: wissen/index.html
+title: Wissen für CNC-Anfragen und Fertigung
+meta_description: Fachwissen von OS.MECHPLAST zu CNC-Drehen, Dreh-Fräsen, Werkstoffen, Qualität, Fertigungsplanung und technischen Angebotsanfragen.
+summary: Technische Beiträge für Einkauf, Konstruktion, Produktentwicklung und Produktionsplanung.
+pageType: overview
+---
+<main id="main-content">
+  <section class="knowledge-hero">
+    <div class="container knowledge-hero__inner">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Startseite</a><span aria-hidden="true">/</span><span>Wissen</span>
+      </nav>
+      <span class="kicker">Technisches Wissen</span>
+      <h1>Wissen für CNC-Anfragen und Fertigung</h1>
+      <p>Fachliche Grundlagen für Einkauf, Konstruktion und Produktionsplanung – sachlich geordnet nach Konstruktion, Werkstoffen, Verfahren, Qualität, Serienplanung und Anfragevorbereitung.</p>
+    </div>
+  </section>
+
+  <section class="sec knowledge-overview" aria-labelledby="knowledge-clusters-title">
+    <div class="container">
+      <header class="knowledge-overview__head">
+        <span class="kicker">Themenübersicht</span>
+        <h2 id="knowledge-clusters-title">Sechs klar abgegrenzte Themencluster</h2>
+      </header>
+      <ol class="knowledge-clusters">
+        {% for cluster in knowledgeClusters %}
+          <li><span>0{{ loop.index }}</span><strong>{{ cluster }}</strong></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec sec-soft knowledge-latest" aria-labelledby="knowledge-latest-title">
+    <div class="container">
+      <header class="knowledge-overview__head">
+        <span class="kicker">Fachartikel</span>
+        <h2 id="knowledge-latest-title">Veröffentlichte Beiträge</h2>
+      </header>
+      {% if collections.wissenPublished.length %}
+        <div class="knowledge-grid">
+          {% for article in collections.wissenPublished %}
+            {% include "wissen/article-card.njk" %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="knowledge-empty" role="status">
+          <h3>Noch keine Fachartikel veröffentlicht</h3>
+          <p>Neue Beiträge werden nach redaktioneller und technischer Freigabe hier veröffentlicht.</p>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+</main>
