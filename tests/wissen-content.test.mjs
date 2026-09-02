@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
 import {
@@ -35,6 +36,56 @@ test('provides exactly the six approved knowledge clusters', () => {
     'Prototypen, Serien und Fertigungsplanung',
     'CNC-Anfragen, Einkauf und Kosten',
   ]);
+});
+
+test('uses consistent cluster translations across all supported languages', () => {
+  const source = readFileSync(new URL('../js/translations.js', import.meta.url), 'utf8');
+
+  const deTranslations = [
+    "cluster_design: 'Fertigungsgerechte Konstruktion'",
+    "cluster_materials: 'Werkstoffe für CNC-Drehteile'",
+    "cluster_turning: 'CNC-Drehen und Dreh-Fräsen'",
+    "cluster_quality: 'Toleranzen, Oberflächen und Qualität'",
+    "cluster_series: 'Prototypen, Serien und Fertigungsplanung'",
+    "cluster_request: 'CNC-Anfragen, Einkauf und Kosten'",
+  ];
+
+  for (const translation of deTranslations) {
+    assert.match(source, new RegExp(translation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `missing German cluster label: ${translation}`);
+  }
+
+  const languageTranslations = {
+    it: {
+      'Fertigungsgerechte Konstruktion': 'Progettazione per la lavorazione',
+      'Werkstoffe für CNC-Drehteile': 'Materiali per particolari torniti CNC',
+      'CNC-Drehen und Dreh-Fräsen': 'Tornitura CNC e tornio-fresatura',
+      'Toleranzen, Oberflächen und Qualität': 'Tolleranze, superfici e qualità',
+      'Prototypen, Serien und Fertigungsplanung': 'Prototipi, serie e pianificazione della produzione',
+      'CNC-Anfragen, Einkauf und Kosten': 'Richieste CNC, acquisti e costi',
+    },
+    en: {
+      'Fertigungsgerechte Konstruktion': 'Design for manufacturability',
+      'Werkstoffe für CNC-Drehteile': 'Materials for CNC turned parts',
+      'CNC-Drehen und Dreh-Fräsen': 'CNC turning and turn-milling',
+      'Toleranzen, Oberflächen und Qualität': 'Tolerances, surfaces and quality',
+      'Prototypen, Serien und Fertigungsplanung': 'Prototypes, series and production planning',
+      'CNC-Anfragen, Einkauf und Kosten': 'CNC inquiries, purchasing and costs',
+    },
+    fr: {
+      'Fertigungsgerechte Konstruktion': 'Conception pour l’usinage',
+      'Werkstoffe für CNC-Drehteile': 'Matières pour pièces tournées CNC',
+      'CNC-Drehen und Dreh-Fräsen': 'Tournage CNC et tournage-fraisage',
+      'Toleranzen, Oberflächen und Qualität': 'Tolérances, surfaces et qualité',
+      'Prototypen, Serien und Fertigungsplanung': 'Prototypes, séries et planification de production',
+      'CNC-Anfragen, Einkauf und Kosten': 'Demandes CNC, achats et coûts',
+    },
+  };
+
+  for (const [lang, values] of Object.entries(languageTranslations)) {
+    for (const [sourceText, targetText] of Object.entries(values)) {
+      assert.match(source, new RegExp(`'${sourceText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}':\\s*'${targetText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}'`), `missing ${lang} translation for ${sourceText}`);
+    }
+  }
 });
 
 test('accepts a complete published article and returns its clean URL', () => {
