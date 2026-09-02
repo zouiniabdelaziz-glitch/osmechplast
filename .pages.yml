@@ -19,15 +19,17 @@ content:
     type: collection
     path: content/wissen
     format: yaml-frontmatter
-    filename: "{slug}.md"
+    filename: "{fields.slug}.md"
     subfolders: false
     exclude: [README.md]
     view:
       primary: title
       fields: [draft, cluster, published_at, updated_at]
-      sort: published_at
-      order: desc
+      sort: [published_at, updated_at, title]
       search: [title, summary, cluster, author]
+      default:
+        sort: published_at
+        order: desc
     commit:
       identity: user
     fields:
@@ -42,6 +44,9 @@ content:
         description: Nur Kleinbuchstaben, Zahlen und Bindestriche verwenden.
         type: string
         required: true
+        pattern:
+          regex: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          message: Nur Kleinbuchstaben, Zahlen und einzelne Bindestriche verwenden.
         options:
           maxlength: 80
       - name: meta_description
@@ -78,9 +83,14 @@ content:
         label: Veröffentlichungsdatum
         type: date
         required: true
+        options:
+          format: yyyy-MM-dd
       - name: updated_at
         label: Aktualisierungsdatum
         type: date
+        default: ""
+        options:
+          format: yyyy-MM-dd
       - name: hero_image
         label: Titelbild
         type: image
@@ -176,8 +186,8 @@ content:
           multiple: true
           max: 6
           search: "title,summary,cluster"
-          value: "{slug}"
-          label: "{title}"
+          value: "{fields.slug}"
+          label: "{fields.title}"
       - name: service_link
         label: Passende Leistungsseite
         type: select
@@ -223,4 +233,3 @@ content:
         description: Aktivierte Entwürfe werden nicht als HTML erzeugt und erscheinen weder in Übersicht noch Sitemap.
         type: boolean
         default: true
-

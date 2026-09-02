@@ -65,6 +65,22 @@ test('rejects published articles with missing required metadata', () => {
   );
 });
 
+test('normalizes YAML date objects and rejects impossible calendar dates', () => {
+  const parsedYamlArticle = validPublishedArticle();
+  parsedYamlArticle.published_at = new Date('2026-08-31T00:00:00.000Z');
+  parsedYamlArticle.updated_at = new Date('2026-09-01T00:00:00.000Z');
+  validateArticle(parsedYamlArticle, 'content/wissen/yaml-date.md');
+  assert.equal(parsedYamlArticle.published_at, '2026-08-31');
+  assert.equal(parsedYamlArticle.updated_at, '2026-09-01');
+
+  const impossibleDate = validPublishedArticle();
+  impossibleDate.published_at = '2026-02-31';
+  assert.throws(
+    () => validateArticle(impossibleDate, 'content/wissen/impossible-date.md'),
+    /published_at/,
+  );
+});
+
 test('rejects unsafe slugs and unapproved clusters', () => {
   const unsafeSlug = validPublishedArticle();
   unsafeSlug.slug = '../Interner Ordner';

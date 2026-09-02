@@ -22,11 +22,25 @@ function requireString(data, field, inputPath, maxLength = Infinity) {
   }
 }
 
-function requireDate(data, field, inputPath) {
-  requireString(data, field, inputPath);
-  if (!DATE_PATTERN.test(data[field]) || Number.isNaN(Date.parse(`${data[field]}T00:00:00Z`))) {
+function normalizeDate(value, field, inputPath) {
+  let normalized = value;
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    normalized = value.toISOString().slice(0, 10);
+  }
+  if (typeof normalized !== 'string' || !DATE_PATTERN.test(normalized)) {
     throw new Error(`${inputPath}: ${field} must use YYYY-MM-DD`);
   }
+
+  const [year, month, day] = normalized.split('-').map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  if (
+    parsed.getUTCFullYear() !== year
+    || parsed.getUTCMonth() !== month - 1
+    || parsed.getUTCDate() !== day
+  ) {
+    throw new Error(`${inputPath}: ${field} must use a valid calendar date`);
+  }
+  return normalized;
 }
 
 function validateImage(image, prefix, inputPath) {
@@ -64,7 +78,7 @@ export function validateArticle(data, inputPath = 'knowledge article') {
   requireString(data, 'meta_description', inputPath, 160);
   requireString(data, 'summary', inputPath, 320);
   requireString(data, 'author', inputPath, 100);
-  requireDate(data, 'published_at', inputPath);
+  data.published_at = normalizeDate(data.published_at, 'published_at', inputPath);
 
   if (!SLUG_PATTERN.test(data.slug)) {
     throw new Error(`${inputPath}: slug must contain lowercase letters, numbers and hyphens only`);
@@ -73,7 +87,7 @@ export function validateArticle(data, inputPath = 'knowledge article') {
     throw new Error(`${inputPath}: cluster is not approved`);
   }
   if (data.updated_at) {
-    requireDate(data, 'updated_at', inputPath);
+    data.updated_at = normalizeDate(data.updated_at, 'updated_at', inputPath);
   }
   if (!KNOWLEDGE_IMAGE_PATTERN.test(data.hero_image || '')) {
     throw new Error(`${inputPath}: hero_image must be stored below /assets/images/wissen/`);

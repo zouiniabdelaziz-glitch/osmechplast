@@ -6,9 +6,11 @@ import {
 
 export default {
   tags: ['wissen'],
-  layout: 'wissen/article.njk',
   pageType: 'article',
   eleventyComputed: {
+    layout(data) {
+      return isPublished(data) ? 'wissen/article.njk' : false;
+    },
     permalink(data) {
       if (!isPublished(data)) return false;
       validateArticle(data, data.page?.inputPath || 'knowledge article');
@@ -19,4 +21,3 @@ export default {
     },
   },
 };
-
