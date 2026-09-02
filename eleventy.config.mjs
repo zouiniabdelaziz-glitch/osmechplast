@@ -8,6 +8,7 @@ import {
   validateArticle,
 } from './scripts/wissen-content.mjs';
 import { renderKnowledgeImage } from './scripts/wissen-image.mjs';
+import { PUBLIC_SITEMAP_XML } from './content/_data/public-sitemap.mjs';
 
 const ROOT = process.cwd();
 const OUTPUT = path.join(ROOT, '_site');
@@ -84,8 +85,7 @@ export default function (eleventyConfig) {
     return articles.filter((item) => selected.has(item.data.slug));
   });
   eleventyConfig.addFilter('knowledgeSitemap', (articles) => {
-    const baseSitemap = readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
-    return mergeKnowledgeSitemap(baseSitemap, articles);
+    return mergeKnowledgeSitemap(PUBLIC_SITEMAP_XML, articles);
   });
 
   eleventyConfig.addAsyncShortcode('knowledgeImage', async (src, alt, variant = 'content') => {

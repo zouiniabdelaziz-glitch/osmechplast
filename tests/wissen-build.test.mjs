@@ -4,6 +4,7 @@ import {
   existsSync,
   readFileSync,
   readdirSync,
+  renameSync,
   rmSync,
   writeFileSync,
 } from 'node:fs';
@@ -109,6 +110,32 @@ test('production build creates the empty knowledge overview and preserves the st
   };
   walk(join(root, '_site'));
   assert.equal(outputFiles.some((path) => path.endsWith('.md')), false);
+});
+
+test('production build tolerates a missing root sitemap.xml file', () => {
+  const rootSitemap = join(root, 'sitemap.xml');
+  const backupSitemap = join(root, 'sitemap.xml.bak');
+  const hadRootSitemap = existsSync(rootSitemap);
+
+  if (hadRootSitemap) renameSync(rootSitemap, backupSitemap);
+
+  try {
+    execFileSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', 'npm run build --silent'], {
+      cwd: root,
+      encoding: 'utf8',
+      stdio: 'pipe',
+    });
+
+    const sitemap = read('_site/sitemap.xml');
+    assert.match(sitemap, /<loc>https:\/\/osmechplast\.com\/wissen\/<\/loc>/);
+    assert.doesNotMatch(sitemap, /https:\/\/osmechplast\.com\/wissen\/[^<]+\/<\/loc>/);
+  } finally {
+    if (hadRootSitemap) {
+      renameSync(backupSitemap, rootSitemap);
+    } else {
+      rmSync(rootSitemap, { force: true });
+    }
+  }
 });
 
 test('production build publishes only explicit non-drafts with complete article metadata', () => {
