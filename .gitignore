@@ -13,6 +13,7 @@ Desktop.ini
 
 # Lokale Build-Ausgabe und npm-Cache
 _site/
+_preview/
 .cache/
 .npm-cache/
 node_modules/

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import {
   existsSync,
   readFileSync,
@@ -10,6 +10,7 @@ import {
 } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
+import { get } from 'node:http';
 
 const root = process.cwd();
 const read = (relativePath) => readFileSync(join(root, relativePath), 'utf8');
@@ -138,10 +139,15 @@ test('production build tolerates a missing root sitemap.xml file', () => {
   }
 });
 
-test('production build publishes only explicit non-drafts with complete article metadata', () => {
+test('production and localhost preview strictly separate published articles and drafts', async () => {
   const publishedSource = join(root, 'content', 'wissen', 'build-veroeffentlicht.md');
   const draftSource = join(root, 'content', 'wissen', 'build-entwurf.md');
   const heroSource = join(root, 'assets', 'images', 'wissen', 'build-testbild.png');
+  let preview;
+
+  for (const fixture of [publishedSource, draftSource, heroSource]) {
+    assert.equal(existsSync(fixture), false, `Refusing to overwrite existing fixture path: ${fixture}`);
+  }
 
   writeFileSync(heroSource, onePixelPng);
   writeFileSync(publishedSource, `---
@@ -205,9 +211,90 @@ Dieser Entwurf darf keine öffentliche Ausgabe erzeugen.
     assert.match(sitemap, /https:\/\/osmechplast\.com\/wissen\/build-veroeffentlicht\//);
     assert.doesNotMatch(sitemap, /build-entwurf/);
     assert.equal(existsSync(join(root, '_site', 'wissen', 'build-entwurf', 'index.html')), false);
+
+    assert.equal(JSON.parse(read('package.json')).scripts['dev:preview'], 'node scripts/dev-preview.mjs');
+    preview = spawn(process.execPath, ['scripts/dev-preview.mjs', '--port', '0'], {
+      cwd: root,
+      env: { ...process.env, npm_lifecycle_event: 'dev:preview' },
+      stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
+    });
+    let log = '';
+    preview.stdout.on('data', (chunk) => { log += chunk; });
+    preview.stderr.on('data', (chunk) => { log += chunk; });
+    const address = await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error(`Preview timeout: ${log}`)), 60000);
+      preview.once('error', reject);
+      preview.once('exit', (code) => { clearTimeout(timeout); reject(new Error(`Preview exited ${code}: ${log}`)); });
+      preview.once('message', (message) => { clearTimeout(timeout); resolve(message); });
+    });
+    assert.equal(address.host, '127.0.0.1');
+    const url = `http://127.0.0.1:${address.port}`;
+    const response = await fetch(`${url}/wissen/build-entwurf/`);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow');
+    const draft = await response.text();
+    assert.match(draft, /ENTWURF – NICHT VERÖFFENTLICHT/);
+    assert.match(draft, /<meta name="robots" content="noindex, nofollow">/);
+    assert.match(draft, /Dieser Entwurf darf keine öffentliche Ausgabe erzeugen/);
+    assert.doesNotMatch(draft, /rel="canonical"|datePublished|<script/);
+    const listing = await (await fetch(`${url}/entwuerfe/`)).text();
+    assert.match(listing, /href="\/wissen\/build-entwurf\/"/);
+    assert.doesNotMatch(read('_preview/sitemap.xml'), /build-entwurf/);
+    assert.equal(read('_preview/wissen/build-veroeffentlicht/index.html'), article);
+    assert.equal(read('_site/wissen/build-veroeffentlicht/index.html'), article);
+    assert.equal(existsSync(join(root, '_site/wissen/build-entwurf/index.html')), false);
+    assert.equal(existsSync(join(root, '_site/entwuerfe/index.html')), false);
+    assert.equal((await fetch(`${url}/.pages.yml`)).status, 404);
+    const foreignHostStatus = await new Promise((resolve, reject) => {
+      get(`${url}/entwuerfe/`, { headers: { Host: 'external.example' } }, (res) => {
+        res.resume(); resolve(res.statusCode);
+      }).on('error', reject);
+    });
+    assert.equal(foreignHostStatus, 403);
+    assert.equal((await fetch(`${url}/api/leads`, { method: 'POST' })).status, 405);
+
+    writeFileSync(draftSource, read('content/wissen/build-entwurf.md') + '\nVORSCHAU-SPEICHERTEST\n');
+    let refreshed = '';
+    for (let attempt = 0; attempt < 40; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+      refreshed = await (await fetch(`${url}/wissen/build-entwurf/`)).text();
+      if (refreshed.includes('VORSCHAU-SPEICHERTEST')) break;
+    }
+    assert.match(refreshed, /VORSCHAU-SPEICHERTEST/);
+
+    // Even a inherited preview-looking environment must never enable drafts in build.
+    execFileSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', 'npm run build --silent'], {
+      cwd: root,
+      env: { ...process.env, KNOWLEDGE_PREVIEW: 'true', ELEVENTY_ENV: 'preview' },
+      stdio: 'pipe',
+    });
+    assert.equal(existsSync(join(root, '_site/wissen/build-entwurf/index.html')), false);
+    assert.equal(read('_site/wissen/build-veroeffentlicht/index.html'), article);
   } finally {
+    if (preview && preview.exitCode === null) {
+      const exited = new Promise((resolve) => preview.once('exit', resolve));
+      if (preview.connected) preview.send('stop');
+      else preview.kill();
+      await exited;
+    }
     rmSync(publishedSource, { force: true });
     rmSync(draftSource, { force: true });
     rmSync(heroSource, { force: true });
+  }
+});
+
+test('preview refuses direct invocation and Cloudflare/CI environments', () => {
+  for (const addition of [
+    { npm_lifecycle_event: 'build' },
+    { npm_lifecycle_event: 'dev:preview', CF_PAGES: '1' },
+    { npm_lifecycle_event: 'dev:preview', CF_PAGES_BRANCH: 'main' },
+    { npm_lifecycle_event: 'dev:preview', CI: 'true' },
+  ]) {
+    assert.throws(() => execFileSync(process.execPath, ['scripts/dev-preview.mjs'], {
+      cwd: root, env: { ...process.env, ...addition }, stdio: 'pipe',
+    }), (error) => {
+      assert.match(error.stderr.toString(), /Local preview denied/);
+      return true;
+    });
   }
 });

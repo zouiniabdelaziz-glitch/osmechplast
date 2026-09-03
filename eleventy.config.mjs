@@ -9,9 +9,10 @@ import {
 } from './scripts/wissen-content.mjs';
 import { renderKnowledgeImage } from './scripts/wissen-image.mjs';
 import { PUBLIC_SITEMAP_XML } from './content/_data/public-sitemap.mjs';
+import { isLocalPreview, draftUrl } from './scripts/preview-mode.mjs';
 
 const ROOT = process.cwd();
-const OUTPUT = path.join(ROOT, '_site');
+const OUTPUT = path.join(ROOT, isLocalPreview() ? '_preview' : '_site');
 
 const publicDirectories = [
   'assets',
@@ -51,6 +52,27 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy('*.html');
 
   eleventyConfig.addGlobalData('knowledgeClusters', CLUSTERS);
+  eleventyConfig.addCollection('wissenDrafts', (collectionApi) => {
+    if (!isLocalPreview()) return [];
+    const all = collectionApi.getFilteredByTag('wissen');
+    const urls = new Set();
+    for (const item of all) {
+      const url = draftUrl(item.data);
+      if (urls.has(url)) throw new Error(`Duplicate knowledge URL: ${url}`);
+      urls.add(url);
+    }
+    return all.filter((item) => !isPublished(item.data));
+  });
+  eleventyConfig.addAsyncShortcode('draftImage', async (src, alt) => {
+    if (!isLocalPreview() || !src) return '';
+    try {
+      return await renderKnowledgeImage(src, alt || '', 'hero', {
+        root: ROOT, outputDir: path.join(OUTPUT, 'assets', 'images', 'wissen', 'generated'),
+      });
+    } catch {
+      return '<p>Entwurf: Bild fehlt oder ist für die Vorschau nicht verfügbar.</p>';
+    }
+  });
   eleventyConfig.addCollection('wissenPublished', (collectionApi) => {
     const articles = collectionApi
       .getFilteredByTag('wissen')
@@ -100,10 +122,10 @@ export default function (eleventyConfig) {
       input: 'content',
       includes: '_includes',
       data: '_data',
-      output: '_site',
+      output: isLocalPreview() ? '_preview' : '_site',
     },
     markdownTemplateEngine: 'njk',
     htmlTemplateEngine: 'njk',
-    templateFormats: ['md', 'njk'],
+    templateFormats: ['md', 'njk', '11ty.js'],
   };
 }

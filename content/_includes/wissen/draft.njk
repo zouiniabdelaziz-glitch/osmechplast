@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>ENTWURF – {{ (title or page.fileSlug) | escape }} | OS.MECHPLAST</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/oncc-system.css">
+</head>
+<body>
+  <aside style="padding:1rem;background:#fff1bd;color:#172b3a;border:3px solid #a15d00" aria-label="Entwurfsstatus">
+    <strong>ENTWURF – NICHT VERÖFFENTLICHT</strong>
+    <p>Nur lokale Vorschau. Fehlende Angaben sind keine Veröffentlichungsfreigabe.</p>
+    <a href="/entwuerfe/">Alle lokalen Entwürfe</a>
+  </aside>
+  <main id="main-content" class="container knowledge-article">
+    <header class="knowledge-article__header">
+      {% if cluster %}<p>{{ cluster | escape }}</p>{% endif %}
+      <h1>{{ (title or page.fileSlug) | escape }}</h1>
+      {% if summary %}<p>{{ summary | escape }}</p>{% endif %}
+      {% if author %}<p>{{ author | escape }}</p>{% endif %}
+    </header>
+    {% if hero_image %}<figure>{% draftImage hero_image, hero_alt %}<figcaption>{{ hero_caption | escape }}</figcaption></figure>{% endif %}
+    <div class="knowledge-article__body">{{ content | safe }}</div>
+    {% for image in content_images %}
+      <figure>{% draftImage image.image, image.alt %}<figcaption>{{ image.caption | escape }}</figcaption></figure>
+    {% endfor %}
+    {% if sources and sources.length %}
+      <section><h2>Quellen im Entwurf</h2><ul>{% for source in sources %}<li>{{ source.label | escape }} — {{ source.url | escape }}</li>{% endfor %}</ul></section>
+    {% endif %}
+  </main>
+</body>
+</html>
