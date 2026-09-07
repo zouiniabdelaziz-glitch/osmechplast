@@ -8,8 +8,8 @@ summary: Diese Checkliste zeigt Konstruktion und Einkauf, welche technischen
   Angaben eine klare und belastbare CNC-Anfrage benötigt.
 cluster: CNC-Anfragen, Einkauf und Kosten
 author: OS.MECHPLAST Redaktion
-published_at: 2026-09-03
-updated_at: 2026-09-03
+published_at: 2026-09-07
+updated_at: 2026-09-07
 hero_image: /assets/images/wissen/qualitatskontrolle-eines-cnc-bauteils.png
 hero_alt: Messschieber und CNC-Bauteil auf einer technischen Zeichnung
 hero_caption: Zeichnung, Bauteil und Messmittel bilden die Grundlage einer
