@@ -21,6 +21,8 @@ sources:
     url: https://www.iso.org/standard/35446.html
   - label: ISO 1101:2017 – Geometrische Tolerierung
     url: https://www.iso.org/standard/66777.html
+  - label: ISO 10303-1:2024 – Darstellung und Austausch von Produktdaten
+    url: https://www.iso.org/standard/83105.html
 service_link: /leistungen/
 cta_label: CNC-Anfrage senden
 cta_url: /kontakt/
