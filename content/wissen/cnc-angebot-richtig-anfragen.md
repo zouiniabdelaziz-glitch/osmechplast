@@ -8,8 +8,8 @@ summary: Diese Checkliste zeigt Konstruktion und Einkauf, welche technischen
   Angaben eine klare und belastbare CNC-Anfrage benötigt.
 cluster: CNC-Anfragen, Einkauf und Kosten
 author: OS.MECHPLAST Redaktion
-published_at: 2026-09-03
-updated_at: 2026-09-03
+published_at: 2026-09-07
+updated_at: 2026-09-07
 hero_image: /assets/images/wissen/qualitatskontrolle-eines-cnc-bauteils.png
 hero_alt: Messschieber und CNC-Bauteil auf einer technischen Zeichnung
 hero_caption: Zeichnung, Bauteil und Messmittel bilden die Grundlage einer
@@ -21,6 +21,8 @@ sources:
     url: https://www.iso.org/standard/35446.html
   - label: ISO 1101:2017 – Geometrische Tolerierung
     url: https://www.iso.org/standard/66777.html
+  - label: ISO 10303-1:2024 – Darstellung und Austausch von Produktdaten
+    url: https://www.iso.org/standard/83105.html
 service_link: /leistungen/
 cta_label: CNC-Anfrage senden
 cta_url: /kontakt/
@@ -73,7 +75,7 @@ Das erschwert die Kalkulation. Enge Anforderungen können andere Werkzeuge, zus�
 
 Ein 3D-Modell hilft dabei, komplexe Konturen und die vollständige Geometrie zu verstehen. Es kann auch die Vorbereitung der Arbeitsplanung unterstützen.
 
-Für den Austausch zwischen unterschiedlichen Konstruktions- und Fertigungssystemen wird häufig STEP verwendet. Die Normenfamilie ISO 10303 beschreibt die Darstellung und den Austausch von Produktdaten zwischen Computersystemen. [ISO 10303-1:2021](https://www.iso.org/standard/72237.html)
+Für den Austausch zwischen unterschiedlichen Konstruktions- und Fertigungssystemen wird häufig STEP verwendet. Die Normenfamilie ISO 10303 beschreibt die Darstellung und den Austausch von Produktdaten zwischen Computersystemen. [ISO 10303-1:2024](https://www.iso.org/standard/83105.html)
 
 Das 3D-Modell ersetzt nicht automatisch alle Angaben der Zeichnung. Ein Modell kann die Form enthalten, aber wichtige Informationen können fehlen:
 
