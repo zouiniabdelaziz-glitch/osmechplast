@@ -26,7 +26,7 @@ sources:
 service_link: /leistungen/
 cta_label: CNC-Anfrage senden
 cta_url: /kontakt/
-draft: true
+draft: false
 ---
 Eine CNC-Anfrage besteht nicht nur aus einer Zeichnung und einer Stückzahl. Für ein belastbares Angebot muss der Fertiger erkennen können, **was gefertigt werden soll, welche Anforderungen gelten und in welchem Umfang geliefert werden soll**.
 
