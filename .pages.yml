@@ -129,12 +129,44 @@ content:
           media: false
       - name: content_images
         label: Weitere Bilder
+        description: Bestehender Artikeltext bleibt erhalten. Diese Bild-Text-Elemente erscheinen anschließend in der hier festgelegten Reihenfolge.
         type: object
         list:
           collapsible:
             collapsed: true
             summary: "{alt} ({index})"
         fields:
+          - name: layout
+            label: Anordnung
+            type: select
+            default: full
+            options:
+              values:
+                - name: full
+                  label: Bild in voller Textbreite
+                - name: left
+                  label: Bild links – Text rechts
+                - name: right
+                  label: Bild rechts – Text links
+          - name: size
+            label: Bildgröße
+            type: select
+            default: large
+            options:
+              values:
+                - name: small
+                  label: Klein
+                - name: medium
+                  label: Mittel
+                - name: large
+                  label: Groß
+          - name: text
+            label: Begleittext zum Bild (optional)
+            type: rich-text
+            options:
+              format: markdown
+              switcher: true
+              media: false
           - name: image
             label: Datei
             type: image

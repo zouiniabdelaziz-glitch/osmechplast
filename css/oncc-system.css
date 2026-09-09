@@ -3377,6 +3377,18 @@ textarea:focus {
   gap: 20px;
 }
 
+/* Lokale Entwurfsvorschau: das normale Artikellayout erhält nur diesen Hinweis. */
+.knowledge-preview__notice {
+  background: #fff1bd;
+  border: 3px solid #a15d00;
+  color: var(--oncc-navy);
+  padding: 16px;
+}
+
+.knowledge-preview__notice p {
+  margin: 8px 0;
+}
+
 @media (max-width: 900px) {
   .knowledge-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

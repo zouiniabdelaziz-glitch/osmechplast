@@ -46,11 +46,17 @@ test('Pages CMS exposes the approved knowledge collection and media directory', 
   }
 });
 
-test('knowledge content starts without a published or draft article', () => {
+test('knowledge content can contain CMS drafts without publishing them', () => {
   const articleDirectory = join(root, 'content', 'wissen');
   assert.equal(existsSync(articleDirectory), true);
   const markdownFiles = readdirSync(articleDirectory).filter((name) => name.endsWith('.md'));
-  assert.deepEqual(markdownFiles, []);
+  for (const name of markdownFiles) {
+    assert.match(read(`content/wissen/${name}`), /\ndraft:\s*true\s*\n---/);
+  }
+  assert.match(
+    read('content/wissen/cnc-angebot-richtig-anfragen.md'),
+    /Die folgende Tabelle zeigt eine praktische Mindeststruktur\./,
+  );
 });
 
 test('canonical navigation and footer expose Wissen without changing legacy pages', () => {
@@ -162,7 +168,16 @@ updated_at: 2026-09-01
 hero_image: /assets/images/wissen/build-testbild.png
 hero_alt: Technisches Testbild für den Wissensbereich
 hero_approval: freigegeben
-content_images: []
+content_images:
+  - image: /assets/images/wissen/build-testbild.png
+    alt: Bild rechts im Test
+    approval: freigegeben
+    layout: right
+    size: medium
+    text: "## Begleittext\\n\\nUnveränderter Bildtext."
+  - image: /assets/images/wissen/build-testbild.png
+    alt: Bestehendes Bild ohne Layoutangabe
+    approval: freigegeben
 sources:
   - label: Technische Testquelle
     url: https://example.com/quelle
@@ -180,10 +195,24 @@ Dieser Inhalt wird ausschließlich während des automatisierten Build-Tests erze
   writeFileSync(draftSource, `---
 title: Nicht öffentliches Build-Testwissen
 slug: build-entwurf
+summary: Vorschautext für die visuelle und technische Prüfung.
+cluster: CNC-Anfragen, Einkauf und Kosten
+author: OS.MECHPLAST Redaktion
+published_at: 2026-09-03
+updated_at: 2026-09-03
+sources:
+  - label: Technische Testquelle
+    url: https://example.com/quelle
 draft: true
 ---
 
 Dieser Entwurf darf keine öffentliche Ausgabe erzeugen.
+
+| Angabe | Zweck |
+| --- | --- |
+| Zeichnung | Technische Prüfung |
+
+[Technische Testquelle](https://example.com/quelle)
 `);
 
   try {
@@ -194,6 +223,10 @@ Dieser Entwurf darf keine öffentliche Ausgabe erzeugen.
     });
 
     const article = read('_site/wissen/build-veroeffentlicht/index.html');
+    assert.match(article, /data-layout="right" data-size="medium"/);
+    assert.match(article, /data-layout="full" data-size="large"/);
+    assert.match(article, /<h2 id="bild-1-1">Begleittext<\/h2>/);
+    assert.match(article, /<p>Unveränderter Bildtext\.<\/p>/);
     assert.match(article, /<link rel="canonical" href="https:\/\/osmechplast\.com\/wissen\/build-veroeffentlicht\/">/);
     assert.match(article, /<meta property="og:type" content="article">/);
     assert.match(article, /<meta property="og:image" content="https:\/\/osmechplast\.com\/assets\/images\/wissen\/build-testbild\.png">/);
@@ -236,7 +269,31 @@ Dieser Entwurf darf keine öffentliche Ausgabe erzeugen.
     assert.match(draft, /ENTWURF – NICHT VERÖFFENTLICHT/);
     assert.match(draft, /<meta name="robots" content="noindex, nofollow">/);
     assert.match(draft, /Dieser Entwurf darf keine öffentliche Ausgabe erzeugen/);
-    assert.doesNotMatch(draft, /rel="canonical"|datePublished|<script/);
+    assert.doesNotMatch(draft, /rel="canonical"|datePublished/);
+    assert.match(draft, /<body class="knowledge-preview">/);
+    assert.match(draft, /<header class="header" data-include="header"/);
+    assert.match(draft, /<footer class="footer" data-include="footer"/);
+    assert.ok(draft.indexOf('<footer class="footer"') > draft.indexOf('knowledge-article__cta'));
+    assert.ok(draft.includes(read('modules/footer.html').trim()), 'same global footer is rendered without JavaScript');
+    assert.match(draft, /<link rel="stylesheet" href="\/css\/main\.css\?v=/);
+    assert.match(draft, /<link rel="stylesheet" href="\/css\/oncc-system\.css\?v=/);
+    assert.match(draft, /<nav class="crumbs" aria-label="Breadcrumb">/);
+    assert.match(draft, /class="container knowledge-article__layout"/);
+    assert.match(draft, /class="knowledge-article__meta"/);
+    assert.match(draft, /OS\.MECHPLAST Redaktion/);
+    assert.match(draft, /<time datetime="2026-09-03">Geplante Veröffentlichung: 03\.09\.2026<\/time>/);
+    assert.doesNotMatch(draft, /Aktualisiert am/);
+    assert.match(draft, /<table>/);
+    assert.match(draft, /knowledge-table-scroll/);
+    assert.match(draft, /href="\/css\/wissen-article.css/);
+    assert.match(article, /href="\/css\/wissen-article.css/);
+    assert.match(draft, /<h2 id="article-sources-title">Quellen<\/h2>/);
+    assert.match(draft, /target="_blank" rel="noopener noreferrer">Technische Testquelle<\/a>/);
+    assert.doesNotMatch(read('content/wissen/wissen.11tydata.mjs'), /wissen\/draft\.njk/);
+    assert.equal(existsSync(join(root, 'content/_includes/wissen/draft.njk')), false);
+    const previewCss = read('css/oncc-system.css');
+    assert.match(previewCss, /\.knowledge-preview__notice/);
+    assert.doesNotMatch(previewCss, /\.knowledge-preview \.knowledge-article__(?:header|layout|body)/);
     const listing = await (await fetch(`${url}/entwuerfe/`)).text();
     assert.match(listing, /href="\/wissen\/build-entwurf\/"/);
     assert.doesNotMatch(read('_preview/sitemap.xml'), /build-entwurf/);

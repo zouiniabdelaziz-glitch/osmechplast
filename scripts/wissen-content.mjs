@@ -1,3 +1,5 @@
+import { validateImageLayout } from './wissen-editorial.mjs';
+
 export const CLUSTERS = Object.freeze([
   'Fertigungsgerechte Konstruktion',
   'Werkstoffe für CNC-Drehteile',
@@ -47,6 +49,7 @@ function validateImage(image, prefix, inputPath) {
   if (!image || typeof image !== 'object') {
     throw new Error(`${inputPath}: ${prefix} must be an object`);
   }
+  validateImageLayout(image);
   if (!KNOWLEDGE_IMAGE_PATTERN.test(image.image || '')) {
     throw new Error(`${inputPath}: ${prefix}.image must be stored below /assets/images/wissen/`);
   }

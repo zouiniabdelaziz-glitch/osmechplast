@@ -10,7 +10,7 @@ export default {
   pageType: 'article',
   eleventyComputed: {
     layout(data) {
-      return isPublished(data) ? 'wissen/article.njk' : (isLocalPreview() ? 'wissen/draft.njk' : false);
+      return isPublished(data) || isLocalPreview() ? 'wissen/article.njk' : false;
     },
     permalink(data) {
       if (!isPublished(data)) return isLocalPreview() ? `${draftUrl(data).slice(1)}index.html` : false;

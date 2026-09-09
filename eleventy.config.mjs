@@ -10,9 +10,15 @@ import {
 import { renderKnowledgeImage } from './scripts/wissen-image.mjs';
 import { PUBLIC_SITEMAP_XML } from './content/_data/public-sitemap.mjs';
 import { isLocalPreview, draftUrl } from './scripts/preview-mode.mjs';
+import { installEditorial, tocFromHtml, serviceLabel, imageLayout, imageSize } from './scripts/wissen-editorial.mjs';
 
 const ROOT = process.cwd();
 const OUTPUT = path.join(ROOT, isLocalPreview() ? '_preview' : '_site');
+
+function asUtcDate(value) {
+  if (value instanceof Date) return value;
+  return new Date(`${String(value).slice(0, 10)}T00:00:00Z`);
+}
 
 const publicDirectories = [
   'assets',
@@ -36,12 +42,23 @@ const publicRootFiles = [
 ];
 
 export default function (eleventyConfig) {
+  let editorialMarkdown;
+  eleventyConfig.addFilter('editorialMarkdown', (value, index) => {
+    if (!editorialMarkdown) throw new Error('Markdown renderer is not initialized');
+    return editorialMarkdown.render(String(value || ''), { editorialPrefix: `bild-${Number(index) || 0}` });
+  });
   eleventyConfig.addWatchTarget('modules/header.html');
   eleventyConfig.addWatchTarget('modules/footer.html');
   eleventyConfig.addWatchTarget('assets/images/wissen');
   eleventyConfig.amendLibrary('md', (markdownLibrary) => {
     markdownLibrary.set({ html: false, linkify: true, typographer: false });
+    installEditorial(markdownLibrary);
+    editorialMarkdown = markdownLibrary;
   });
+  eleventyConfig.addFilter('articleToc', tocFromHtml);
+  eleventyConfig.addFilter('serviceLabel', serviceLabel);
+  eleventyConfig.addFilter('imageLayout', imageLayout);
+  eleventyConfig.addFilter('imageSize', imageSize);
 
   for (const directory of publicDirectories) {
     if (existsSync(path.join(ROOT, directory))) eleventyConfig.addPassthroughCopy(directory);
@@ -99,7 +116,11 @@ export default function (eleventyConfig) {
       month: '2-digit',
       year: 'numeric',
       timeZone: 'UTC',
-    }).format(new Date(`${value}T00:00:00Z`));
+    }).format(asUtcDate(value));
+  });
+  eleventyConfig.addFilter('dateISO', (value) => {
+    if (!value) return '';
+    return asUtcDate(value).toISOString().slice(0, 10);
   });
   eleventyConfig.addFilter('json', (value) => JSON.stringify(value).replace(/</g, '\\u003c'));
   eleventyConfig.addFilter('relatedKnowledge', (articles, slugs = []) => {

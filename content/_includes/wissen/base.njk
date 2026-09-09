@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ title }} | OS.MECHPLAST</title>
+  <title>{% if draft %}ENTWURF – {% endif %}{{ title }} | OS.MECHPLAST</title>
   <meta name="description" content="{{ meta_description }}">
+  {% if draft %}
+  <meta name="robots" content="noindex, nofollow">
+  {% else %}
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="{{ site.url }}{{ page.url }}">
   <link rel="alternate" hreflang="de" href="{{ site.url }}{{ page.url }}">
@@ -16,11 +19,6 @@
   <meta property="og:description" content="{{ meta_description }}">
   <meta property="og:url" content="{{ site.url }}{{ page.url }}">
   {% if pageType == 'article' %}<meta property="og:image" content="{{ site.url }}{{ hero_image }}">{% endif %}
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/main.css?v=20260618-light-industrial-logo-v2">
-  <link rel="stylesheet" href="/css/oncc-system.css?v=20260831-wissen-v1">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -63,11 +61,25 @@
     ]
   }
   </script>
+  {% endif %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css?v=20260618-light-industrial-logo-v2">
+  <link rel="stylesheet" href="/css/oncc-system.css?v=20260831-wissen-v1">
+  {% if pageType == 'article' %}<link rel="stylesheet" href="/css/wissen-article.css?v=20260907-a">{% endif %}
 </head>
-<body>
+<body{% if draft %} class="knowledge-preview"{% endif %}>
   <header class="header" data-include="header" data-module-fallback="true">
     {{ site.headerHtml | safe }}
   </header>
+  {% if draft %}
+  <aside class="knowledge-preview__notice" aria-label="Entwurfsstatus">
+    <strong>ENTWURF – NICHT VERÖFFENTLICHT</strong>
+    <p>Nur lokale Vorschau. Fehlende Angaben sind keine Veröffentlichungsfreigabe.</p>
+    <a href="/entwuerfe/">Alle lokalen Entwürfe</a>
+  </aside>
+  {% endif %}
   {{ content | safe }}
   <footer class="footer" data-include="footer" data-module-fallback="true">
     {{ site.footerHtml | safe }}

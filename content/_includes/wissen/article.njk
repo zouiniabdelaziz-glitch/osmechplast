@@ -11,16 +11,20 @@ layout: wissen/base.njk
         <span class="knowledge-article__cluster">{{ cluster }}</span>
         <h1>{{ title }}</h1>
         <p class="knowledge-article__summary">{{ summary }}</p>
-        <div class="knowledge-article__meta">
-          <span>{{ author }}</span>
-          <time datetime="{{ published_at }}">Veröffentlicht am {{ published_at | dateDE }}</time>
-          {% if updated_at %}<time datetime="{{ updated_at }}">Aktualisiert am {{ updated_at | dateDE }}</time>{% endif %}
-        </div>
+        {% set publishedDate = published_at | dateDE %}
+        {% set updatedDate = updated_at | dateDE %}
+        {% if author or publishedDate %}
+          <div class="knowledge-article__meta">
+            {% if author %}<span>{{ author }}</span>{% endif %}
+            {% if publishedDate %}<time datetime="{{ published_at | dateISO }}">{% if draft %}Geplante Veröffentlichung: {% else %}Veröffentlicht am {% endif %}{{ publishedDate }}</time>{% endif %}
+            {% if updatedDate and updatedDate != publishedDate %}<time datetime="{{ updated_at | dateISO }}">Aktualisiert am {{ updatedDate }}</time>{% endif %}
+          </div>
+        {% endif %}
       </div>
     </header>
 
     <figure class="container knowledge-article__hero">
-      {% knowledgeImage hero_image, hero_alt, "hero" %}
+      {% if draft %}{% draftImage hero_image, hero_alt %}{% else %}{% knowledgeImage hero_image, hero_alt, "hero" %}{% endif %}
       {% if hero_caption or hero_credit %}
         <figcaption>{{ hero_caption }}{% if hero_caption and hero_credit %} · {% endif %}{% if hero_credit %}Quelle: {{ hero_credit }}{% endif %}</figcaption>
       {% endif %}
@@ -28,17 +32,27 @@ layout: wissen/base.njk
 
     <div class="container knowledge-article__layout">
       <div class="knowledge-article__body">
+        {% set toc = content | articleToc %}
+        {% if toc.length >= 4 %}
+        <details class="knowledge-toc-mobile">
+          <summary>In diesem Artikel</summary>
+          <nav aria-label="Artikelinhalt mobil"><ol>{% for item in toc %}<li><a href="#{{ item.id }}">{{ item.label | safe }}</a></li>{% endfor %}</ol></nav>
+        </details>
+        {% endif %}
         {{ content | safe }}
 
         {% if content_images and content_images.length %}
           <section class="knowledge-article__images" aria-label="Weitere Abbildungen">
             {% for image in content_images %}
+              <div class="knowledge-image-block" data-layout="{{ image.layout | imageLayout }}" data-size="{{ image.size | imageSize }}">
               <figure>
-                {% knowledgeImage image.image, image.alt, "content" %}
+                {% if draft %}{% draftImage image.image, image.alt %}{% else %}{% knowledgeImage image.image, image.alt, "content" %}{% endif %}
                 {% if image.caption or image.credit %}
                   <figcaption>{{ image.caption }}{% if image.caption and image.credit %} · {% endif %}{% if image.credit %}Quelle: {{ image.credit }}{% endif %}</figcaption>
                 {% endif %}
               </figure>
+              {% if image.text %}<div class="knowledge-image-block__text">{{ image.text | editorialMarkdown(loop.index) | safe }}</div>{% endif %}
+              </div>
             {% endfor %}
           </section>
         {% endif %}
@@ -54,8 +68,14 @@ layout: wissen/base.njk
       </div>
 
       <aside class="knowledge-article__aside" aria-label="Artikelzuordnung">
+        {% if toc.length >= 4 %}
+        <nav class="knowledge-toc" aria-label="In diesem Artikel">
+          <strong>In diesem Artikel</strong>
+          <ol>{% for item in toc %}<li><a href="#{{ item.id }}">{{ item.label | safe }}</a></li>{% endfor %}</ol>
+        </nav>
+        {% endif %}
         <span>Passende Fachseite</span>
-        <a href="{{ service_link }}">Fachseite öffnen</a>
+        {% if service_link %}<a href="{{ service_link }}">{{ service_link | serviceLabel }}</a>{% endif %}
         <span>Themencluster</span>
         <strong>{{ cluster }}</strong>
       </aside>
