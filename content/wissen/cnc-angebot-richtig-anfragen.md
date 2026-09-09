@@ -15,7 +15,7 @@ hero_alt: Messschieber und CNC-Bauteil auf einer technischen Zeichnung
 hero_caption: Zeichnung, Bauteil und Messmittel bilden die Grundlage einer
   klaren technischen CNC-Anfrage.
 hero_credit: OS.MECHPLAST SRLS
-hero_approval: intern
+hero_approval: freigegeben
 sources:
   - label: ISO 7200:2004 – Datenfelder in Schriftfeldern und Dokumentenköpfen
     url: https://www.iso.org/standard/35446.html
