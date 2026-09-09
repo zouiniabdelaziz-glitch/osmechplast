@@ -75,8 +75,7 @@ Das erschwert die Kalkulation. Enge Anforderungen können andere Werkzeuge, zus�
 
 Ein 3D-Modell hilft dabei, komplexe Konturen und die vollständige Geometrie zu verstehen. Es kann auch die Vorbereitung der Arbeitsplanung unterstützen.
 
-Für den Austausch zwischen unterschiedlichen Konstruktions- und Fertigungssystemen wird häufig STEP verwendet. Die Normenfamilie ISO 10303 beschreibt die Darstellung und den Austausch von Produktdaten zwischen Computersystemen. [ISO 10303-1:2024]
-(https://www.iso.org/standard/83105.html)
+Für den Austausch zwischen unterschiedlichen Konstruktions- und Fertigungssystemen wird häufig STEP verwendet. Die Normenfamilie ISO 10303 beschreibt die Darstellung und den Austausch von Produktdaten zwischen Computersystemen. [ISO 10303-1:2024](https://www.iso.org/standard/83105.html)
 
 Das 3D-Modell ersetzt nicht automatisch alle Angaben der Zeichnung. Ein Modell kann die Form enthalten, aber wichtige Informationen können fehlen:
 
