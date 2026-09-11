@@ -46,13 +46,12 @@ test('Pages CMS exposes the approved knowledge collection and media directory', 
   }
 });
 
-test('knowledge content can contain CMS drafts without publishing them', () => {
+test('knowledge content honors the current CMS publication flag', () => {
   const articleDirectory = join(root, 'content', 'wissen');
   assert.equal(existsSync(articleDirectory), true);
   const markdownFiles = readdirSync(articleDirectory).filter((name) => name.endsWith('.md'));
-  for (const name of markdownFiles) {
-    assert.match(read(`content/wissen/${name}`), /\ndraft:\s*true\s*\n---/);
-  }
+  assert.ok(markdownFiles.includes('cnc-angebot-richtig-anfragen.md'));
+  assert.match(read('content/wissen/cnc-angebot-richtig-anfragen.md'), /\ndraft:\s*false\s*\r?\n---/);
   assert.match(
     read('content/wissen/cnc-angebot-richtig-anfragen.md'),
     /Die folgende Tabelle zeigt eine praktische Mindeststruktur\./,
@@ -67,7 +66,7 @@ test('canonical navigation and footer expose Wissen without changing legacy page
   assert.equal((read('js/translations.js').match(/hnav_knowledge:/g) || []).length, 4);
 });
 
-test('production build creates the empty knowledge overview and preserves the static site', () => {
+test('production build publishes the current article and preserves the static site', () => {
   execFileSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', 'npm run build --silent'], {
     cwd: root,
     encoding: 'utf8',
@@ -77,8 +76,8 @@ test('production build creates the empty knowledge overview and preserves the st
   const overview = read('_site/wissen/index.html');
   assert.match(overview, /<html lang="de">/);
   assert.match(overview, /<h1[^>]*>Wissen für CNC-Anfragen und Fertigung<\/h1>/);
-  assert.match(overview, /Noch keine Fachartikel veröffentlicht/);
-  assert.doesNotMatch(overview, /class="knowledge-card"/);
+  assert.match(overview, /Welche Unterlagen braucht ein CNC-Fertiger für ein belastbares Angebot\?/);
+  assert.match(overview, /class="knowledge-card"/);
   assert.equal((overview.match(/href="\/wissen\/"/g) || []).length >= 3, true);
   for (const match of overview.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
     assert.doesNotThrow(() => JSON.parse(match[1]));
@@ -102,9 +101,9 @@ test('production build creates the empty knowledge overview and preserves the st
   assert.equal(read('_site/js/app.js'), read('js/app.js'));
 
   const sitemap = read('_site/sitemap.xml');
-  assert.equal((sitemap.match(/https:\/\/osmechplast\.com\/wissen\//g) || []).length, 1);
+  assert.equal((sitemap.match(/https:\/\/osmechplast\.com\/wissen\//g) || []).length, 2);
   assert.match(sitemap, /<loc>https:\/\/osmechplast\.com\/wissen\/<\/loc>/);
-  assert.doesNotMatch(sitemap, /https:\/\/osmechplast\.com\/wissen\/[^<]+\/<\/loc>/);
+  assert.match(sitemap, /https:\/\/osmechplast\.com\/wissen\/cnc-angebot-richtig-anfragen\//);
   assert.equal(existsSync(join(root, '_site', 'functions')), false, 'Cloudflare Functions remain at the project root');
 
   const outputFiles = [];
@@ -135,7 +134,7 @@ test('production build tolerates a missing root sitemap.xml file', () => {
 
     const sitemap = read('_site/sitemap.xml');
     assert.match(sitemap, /<loc>https:\/\/osmechplast\.com\/wissen\/<\/loc>/);
-    assert.doesNotMatch(sitemap, /https:\/\/osmechplast\.com\/wissen\/[^<]+\/<\/loc>/);
+    assert.match(sitemap, /https:\/\/osmechplast\.com\/wissen\/cnc-angebot-richtig-anfragen\//);
   } finally {
     if (hadRootSitemap) {
       renameSync(backupSitemap, rootSitemap);
@@ -149,13 +148,19 @@ test('production and localhost preview strictly separate published articles and 
   const publishedSource = join(root, 'content', 'wissen', 'build-veroeffentlicht.md');
   const draftSource = join(root, 'content', 'wissen', 'build-entwurf.md');
   const heroSource = join(root, 'assets', 'images', 'wissen', 'build-testbild.png');
+  const sharedSource = join(root, 'assets', 'images', 'wissen', 'build-shared.png');
+  const draftOnlySource = join(root, 'assets', 'images', 'wissen', 'build-entwurf-only.png');
+  const otherAssetSource = join(root, 'assets', 'images', 'build-other-asset.svg');
   let preview;
 
-  for (const fixture of [publishedSource, draftSource, heroSource]) {
+  for (const fixture of [publishedSource, draftSource, heroSource, sharedSource, draftOnlySource, otherAssetSource]) {
     assert.equal(existsSync(fixture), false, `Refusing to overwrite existing fixture path: ${fixture}`);
   }
 
   writeFileSync(heroSource, onePixelPng);
+  writeFileSync(sharedSource, onePixelPng);
+  writeFileSync(draftOnlySource, onePixelPng);
+  writeFileSync(otherAssetSource, '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0 0h1v1H0z"/></svg>\n');
   writeFileSync(publishedSource, `---
 title: Veröffentlichtes Build-Testwissen
 slug: build-veroeffentlicht
@@ -178,6 +183,11 @@ content_images:
   - image: /assets/images/wissen/build-testbild.png
     alt: Bestehendes Bild ohne Layoutangabe
     approval: freigegeben
+  - image: /assets/images/wissen/build-shared.png
+    alt: Geteiltes Testbild
+    approval: freigegeben
+    layout: left
+    size: small
 sources:
   - label: Technische Testquelle
     url: https://example.com/quelle
@@ -200,6 +210,13 @@ cluster: CNC-Anfragen, Einkauf und Kosten
 author: OS.MECHPLAST Redaktion
 published_at: 2026-09-03
 updated_at: 2026-09-03
+content_images:
+  - image: /assets/images/wissen/build-shared.png
+    alt: Geteiltes Entwurfsbild
+    approval: offen
+  - image: /assets/images/wissen/build-entwurf-only.png
+    alt: Nicht veröffentlichtes Entwurfsbild
+    approval: offen
 sources:
   - label: Technische Testquelle
     url: https://example.com/quelle
@@ -244,6 +261,24 @@ Dieser Entwurf darf keine öffentliche Ausgabe erzeugen.
     assert.match(sitemap, /https:\/\/osmechplast\.com\/wissen\/build-veroeffentlicht\//);
     assert.doesNotMatch(sitemap, /build-entwurf/);
     assert.equal(existsSync(join(root, '_site', 'wissen', 'build-entwurf', 'index.html')), false);
+    assert.equal(existsSync(join(root, '_site', 'assets', 'images', 'wissen', 'build-testbild.png')), true);
+    assert.equal(existsSync(join(root, '_site', 'assets', 'images', 'wissen', 'build-shared.png')), true);
+    assert.equal(existsSync(join(root, '_site', 'assets', 'images', 'wissen', 'build-entwurf-only.png')), false);
+    assert.equal(read('_site/assets/images/build-other-asset.svg'), read('assets/images/build-other-asset.svg'));
+    assert.equal(readFileSync(heroSource).equals(onePixelPng), true);
+    assert.equal(readFileSync(sharedSource).equals(onePixelPng), true);
+    assert.equal(readFileSync(draftOnlySource).equals(onePixelPng), true);
+
+    // A rebuild without npm's clean step must remove a stale draft image too.
+    const staleOutput = join(root, '_site', 'assets', 'images', 'wissen', 'stale-draft-image.png');
+    writeFileSync(staleOutput, onePixelPng);
+    execFileSync(process.execPath, ['./node_modules/@11ty/eleventy/cmd.cjs'], {
+      cwd: root,
+      encoding: 'utf8',
+      stdio: 'pipe',
+      env: { ...process.env, ELEVENTY_ENV: 'production' },
+    });
+    assert.equal(existsSync(staleOutput), false);
 
     assert.equal(JSON.parse(read('package.json')).scripts['dev:preview'], 'node scripts/dev-preview.mjs');
     preview = spawn(process.execPath, ['scripts/dev-preview.mjs', '--port', '0'], {
@@ -337,6 +372,9 @@ Dieser Entwurf darf keine öffentliche Ausgabe erzeugen.
     rmSync(publishedSource, { force: true });
     rmSync(draftSource, { force: true });
     rmSync(heroSource, { force: true });
+    rmSync(sharedSource, { force: true });
+    rmSync(draftOnlySource, { force: true });
+    rmSync(otherAssetSource, { force: true });
   }
 });
 

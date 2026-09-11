@@ -147,6 +147,14 @@ test('rejects unapproved or externally hosted hero images', () => {
   externalImage.hero_image = 'https://example.com/image.jpg';
   assert.throws(() => validateArticle(externalImage, 'image.md'), /hero_image/);
 
+  const traversalImage = validPublishedArticle();
+  traversalImage.hero_image = '/assets/images/wissen/../private.jpg';
+  assert.throws(() => validateArticle(traversalImage, 'traversal.md'), /hero_image/);
+
+  const absoluteImage = validPublishedArticle();
+  absoluteImage.hero_image = 'C:/private/image.png';
+  assert.throws(() => validateArticle(absoluteImage, 'absolute.md'), /hero_image/);
+
   const pendingImage = validPublishedArticle();
   pendingImage.hero_approval = 'intern';
   assert.throws(() => validateArticle(pendingImage, 'approval.md'), /hero_approval/);

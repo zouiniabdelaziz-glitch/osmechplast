@@ -65,6 +65,18 @@ export function isPublished(data) {
   return data?.draft === false;
 }
 
+export function publishedKnowledgeImagePaths(articles = []) {
+  const imagePaths = new Set();
+  for (const item of articles) {
+    const data = item?.data || item;
+    if (!isPublished(data)) continue;
+    validateArticle(data, item?.inputPath || 'knowledge article');
+    imagePaths.add(data.hero_image);
+    for (const image of data.content_images || []) imagePaths.add(image.image);
+  }
+  return imagePaths;
+}
+
 export function articleUrl(data) {
   if (!isPublished(data)) return false;
   if (!SLUG_PATTERN.test(data?.slug || '')) {
