@@ -13,6 +13,12 @@ const ALLOWED_SERVICES = new Set(["", "cnc-drehen", "drehfraesen", "prototypen-s
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
+    // Prevent bypassing the custom-domain rate limit via Pages deployment URLs.
+    const hostname = new URL(request.url).hostname.toLowerCase().replace(/\.$/, "");
+    if (hostname.endsWith(".pages.dev")) {
+      return json({ ok: false, error: "forbidden" }, 403);
+    }
+
     const contentType = (request.headers.get("Content-Type") || "").split(";", 1)[0].trim().toLowerCase();
     if (contentType !== "application/json") {
       return json({ ok: false, error: "invalid_request" }, 400);

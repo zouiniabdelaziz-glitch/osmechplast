@@ -44,13 +44,80 @@ function validLead(overrides = {}) {
   };
 }
 
-function requestWith(body, headers = {}) {
-  return new Request('https://osmechplast.com/api/leads', {
+function requestWith(body, headers = {}, url = 'https://osmechplast.com/api/leads') {
+  return new Request(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Origin: 'https://osmechplast.com', ...headers },
     body: typeof body === 'string' ? body : JSON.stringify(body)
   });
 }
+
+const allowedOrigins = [
+  'https://osmechplast.com',
+  'https://www.osmechplast.com',
+  'http://localhost:8080',
+  'http://127.0.0.1:8788',
+  'http://[::1]:8788'
+];
+const blockedOrigins = [
+  'https://osmechplast.pages.dev',
+  'https://HASH.osmechplast.pages.dev',
+  'https://OSMECHPLAST.PAGES.DEV',
+  'https://osmechplast.pages.dev.'
+];
+
+for (const origin of allowedOrigins) {
+  test(`accepts a valid POST on ${origin}`, async () => {
+    const api = await loadApi();
+    const db = makeDb();
+    const response = await api.onRequestPost({
+      request: requestWith(validLead(), {}, `${origin}/api/leads`), env: { DB: db }
+    });
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { ok: true });
+    assert.equal(db.calls.length, 1);
+  });
+}
+
+for (const origin of blockedOrigins) {
+  test(`rejects POST on ${origin} before reading the body or accessing D1`, async () => {
+    const api = await loadApi();
+    // Forged forwarding headers must not override the actual request URL.
+    const request = requestWith(validLead(), {
+      'X-Forwarded-Host': 'osmechplast.com', Host: 'osmechplast.com'
+    }, `${origin}/api/leads`);
+    let bodyReads = 0;
+    request.text = async () => { bodyReads++; return JSON.stringify(validLead()); };
+    let dbAccesses = 0;
+    const db = makeDb();
+    const env = { get DB() { dbAccesses++; return db; } };
+    const response = await api.onRequestPost({ request, env });
+    assert.equal(response.status, 403);
+    assert.deepEqual(await response.json(), { ok: false, error: 'forbidden' });
+    assert.equal(bodyReads, 0);
+    assert.equal(dbAccesses, 0);
+    assert.equal(db.calls.length, 0);
+  });
+}
+
+test('keeps GET at 405 and OPTIONS at 204 on custom, local and pages.dev hosts', async () => {
+  const api = await loadApi();
+  for (const origin of [...allowedOrigins, ...blockedOrigins]) {
+    const db = makeDb();
+    const get = await api.onRequestGet({
+      request: new Request(`${origin}/api/leads`), env: { DB: db }
+    });
+    assert.equal(get.status, 405);
+    assert.deepEqual(await get.json(), { ok: false, error: 'method_not_allowed' });
+    const options = await api.onRequestOptions({
+      request: new Request(`${origin}/api/leads`, { method: 'OPTIONS' }), env: { DB: db }
+    });
+    assert.equal(options.status, 204);
+    assert.equal(await options.text(), '');
+    assert.equal(options.headers.get('Access-Control-Allow-Methods'), 'POST, OPTIONS');
+    assert.equal(db.calls.length, 0);
+  }
+});
 
 test('accepts one valid same-origin JSON lead and writes normalized values once', async () => {
   const api = await loadApi();
