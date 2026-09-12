@@ -52,6 +52,51 @@ function requestWith(body, headers = {}, url = 'https://osmechplast.com/api/lead
   });
 }
 
+function byteLength(value) {
+  return new TextEncoder().encode(value).byteLength;
+}
+
+function bodyWithExactBytes(targetBytes) {
+  const body = { ...validLead(), padding: '' };
+  while (byteLength(JSON.stringify(body)) < targetBytes) body.padding += 'a';
+  assert.equal(byteLength(JSON.stringify(body)), targetBytes);
+  return JSON.stringify(body);
+}
+
+function streamRequest(chunks, headers = {}) {
+  let index = 0;
+  const stats = { reads: 0, readerCalls: 0, cancelled: false };
+  const stream = new ReadableStream({
+    pull(controller) {
+      stats.reads += 1;
+      if (index >= chunks.length) {
+        controller.close();
+        return;
+      }
+      controller.enqueue(chunks[index++]);
+    },
+    cancel() {
+      stats.cancelled = true;
+    }
+  });
+  const body = {
+    getReader() {
+      stats.readerCalls += 1;
+      return stream.getReader();
+    }
+  };
+  const request = {
+    url: 'https://osmechplast.com/api/leads',
+    headers: new Headers({ 'Content-Type': 'application/json', Origin: 'https://osmechplast.com', ...headers }),
+    body,
+    text: async () => {
+      stats.textCalled = true;
+      return '';
+    }
+  };
+  return { request, stats };
+}
+
 const allowedOrigins = [
   'https://osmechplast.com',
   'https://www.osmechplast.com',
@@ -199,6 +244,87 @@ test('rejects fields above their limits with 413 without touching D1', async () 
     const response = await api.onRequestPost({ request: requestWith(validLead(values)), env: { DB: db } });
     assert.equal(response.status, 413, Object.keys(values)[0]);
     assert.deepEqual(await response.json(), { ok: false, error: 'payload_too_large' });
+    assert.equal(db.calls.length, 0);
+  }
+});
+
+test('rejects a declared body over 16 KiB before reading it or accessing D1', async () => {
+  const api = await loadApi();
+  const stream = streamRequest([new Uint8Array([123])], { 'Content-Length': '16385' });
+  const db = makeDb();
+  const response = await api.onRequestPost({ request: stream.request, env: { DB: db } });
+
+  assert.equal(response.status, 413);
+  assert.deepEqual(await response.json(), { ok: false, error: 'payload_too_large' });
+  assert.equal(stream.stats.readerCalls, 0);
+  assert.equal(stream.stats.textCalled, undefined);
+  assert.equal(db.calls.length, 0);
+});
+
+test('counts streamed bytes and cancels after crossing 16 KiB', async () => {
+  const api = await loadApi();
+  const stream = streamRequest([
+    new Uint8Array(16384),
+    new Uint8Array([123])
+  ]);
+  const db = makeDb();
+  const response = await api.onRequestPost({ request: stream.request, env: { DB: db } });
+
+  assert.equal(response.status, 413);
+  assert.deepEqual(await response.json(), { ok: false, error: 'payload_too_large' });
+  assert.equal(stream.stats.readerCalls, 1);
+  assert.equal(stream.stats.reads, 2);
+  assert.equal(stream.stats.cancelled, true);
+  assert.equal(db.calls.length, 0);
+});
+
+test('does not trust a smaller Content-Length than the streamed body', async () => {
+  const api = await loadApi();
+  const stream = streamRequest([
+    new Uint8Array(16384),
+    new Uint8Array([123])
+  ], { 'Content-Length': '1' });
+  const db = makeDb();
+  const response = await api.onRequestPost({ request: stream.request, env: { DB: db } });
+
+  assert.equal(response.status, 413);
+  assert.deepEqual(await response.json(), { ok: false, error: 'payload_too_large' });
+  assert.equal(stream.stats.readerCalls, 1);
+  assert.equal(stream.stats.cancelled, true);
+  assert.equal(db.calls.length, 0);
+});
+
+test('accepts exactly 16 KiB and rejects 16 KiB plus one byte', async () => {
+  const api = await loadApi();
+  const exactDb = makeDb();
+  const exact = bodyWithExactBytes(16384);
+  const accepted = await api.onRequestPost({
+    request: requestWith(exact, { 'Content-Length': '16384' }), env: { DB: exactDb }
+  });
+  assert.equal(accepted.status, 200);
+  assert.equal(exactDb.calls.length, 1);
+
+  const oversizedDb = makeDb();
+  const oversized = bodyWithExactBytes(16385);
+  const rejected = await api.onRequestPost({
+    request: requestWith(oversized, { 'Content-Length': '16385' }), env: { DB: oversizedDb }
+  });
+  assert.equal(rejected.status, 413);
+  assert.deepEqual(await rejected.json(), { ok: false, error: 'payload_too_large' });
+  assert.equal(oversizedDb.calls.length, 0);
+});
+
+test('uses UTF-8 byte length and does not allow invalid Content-Length values to bypass the stream limit', async () => {
+  const api = await loadApi();
+  const utf8 = JSON.stringify({ ...validLead(), padding: '€'.repeat(6000) });
+  assert.ok(byteLength(utf8) > 16384);
+  for (const contentLength of ['invalid', '-1']) {
+    const stream = streamRequest([new TextEncoder().encode(utf8)], { 'Content-Length': contentLength });
+    const db = makeDb();
+    const response = await api.onRequestPost({ request: stream.request, env: { DB: db } });
+    assert.equal(response.status, 413, contentLength);
+    assert.deepEqual(await response.json(), { ok: false, error: 'payload_too_large' });
+    assert.equal(stream.stats.cancelled, true);
     assert.equal(db.calls.length, 0);
   }
 });

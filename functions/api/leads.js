@@ -10,6 +10,60 @@ const FIELD_LIMITS = {
 const ALLOWED_LANGUAGES = new Set(["de", "it", "en", "fr"]);
 const ALLOWED_SERVICES = new Set(["", "cnc-drehen", "drehfraesen", "prototypen-serien", "unsicher"]);
 
+function declaredContentLength(request) {
+  const value = request.headers.get("Content-Length");
+  if (value == null || !/^\d+$/.test(value.trim())) return null;
+  const length = Number(value.trim());
+  return Number.isSafeInteger(length) ? length : null;
+}
+
+async function readBodyWithinLimit(request) {
+  const declaredLength = declaredContentLength(request);
+  if (declaredLength !== null && declaredLength > MAX_BODY_BYTES) {
+    return { tooLarge: true };
+  }
+
+  if (!request.body) return { text: "" };
+
+  const reader = request.body.getReader();
+  const chunks = [];
+  let totalBytes = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = value instanceof Uint8Array ? value : new Uint8Array(value);
+      totalBytes += chunk.byteLength;
+      if (totalBytes > MAX_BODY_BYTES) {
+        try {
+          await reader.cancel("payload_too_large");
+        } catch {
+          // The request is already rejected; cancellation is best effort.
+        }
+        return { tooLarge: true };
+      }
+      chunks.push(chunk);
+    }
+  } catch {
+    try {
+      await reader.cancel("invalid_request");
+    } catch {
+      // Keep stream errors neutral for the client.
+    }
+    return { error: true };
+  } finally {
+    reader.releaseLock();
+  }
+
+  const bytes = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return { text: new TextDecoder().decode(bytes) };
+}
+
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
@@ -24,10 +78,14 @@ export async function onRequestPost(context) {
       return json({ ok: false, error: "invalid_request" }, 400);
     }
 
-    const rawBody = await request.text();
-    if (new TextEncoder().encode(rawBody).length > MAX_BODY_BYTES) {
+    const bodyResult = await readBodyWithinLimit(request);
+    if (bodyResult.tooLarge) {
       return json({ ok: false, error: "payload_too_large" }, 413);
     }
+    if (bodyResult.error) {
+      return json({ ok: false, error: "invalid_request" }, 400);
+    }
+    const rawBody = bodyResult.text;
 
     let body;
     try {
