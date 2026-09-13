@@ -343,6 +343,16 @@ Dieser Entwurf darf keine öffentliche Ausgabe erzeugen.
       }).on('error', reject);
     });
     assert.equal(foreignHostStatus, 403);
+    assert.equal((await fetch(`${url}/package.json`)).status, 404);
+    assert.equal((await fetch(`${url}/.gitignore`)).status, 404);
+    assert.equal((await fetch(`${url}/entwuerfe/`)).status, 200);
+    assert.equal((await fetch(`${url}/assets/`)).status, 404);
+    assert.equal((await fetch(`${url}/wissen/../package.json`)).status, 404);
+    assert.equal((await fetch(`${url}/wissen/%2e%2e/package.json`)).status, 404);
+    assert.equal((await fetch(`${url}/wissen/%252e%252e/package.json`)).status, 404);
+    assert.equal((await fetch(`${url}/entwuerfe/`, { method: 'POST' })).status, 405);
+    assert.equal((await fetch(`${url}/entwuerfe/`, { method: 'PUT' })).status, 405);
+    assert.equal((await fetch(`${url}/entwuerfe/`, { method: 'OPTIONS' })).status, 405);
     assert.equal((await fetch(`${url}/api/leads`, { method: 'POST' })).status, 405);
 
     writeFileSync(draftSource, read('content/wissen/build-entwurf.md') + '\nVORSCHAU-SPEICHERTEST\n');
@@ -392,4 +402,11 @@ test('preview refuses direct invocation and Cloudflare/CI environments', () => {
       return true;
     });
   }
+});
+
+test('Windows preview launcher delegates only to the safe local preview command', () => {
+  const launcher = read('start-website-8099.bat');
+  assert.doesNotMatch(launcher, /python\s+-m\s+http\.server/i);
+  assert.match(launcher, /npm\s+run\s+dev:preview\s+--\s+--port\s+8099/i);
+  assert.doesNotMatch(launcher, /npm\s+run\s+dev(?!:)/i);
 });
