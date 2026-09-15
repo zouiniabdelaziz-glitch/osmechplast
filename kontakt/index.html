@@ -72,7 +72,7 @@
           "name": "Welche Dateiformate können mit der Anfrage ausgewählt werden?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Im Anfrageformular sind PDF, DXF, STEP, STP und Bilddateien auswählbar. Für die technische Einordnung sind vollständige Zeichnungsdaten besonders hilfreich."
+            "text": "Das Anfrageformular nimmt keine Dateien entgegen. Nach der Kontaktaufnahme können vollständige Zeichnungsdaten wie PDF, DXF, STEP, STP oder Bilddateien per E-Mail übermittelt werden."
           }
         },
         {
@@ -171,7 +171,7 @@
     </select>
   </div>
 
-  <a id="cta-header-drawing" href="/kontakt/#leadForm" class="btn btn-primary oncc-header__cta" data-key="hnav_cta" data-cta="header-drawing" data-track-event="cta_primary_drawing">Zeichnung senden</a>
+  <a id="cta-header-drawing" href="/kontakt/#leadForm" class="btn btn-primary oncc-header__cta" data-key="hnav_cta" data-cta="header-drawing" data-track-event="cta_primary_drawing">Anfrage senden</a>
 
   <button class="oncc-menu-button" type="button" aria-expanded="false" aria-controls="oncc-mobile-menu" data-menu-toggle>
     <span></span><span></span><span></span>
@@ -196,7 +196,7 @@
     <a href="/qualitaet/" data-key="hnav_quality">Qualität</a>
     <a href="/unternehmen/" data-key="hnav_company">Unternehmen</a>
     <a href="/kontakt/" data-key="hnav_contact">Kontakt</a>
-    <a id="cta-mobile-drawing" href="/kontakt/#leadForm" class="btn btn-primary" data-key="hnav_cta" data-cta="mobile-drawing" data-track-event="cta_primary_drawing">Zeichnung senden</a>
+    <a id="cta-mobile-drawing" href="/kontakt/#leadForm" class="btn btn-primary" data-key="hnav_cta" data-cta="mobile-drawing" data-track-event="cta_primary_drawing">Anfrage senden</a>
   </div>
 </div>
 </header>
@@ -205,7 +205,7 @@
   <div class="container">
     <div class="crumbs"><a href="/" data-key="pg_home"></a> <span>/</span> <span data-key="c_kicker"></span></div>
     <span class="kicker" data-key="c_kicker"></span>
-    <h1 data-key="contact_h2">CNC Anfrage vorbereiten.<br><em>Zeichnung senden.</em></h1>
+    <h1 data-key="contact_h2">CNC-Anfrage vorbereiten.<br><em>Anfrage senden.</em></h1>
   </div>
 </section>
 
@@ -216,7 +216,7 @@
 <div class="container contact-grid">
   <div class="contact-info">
     <span class="kicker" data-key="c_kicker"></span>
-    <h2 data-key="contact_h2">CNC-Anfrage vorbereiten.<br><em>Zeichnung senden.</em></h2>
+    <h2 data-key="contact_h2">CNC-Anfrage vorbereiten.<br><em>Anfrage senden.</em></h2>
     <p class="sec-lead" data-key="c_lead"></p>
     <div class="contact-points">
       <div class="cp"><div class="cp-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></div><div><b data-key="cp1_t"></b><span data-key="cp1_s"></span></div></div>
@@ -232,62 +232,7 @@
       <p><strong>Telefon</strong><br><a href="tel:+390464667981" data-track-event="contact_phone_click">+39 0464 667981</a></p>
       <p><strong>E-Mail</strong><br><a href="mailto:info@osmechplast.com" data-track-event="contact_email_click">info@osmechplast.com</a></p>
       <p><a href="https://www.google.com/maps/dir/?api=1&amp;destination=Via%20Strada%20Romana%20n.%2019%2C%2038061%20Ala%20TN%2C%20Italy" target="_blank" rel="noopener noreferrer">Route in Google Maps öffnen</a></p>
-      <p class="contact-company-details__todo"><strong>Kontaktzeiten</strong><br>TODO: Reale Kontaktzeiten ergänzen.</p>
     </section>
-    <p>F&uuml;r Ihre Anfrage k&ouml;nnen Sie vorab die <a href="/leistungen/">CNC-Fertigungsverfahren</a>, <a href="/werkstoffe/">Werkstoffangaben f&uuml;r CNC-Drehteile</a> und <a href="/qualitaet/">Pr&uuml;fanforderungen</a> einordnen.</p>
-  </div>
-  <div class="form-card">
-    <form id="leadForm" data-form="lead-form" onsubmit="submitForm(event)">
-      <div class="form-grid">
-        <div class="form-row">
-          <div class="form-group"><label for="f_company" data-key="f_company"></label><input id="f_company" required></div>
-          <div class="form-group"><label for="f_name" data-key="f_name"></label><input id="f_name" required></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label for="f_email">E-Mail *</label><input id="f_email" type="email" required></div>
-          <div class="form-group"><label for="f_phone" data-key="f_phone"></label><input id="f_phone"></div>
-        </div>
-        <div class="form-group">
-          <label for="f_service" data-key="f_service"></label>
-          <select id="f_service"><option value=""></option><option value="cnc-drehen"></option><option value="drehfraesen"></option><option value="prototypen-serien"></option><option value="unsicher"></option></select>
-        </div>
-        <div class="form-group"><label for="f_msg" data-key="f_msg"></label><textarea id="f_msg"></textarea></div>
-        <p class="form-privacy-note"><strong>Datenschutzhinweis:</strong> Die von Ihnen übermittelten Angaben werden zur Bearbeitung Ihrer Anfrage verarbeitet. Weitere Informationen finden Sie in unserer <a href="/datenschutz/">Datenschutzerklärung</a>.</p>
-        <button id="cta-contact-submit" type="submit" class="btn btn-primary btn-lg" data-key="f_submit" data-cta="contact-form-submit" data-track-event="lead_form_submit"></button>
-        <div class="success-banner" id="successBanner" role="status" aria-live="polite" data-form-success="lead-form" data-track-event="lead_form_success" hidden></div>
-        <div class="error-banner" id="errorBanner" role="alert" aria-live="assertive" hidden></div>
-      </div>
-    </form>
-  </div>
-</div>
-</section>
-    <p>F&uuml;r Ihre Anfrage k&ouml;nnen Sie vorab die <a href="/leistungen/">CNC-Fertigungsverfahren</a>, <a href="/werkstoffe/">Werkstoffangaben f&uuml;r CNC-Drehteile</a> und <a href="/qualitaet/">Pr&uuml;fanforderungen</a> einordnen.</p>
-  </div>
-  <div class="form-card">
-    <form id="leadForm" data-form="lead-form" onsubmit="submitForm(event)">
-      <div class="form-grid">
-        <div class="form-row">
-          <div class="form-group"><label for="f_company" data-key="f_company"></label><input id="f_company" required></div>
-          <div class="form-group"><label for="f_name" data-key="f_name"></label><input id="f_name" required></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label for="f_email">E-Mail *</label><input id="f_email" type="email" required></div>
-          <div class="form-group"><label for="f_phone" data-key="f_phone"></label><input id="f_phone"></div>
-        </div>
-        <div class="form-group">
-          <label for="f_service" data-key="f_service"></label>
-          <select id="f_service"><option value=""></option><option value="cnc-drehen"></option><option value="drehfraesen"></option><option value="prototypen-serien"></option><option value="unsicher"></option></select>
-        </div>
-        <div class="form-group"><label for="f_msg" data-key="f_msg"></label><textarea id="f_msg"></textarea></div>
-        <p class="form-privacy-note"><strong>Datenschutzhinweis:</strong> Die von Ihnen übermittelten Angaben werden zur Bearbeitung Ihrer Anfrage verarbeitet. Weitere Informationen finden Sie in unserer <a href="/datenschutz/">Datenschutzerklärung</a>.</p>
-        <button id="cta-contact-submit" type="submit" class="btn btn-primary btn-lg" data-key="f_submit" data-cta="contact-form-submit" data-track-event="lead_form_submit"></button>
-        <div class="success-banner" id="successBanner" role="status" aria-live="polite" data-form-success="lead-form" data-track-event="lead_form_success" hidden></div>
-        <div class="error-banner" id="errorBanner" role="alert" aria-live="assertive" hidden></div>
-      </div>
-    </form>
-  </div>
-</div>
-</section>
     <p>F&uuml;r Ihre Anfrage k&ouml;nnen Sie vorab die <a href="/leistungen/">CNC-Fertigungsverfahren</a>, <a href="/werkstoffe/">Werkstoffangaben f&uuml;r CNC-Drehteile</a> und <a href="/qualitaet/">Pr&uuml;fanforderungen</a> einordnen.</p>
   </div>
   <div class="form-card">
@@ -333,7 +278,7 @@
 
     <details>
       <summary data-key="faq_files_q">Welche Dateiformate können mit der Anfrage ausgewählt werden?</summary>
-      <p data-key="faq_files_a">Im Anfrageformular sind PDF, DXF, STEP, STP und Bilddateien auswählbar. Für die technische Einordnung sind vollständige Zeichnungsdaten besonders hilfreich.</p>
+      <p data-key="faq_files_a">Das Anfrageformular nimmt keine Dateien entgegen. Nach der Kontaktaufnahme können vollständige Zeichnungsdaten wie PDF, DXF, STEP, STP oder Bilddateien per E-Mail übermittelt werden.</p>
     </details>
 
     <details>

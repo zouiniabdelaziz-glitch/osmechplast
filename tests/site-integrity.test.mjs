@@ -42,6 +42,30 @@ test('contact form links to the privacy page without a TODO privacy notice', () 
   }
 });
 
+test('contact page has one honest inquiry form with unique IDs and no upload promise', () => {
+  const html = read('kontakt/index.html');
+  assert.equal((html.match(/<form\b/gi) || []).length, 1);
+  assert.equal((html.match(/type=["']submit["']/gi) || []).length, 1);
+  const ids = [...html.matchAll(/\bid=["']([^"']+)["']/gi)].map(match => match[1]);
+  assert.equal(new Set(ids).size, ids.length, 'contact page contains duplicate IDs');
+  assert.doesNotMatch(html, /TODO:\s*Reale Kontaktzeiten/i);
+  assert.doesNotMatch(html, /Im Anfrageformular sind PDF, DXF, STEP, STP und Bilddateien auswählbar/i);
+  assert.doesNotMatch(html, /data-key=["']hnav_cta["'][^>]*>Zeichnung senden</i);
+  assert.doesNotMatch(html, /class=["'][^"']*btn[^"']*["'][^>]*>Zeichnung senden</i);
+  assert.match(html, /Zeichnungsdaten.*per E-Mail|per E-Mail.*Zeichnungsdaten/i);
+  assert.match(html, /href=["']\/datenschutz\/["']/i);
+  assert.match(html, /id=["']leadForm["']/i);
+  assert.match(read('js/app.js'), /fetch\(["']\/api\/leads["']/i);
+});
+
+test('services page renders each primary service block once', () => {
+  const html = read('leistungen/index.html');
+  for (const id of ['cnc-drehen', 'drehfraesen', 'prototypen', 'kleinserien', 'mittlere-serien', 'ersatzteile']) {
+    assert.equal((html.match(new RegExp(`id=["']${id}["']`, 'gi')) || []).length, 1, `${id} is duplicated`);
+  }
+  assert.equal((html.match(/class=["']service-final-cta["']/gi) || []).length, 1);
+});
+
 test('privacy draft names every verified technical data flow and its review state', () => {
   const html = read('datenschutz/index.html');
   for (const expected of [
