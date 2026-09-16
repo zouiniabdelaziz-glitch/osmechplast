@@ -46,3 +46,26 @@ export async function validateUploadFile(file) {
   const sha256 = [...new Uint8Array(hash)].map((value) => value.toString(16).padStart(2, '0')).join('');
   return { ok, extension, detectedType: extension === 'pdf' ? 'application/pdf' : file?.type || 'application/octet-stream', sha256, reason: ok ? undefined : 'invalid_file' };
 }
+
+export async function readMultipartRequest(request) {
+  if (!request?.body) throw new Error('invalid_request');
+  const reader = request.body.getReader();
+  let total = 0;
+  const chunks = [];
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > limitCases.maxBodyBytes) {
+        await reader.cancel();
+        throw new Error('payload_too_large');
+      }
+      chunks.push(value);
+    }
+  } catch (error) {
+    try { await reader.cancel(); } catch {}
+    throw error;
+  }
+  return { fields: new FormData(), files: [], bytes: total, chunks };
+}
