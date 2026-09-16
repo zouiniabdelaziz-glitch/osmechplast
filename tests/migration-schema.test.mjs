@@ -27,3 +27,12 @@ test('audit migration allows anonymous and orphan events without sensitive detai
   assert.match(sql, /cleanup_failed/);
   assert.match(sql, /ON DELETE SET NULL/);
 });
+
+test('migrations define bounded cleanup indexes', () => {
+  const uploads = fs.readFileSync('migrations/0002_lead_uploads.sql', 'utf8');
+  const requests = fs.readFileSync('migrations/0003_lead_requests.sql', 'utf8');
+  const audit = fs.readFileSync('migrations/0004_upload_audit_log.sql', 'utf8');
+  assert.match(uploads, /idx_lead_uploads_cleanup/);
+  assert.match(requests, /idx_lead_requests_cleanup/);
+  assert.match(audit, /idx_upload_audit_time/);
+});

@@ -19,3 +19,4 @@ CREATE TABLE IF NOT EXISTS lead_uploads (
   FOREIGN KEY (lead_id) REFERENCES leads(id)
 );
 CREATE INDEX IF NOT EXISTS idx_lead_uploads_lead ON lead_uploads(lead_id);
+CREATE INDEX IF NOT EXISTS idx_lead_uploads_cleanup ON lead_uploads(storage_status, created_at);

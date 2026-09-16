@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS lead_uploads (
   FOREIGN KEY (lead_id) REFERENCES leads(id)
 );
 CREATE INDEX IF NOT EXISTS idx_lead_uploads_lead ON lead_uploads(lead_id);
+CREATE INDEX IF NOT EXISTS idx_lead_uploads_cleanup ON lead_uploads(storage_status, created_at);
 
 CREATE TABLE IF NOT EXISTS lead_requests (
   request_id TEXT PRIMARY KEY,
@@ -46,6 +47,7 @@ CREATE TABLE IF NOT EXISTS lead_requests (
   FOREIGN KEY (lead_id) REFERENCES leads(id)
 );
 CREATE INDEX IF NOT EXISTS idx_lead_requests_completed ON lead_requests(completed_at);
+CREATE INDEX IF NOT EXISTS idx_lead_requests_cleanup ON lead_requests(state, completed_at);
 
 CREATE TABLE IF NOT EXISTS upload_audit_log (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -61,3 +63,4 @@ CREATE TABLE IF NOT EXISTS upload_audit_log (
   FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE SET NULL
 );
 CREATE INDEX IF NOT EXISTS idx_upload_audit_upload ON upload_audit_log(upload_id, occurred_at);
+CREATE INDEX IF NOT EXISTS idx_upload_audit_time ON upload_audit_log(occurred_at, action);

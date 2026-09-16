@@ -12,3 +12,4 @@ CREATE TABLE IF NOT EXISTS upload_audit_log (
   FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE SET NULL
 );
 CREATE INDEX IF NOT EXISTS idx_upload_audit_upload ON upload_audit_log(upload_id, occurred_at);
+CREATE INDEX IF NOT EXISTS idx_upload_audit_time ON upload_audit_log(occurred_at, action);

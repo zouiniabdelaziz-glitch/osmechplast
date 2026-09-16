@@ -9,3 +9,4 @@ CREATE TABLE IF NOT EXISTS lead_requests (
   FOREIGN KEY (lead_id) REFERENCES leads(id)
 );
 CREATE INDEX IF NOT EXISTS idx_lead_requests_completed ON lead_requests(completed_at);
+CREATE INDEX IF NOT EXISTS idx_lead_requests_cleanup ON lead_requests(state, completed_at);
