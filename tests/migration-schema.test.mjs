@@ -16,3 +16,14 @@ test('idempotency migration defines unique request state', () => {
   assert.match(sql, /succeeded/);
   assert.match(sql, /failed/);
 });
+
+test('audit migration allows anonymous and orphan events without sensitive detail', () => {
+  const sql = fs.readFileSync('migrations/0004_upload_audit_log.sql', 'utf8');
+  assert.match(sql, /upload_id TEXT/);
+  assert.match(sql, /lead_id INTEGER/);
+  assert.match(sql, /actor_id TEXT/);
+  assert.match(sql, /download_allowed/);
+  assert.match(sql, /download_denied/);
+  assert.match(sql, /cleanup_failed/);
+  assert.match(sql, /ON DELETE SET NULL/);
+});
