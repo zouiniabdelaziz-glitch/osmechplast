@@ -26,3 +26,23 @@ export function validateLeadFields(input) {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(input?.email || '').trim())) errors.push('email');
   return { ok: errors.length === 0, errors };
 }
+
+const signatures = {
+  pdf: (b) => b.length >= 4 && b[0] === 0x25 && b[1] === 0x50 && b[2] === 0x44 && b[3] === 0x46,
+  jpg: (b) => b.length >= 2 && b[0] === 0xff && b[1] === 0xd8,
+  jpeg: (b) => b.length >= 2 && b[0] === 0xff && b[1] === 0xd8,
+  png: (b) => b.length >= 4 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47,
+  step: (b) => new TextDecoder().decode(b).startsWith('ISO-10303-21;'),
+  stp: (b) => new TextDecoder().decode(b).startsWith('ISO-10303-21;'),
+  dxf: (b) => new TextDecoder().decode(b).includes('SECTION') && new TextDecoder().decode(b).includes('EOF')
+};
+
+export async function validateUploadFile(file) {
+  const name = String(file?.name || '');
+  const extension = name.toLowerCase().split('.').pop();
+  const bytes = file?.bytes instanceof Uint8Array ? file.bytes : new Uint8Array(await file.arrayBuffer());
+  const ok = Boolean(signatures[extension]?.(bytes)) && bytes.byteLength <= limitCases.maxFileBytes;
+  const hash = await crypto.subtle.digest('SHA-256', bytes);
+  const sha256 = [...new Uint8Array(hash)].map((value) => value.toString(16).padStart(2, '0')).join('');
+  return { ok, extension, detectedType: extension === 'pdf' ? 'application/pdf' : file?.type || 'application/octet-stream', sha256, reason: ok ? undefined : 'invalid_file' };
+}
