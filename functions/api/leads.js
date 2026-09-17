@@ -31,6 +31,38 @@ export async function verifyTurnstile(token, remoteIp, env = {}) {
   }
 }
 
+export async function reserveRequest(db, requestId, now = new Date().toISOString()) {
+  const inserted = await db.prepare(`
+    INSERT INTO lead_requests (request_id, state, created_at)
+    VALUES (?, 'processing', ?)
+    ON CONFLICT(request_id) DO NOTHING
+  `).bind(requestId, now).run();
+  if (inserted?.meta?.changes === 1) return { state: 'processing' };
+  const row = await db.prepare('SELECT request_id, lead_id, state, response_code, response_body FROM lead_requests WHERE request_id = ?').bind(requestId).first();
+  if (!row) return { state: 'failed' };
+  if (row.state === 'succeeded') {
+    let response;
+    try { response = row.response_body ? JSON.parse(row.response_body) : undefined; } catch { response = undefined; }
+    return { state: 'succeeded', leadId: row.lead_id, response: response == null ? undefined : { code: row.response_code, body: response } };
+  }
+  if (row.state === 'failed') {
+    let response;
+    try { response = row.response_body ? JSON.parse(row.response_body) : undefined; } catch { response = undefined; }
+    return { state: 'failed', response: response == null ? undefined : { code: row.response_code, body: response } };
+  }
+  return { state: row.state };
+}
+
+export async function completeRequest(db, requestId, leadId, responseCode, responseBody, now = new Date().toISOString()) {
+  await db.prepare('UPDATE lead_requests SET state = ?, lead_id = ?, response_code = ?, response_body = ?, completed_at = ? WHERE request_id = ? AND state = ?')
+    .bind('succeeded', leadId, responseCode, JSON.stringify(responseBody), now, requestId, 'processing').run();
+}
+
+export async function failRequest(db, requestId, responseCode, responseBody, now = new Date().toISOString()) {
+  await db.prepare('UPDATE lead_requests SET state = ?, response_code = ?, response_body = ?, completed_at = ? WHERE request_id = ? AND state = ?')
+    .bind('failed', responseCode, JSON.stringify(responseBody), now, requestId, 'processing').run();
+}
+
 function declaredContentLength(request) {
   const value = request.headers.get("Content-Length");
   if (value == null || !/^\d+$/.test(value.trim())) return null;
