@@ -10,6 +10,27 @@ const FIELD_LIMITS = {
 const ALLOWED_LANGUAGES = new Set(["de", "it", "en", "fr"]);
 const ALLOWED_SERVICES = new Set(["", "cnc-drehen", "drehfraesen", "prototypen-serien", "unsicher"]);
 
+export async function verifyTurnstile(token, remoteIp, env = {}) {
+  if (env.TURNSTILE_TEST_MODE === "1") {
+    return Boolean(env.TURNSTILE_TEST_TOKEN && token && token === env.TURNSTILE_TEST_TOKEN);
+  }
+  if (!token || !env.TURNSTILE_SECRET_KEY) return false;
+  const fetchImpl = env.fetchImpl || fetch;
+  try {
+    const body = new URLSearchParams({ secret: env.TURNSTILE_SECRET_KEY, response: token });
+    if (remoteIp) body.set("remoteip", remoteIp);
+    const response = await fetchImpl("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      body
+    });
+    if (!response.ok) return false;
+    const result = await response.json();
+    return result?.success === true;
+  } catch {
+    return false;
+  }
+}
+
 function declaredContentLength(request) {
   const value = request.headers.get("Content-Length");
   if (value == null || !/^\d+$/.test(value.trim())) return null;
