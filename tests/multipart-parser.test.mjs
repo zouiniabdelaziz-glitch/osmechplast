@@ -37,3 +37,35 @@ test('enforces the per-file byte limit and counts UTF-8 bytes', async () => {
   await assert.rejects(() => readMultipartRequest({ body: new ReadableStream({start(c){c.enqueue(make(limitCases.maxFileBytes + 1));c.close();}}), headers: new Headers({'Content-Type':'multipart/form-data; boundary=x'}) }), /file_too_large/);
   const utf8 = new TextEncoder().encode('€'); assert.equal(utf8.byteLength, 3);
 });
+
+test('accepts a syntactically valid multipart body of exactly 16 MiB', async () => {
+  const enc = new TextEncoder();
+  const part = (name, size) => [enc.encode(`--x\r\nContent-Disposition: form-data; name="${name}"; filename="${name}.step"\r\nContent-Type: application/step\r\n\r\n`), new Uint8Array(size), enc.encode('\r\n')];
+  const aHead = part('a', 0)[0], bHead = part('b', 0)[0], tail = enc.encode('--x--\r\n');
+  const available = limitCases.maxBodyBytes - aHead.length - bHead.length - tail.length - 4;
+  const aSize = Math.min(limitCases.maxFileBytes, Math.floor(available / 2));
+  const bSize = available - aSize;
+  const chunks = [...part('a', aSize), ...part('b', bSize), tail];
+  const body = new Uint8Array(chunks.reduce((n, c) => n + c.length, 0)); let offset = 0;
+  for (const chunk of chunks) { body.set(chunk, offset); offset += chunk.length; }
+  assert.equal(body.byteLength, limitCases.maxBodyBytes);
+  const parsed = await readMultipartRequest({ body: new ReadableStream({ start(c) { c.enqueue(body); c.close(); } }), headers: new Headers({ 'Content-Type': 'multipart/form-data; boundary=x' }) });
+  assert.equal(parsed.bytes, limitCases.maxBodyBytes); assert.equal(parsed.files.length, 2);
+});
+
+test('rejects a body at 16 MiB plus one byte', async () => {
+  const body = new Uint8Array(limitCases.maxBodyBytes + 1);
+  await assert.rejects(() => readMultipartRequest({ body: new ReadableStream({ start(c) { c.enqueue(body); c.close(); } }), headers: new Headers({ 'Content-Type': 'multipart/form-data; boundary=x' }) }), /payload_too_large/);
+});
+
+test('normalizes stream failures and returns no partial fields or files', async () => {
+  const stream = new ReadableStream({ start(c) { c.enqueue(new TextEncoder().encode('--x\r\nContent-Disposition: form-data; name="company"\r\n\r\nACME')); c.error(new Error('secret stream detail')); } });
+  await assert.rejects(() => readMultipartRequest({ body: stream, headers: new Headers({ 'Content-Type': 'multipart/form-data; boundary=x' }) }), error => error.message === 'invalid_multipart' && !error.message.includes('secret'));
+});
+
+test('stops reading immediately when one file exceeds 8 MiB', async () => {
+  const enc = new TextEncoder(); const head = enc.encode('--x\r\nContent-Disposition: form-data; name="file"; filename="large.step"\r\nContent-Type: application/step\r\n\r\n');
+  let reads = 0; let cancelled = false; const chunks = [head, new Uint8Array(limitCases.maxFileBytes), new Uint8Array(1)]; const reader = { async read() { if (reads >= chunks.length) return { done: true }; return { done: false, value: chunks[reads++] }; }, async cancel() { cancelled = true; }, releaseLock() {} };
+  await assert.rejects(() => readMultipartRequest({ body: { getReader() { return reader; } }, headers: new Headers({ 'Content-Type': 'multipart/form-data; boundary=x' }) }), /file_too_large/);
+  assert.equal(reads, 3); assert.equal(cancelled, true);
+});

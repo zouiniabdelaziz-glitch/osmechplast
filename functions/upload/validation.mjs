@@ -48,11 +48,45 @@ export async function validateUploadFile(file){
 }
 function parseBoundary(headers){const ct=headers?.get?.('Content-Type')||headers?.get?.('content-type')||'';const m=/multipart\/form-data\s*;\s*boundary=(?:"([^"]+)"|([^;\s]+))/i.exec(ct);if(!m)throw new Error('invalid_boundary');return m[1]||m[2];}
 function indexOfBytes(h,n,start=0){outer:for(let i=start;i<=h.length-n.length;i++){for(let j=0;j<n.length;j++)if(h[i+j]!==n[j])continue outer;return i;}return -1;}
+function concatBytes(a,b){const out=new Uint8Array(a.length+b.length);out.set(a);out.set(b,a.length);return out;}
+function appendPartBytes(parts,bytes){if(bytes.length)parts.push(bytes);}
+function joinPartBytes(parts,total){const out=new Uint8Array(total);let offset=0;for(const part of parts){out.set(part,offset);offset+=part.length;}return out;}
+function normalizeMultipartError(error){if(error?.message==='payload_too_large'||error?.message==='file_too_large'||error?.message==='too_many_files'||error?.message==='invalid_boundary')return error;return new Error('invalid_multipart');}
 export async function readMultipartRequest(request){
-  if(!request?.body)throw new Error('invalid_request'); const boundary=parseBoundary(request.headers); const reader=request.body.getReader(); const chunks=[]; let total=0;
-  try{while(true){const {done,value}=await reader.read();if(done)break;const c=value instanceof Uint8Array?value:new Uint8Array(value);total+=c.byteLength;if(total>limitCases.maxBodyBytes){await reader.cancel();throw new Error('payload_too_large');}chunks.push(c);}}catch(e){try{await reader.cancel();}catch{}chunks.length=0;throw e;}finally{reader.releaseLock();}
-  const all=new Uint8Array(total);let off=0;for(const c of chunks){all.set(c,off);off+=c.length;}chunks.length=0;const enc=new TextEncoder(),del=enc.encode(`--${boundary}`);let pos=indexOfBytes(all,del);if(pos!==0)throw new Error('invalid_multipart');const fields=new FormData(),files=[],dec=new TextDecoder();
-  while(pos<all.length){pos+=del.length;if(all[pos]===45&&all[pos+1]===45)break;if(all[pos]!==13||all[pos+1]!==10)throw new Error('invalid_multipart');pos+=2;const he=indexOfBytes(all,new Uint8Array([13,10,13,10]),pos);if(he<0)throw new Error('truncated_headers');const header=dec.decode(all.slice(pos,he));pos=he+4;const next=indexOfBytes(all,new Uint8Array([13,10,...del]),pos);if(next<0)throw new Error('truncated_multipart');const content=all.slice(pos,next);pos=next+2;const cd=/^Content-Disposition:\s*form-data;\s*name="([^"]+)"(?:;\s*filename="([^"]*)")?/im.exec(header);if(!cd)throw new Error('invalid_content_disposition');
-    if(cd[2]!=null){if(files.length>=limitCases.maxFiles)throw new Error('too_many_files');const tm=/^Content-Type:\s*([^\r\n]+)/im.exec(header);if(content.length>limitCases.maxFileBytes)throw new Error('file_too_large');files.push({name:cd[2],type:tm?tm[1].trim():'application/octet-stream',bytes:content});}else fields.set(cd[1],dec.decode(content));}
+  if(!request?.body)throw new Error('invalid_request');
+  const boundary=parseBoundary(request.headers);const delimiter=new TextEncoder().encode(`--${boundary}`);const marker=new TextEncoder().encode(`\r\n--${boundary}`);
+  const reader=request.body.getReader();let total=0;let buffer=new Uint8Array(0);let phase='opening';let current=null;let closed=false;let fileCount=0;const fields=new FormData();const files=[];const decoder=new TextDecoder();
+  const consume=async(chunk,done=false)=>{
+    buffer=concatBytes(buffer,chunk);
+    while(true){
+      if(phase==='opening'){
+        if(buffer.length<delimiter.length+2){if(done)throw new Error('truncated_multipart');return;}
+        if(indexOfBytes(buffer,delimiter)!==0)throw new Error('invalid_multipart');
+        if(buffer[delimiter.length]===45&&buffer[delimiter.length+1]===45)throw new Error('invalid_multipart');
+        if(buffer[delimiter.length]!==13||buffer[delimiter.length+1]!==10)throw new Error('invalid_multipart');
+        buffer=buffer.slice(delimiter.length+2);phase='headers';continue;
+      }
+      if(phase==='headers'){
+        const end=indexOfBytes(buffer,new Uint8Array([13,10,13,10]));
+        if(end<0){if(buffer.length>16*1024||done)throw new Error('truncated_headers');return;}
+        const header=decoder.decode(buffer.slice(0,end));buffer=buffer.slice(end+4);const cd=/^Content-Disposition:\s*form-data;\s*name="([^"]+)"(?:;\s*filename="([^"]*)")?/im.exec(header);
+        if(!cd)throw new Error('invalid_content_disposition');
+        const tm=/^Content-Type:\s*([^\r\n]+)/im.exec(header);current={name:cd[1],filename:cd[2],type:tm?tm[1].trim():'application/octet-stream',parts:[],size:0};
+        if(current.filename!=null&&fileCount>=limitCases.maxFiles)throw new Error('too_many_files');phase='content';continue;
+      }
+      if(phase==='content'){
+        const at=indexOfBytes(buffer,marker);
+        if(at<0){if(current.filename!=null&&current.size+buffer.length>limitCases.maxFileBytes)throw new Error('file_too_large');const keep=Math.min(buffer.length,marker.length-1);const safe=buffer.slice(0,buffer.length-keep);buffer=buffer.slice(buffer.length-keep);if(safe.length){current.size+=safe.length;if(current.size>(current.filename!=null?limitCases.maxFileBytes:5000))throw new Error(current.filename!=null?'file_too_large':'field_too_large');appendPartBytes(current.parts,safe);}if(done)throw new Error('truncated_multipart');return;}
+        const content=buffer.slice(0,at);buffer=buffer.slice(at+2);current.size+=content.length;if(current.size>(current.filename!=null?limitCases.maxFileBytes:5000))throw new Error(current.filename!=null?'file_too_large':'field_too_large');appendPartBytes(current.parts,content);
+        const value=joinPartBytes(current.parts,current.size);if(current.filename!=null){files.push({name:current.filename,type:current.type,bytes:value});fileCount+=1;}else fields.set(current.name,decoder.decode(value));current=null;
+        if(buffer.length<delimiter.length){if(done)throw new Error('truncated_multipart');return;}if(indexOfBytes(buffer,delimiter)!==0)throw new Error('invalid_multipart');buffer=buffer.slice(delimiter.length);
+        if(buffer[0]===45&&buffer[1]===45){buffer=buffer.slice(2);closed=true;phase='done';continue;}if(buffer[0]!==13||buffer[1]!==10)throw new Error('invalid_multipart');buffer=buffer.slice(2);phase='headers';continue;
+      }
+      if(phase==='done'){if(buffer.length&&!/^\r?\n?$/.test(decoder.decode(buffer)))throw new Error('invalid_multipart');return;}
+    }
+  };
+  try{
+    while(true){const {done,value}=await reader.read();if(done){await consume(new Uint8Array(0),true);if(!closed)throw new Error('truncated_multipart');break;}const chunk=value instanceof Uint8Array?value:new Uint8Array(value);total+=chunk.byteLength;if(total>limitCases.maxBodyBytes){await reader.cancel();throw new Error('payload_too_large');}await consume(chunk);}
+  }catch(error){try{await reader.cancel();}catch{}buffer=new Uint8Array(0);current=null;fields.forEach((_,key)=>fields.delete(key));files.length=0;throw normalizeMultipartError(error);}finally{reader.releaseLock();}
   return {fields,files,bytes:total};
 }
