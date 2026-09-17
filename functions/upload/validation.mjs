@@ -1,71 +1,58 @@
 const MB = 1024 * 1024;
 export const validFiles = {
-  pdf: { name: 'drawing.pdf', type: 'application/pdf', bytes: new Uint8Array([0x25, 0x50, 0x44, 0x46]) },
-  asciiDxf: { name: 'part.dxf', type: 'application/dxf', bytes: new TextEncoder().encode('0\\nSECTION\\n2\\nHEADER\\n0\\nENDSEC\\n0\\nEOF\\n') },
-  step: { name: 'part.step', type: 'application/step', bytes: new TextEncoder().encode('ISO-10303-21;') },
-  stp: { name: 'part.stp', type: 'application/step', bytes: new TextEncoder().encode('ISO-10303-21;') },
-  jpg: { name: 'part.jpg', type: 'image/jpeg', bytes: new Uint8Array([0xff, 0xd8, 0xff, 0xd9]) },
-  jpeg: { name: 'part.jpeg', type: 'image/jpeg', bytes: new Uint8Array([0xff, 0xd8, 0xff, 0xd9]) },
-  png: { name: 'part.png', type: 'image/png', bytes: new Uint8Array([0x89, 0x50, 0x4e, 0x47]) }
-};
-export const invalidFiles = { binaryDxf: { name: 'part.dxf', type: 'application/octet-stream', bytes: new Uint8Array([0, 1, 2, 3]) } };
-export const limitCases = { maxFiles: 5, maxFileBytes: 8 * MB, maxBodyBytes: 16 * MB };
-export const multipartBodies = { valid: new Uint8Array([45, 45, 98, 111, 117, 110, 100, 97, 114, 121]) };
-export const requestIds = { valid: '123e4567-e89b-42d3-a456-426614174000' };
-
-export function parseRequestId(value) {
-  if (typeof value !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)) throw new Error('invalid_request_id');
-  return value.toLowerCase();
-}
-
-export function validateLeadFields(input) {
-  const errors = [];
-  if (!input || typeof input !== 'object') errors.push('invalid_request');
-  if (!String(input?.company || '').trim()) errors.push('company');
-  if (!String(input?.name || '').trim()) errors.push('name');
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(input?.email || '').trim())) errors.push('email');
-  return { ok: errors.length === 0, errors };
-}
-
-const signatures = {
-  pdf: (b) => b.length >= 4 && b[0] === 0x25 && b[1] === 0x50 && b[2] === 0x44 && b[3] === 0x46,
-  jpg: (b) => b.length >= 2 && b[0] === 0xff && b[1] === 0xd8,
-  jpeg: (b) => b.length >= 2 && b[0] === 0xff && b[1] === 0xd8,
-  png: (b) => b.length >= 4 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47,
-  step: (b) => new TextDecoder().decode(b).startsWith('ISO-10303-21;'),
-  stp: (b) => new TextDecoder().decode(b).startsWith('ISO-10303-21;'),
-  dxf: (b) => new TextDecoder().decode(b).includes('SECTION') && new TextDecoder().decode(b).includes('EOF')
-};
-
-export async function validateUploadFile(file) {
-  const name = String(file?.name || '');
-  const extension = name.toLowerCase().split('.').pop();
-  const bytes = file?.bytes instanceof Uint8Array ? file.bytes : new Uint8Array(await file.arrayBuffer());
-  const ok = Boolean(signatures[extension]?.(bytes)) && bytes.byteLength <= limitCases.maxFileBytes;
-  const hash = await crypto.subtle.digest('SHA-256', bytes);
-  const sha256 = [...new Uint8Array(hash)].map((value) => value.toString(16).padStart(2, '0')).join('');
-  return { ok, extension, detectedType: extension === 'pdf' ? 'application/pdf' : file?.type || 'application/octet-stream', sha256, reason: ok ? undefined : 'invalid_file' };
-}
-
-export async function readMultipartRequest(request) {
-  if (!request?.body) throw new Error('invalid_request');
-  const reader = request.body.getReader();
-  let total = 0;
-  const chunks = [];
-  try {
-    for (;;) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      total += value.byteLength;
-      if (total > limitCases.maxBodyBytes) {
-        await reader.cancel();
-        throw new Error('payload_too_large');
-      }
-      chunks.push(value);
-    }
-  } catch (error) {
-    try { await reader.cancel(); } catch {}
-    throw error;
+  pdf: { name: 'drawing.pdf', type: 'application/pdf', bytes: new TextEncoder().encode('%PDF-1.7\n1 0 obj\nendobj\n%%EOF\n') },
+  asciiDxf: { name: 'part.dxf', type: 'application/dxf', bytes: new TextEncoder().encode('0\nSECTION\n2\nHEADER\n0\nENDSEC\n0\nEOF\n') },
+  step: { name: 'part.step', type: 'application/step', bytes: new TextEncoder().encode('ISO-10303-21;\nHEADER;ENDSEC;DATA;ENDSEC;END-ISO-10303-21;') },
+  stp: { name: 'part.stp', type: 'application/step', bytes: new TextEncoder().encode('ISO-10303-21;\nHEADER;ENDSEC;DATA;ENDSEC;END-ISO-10303-21;') },
+  jpg: { name: 'part.jpg', type: 'image/jpeg', bytes: new Uint8Array([0xff,0xd8,0xff,0xe0,0x00,0x04,0xff,0xd9]) },
+  jpeg: { name: 'part.jpeg', type: 'image/jpeg', bytes: new Uint8Array([0xff,0xd8,0xff,0xe0,0x00,0x04,0xff,0xd9]) },
+  png: { name: 'part.png', type: 'image/png', bytes: new Uint8Array([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0,0,0,13,0x49,0x48,0x44,0x52,0,0,0,1,0,0,0,1,8,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82])
   }
-  return { fields: new FormData(), files: [], bytes: total, chunks };
+};
+export const invalidFiles = { binaryDxf: { name: 'part.dxf', type: 'application/octet-stream', bytes: new Uint8Array([0,1,2,3]) } };
+export const limitCases = { maxFiles: 5, maxFileBytes: 8 * MB, maxBodyBytes: 16 * MB };
+export const multipartBodies = { valid: new TextEncoder().encode('--boundary\r\n') };
+export const requestIds = { valid: '123e4567-e89b-42d3-a456-426614174000' };
+const fieldLimits = { company: 200, name: 150, email: 254, phone: 50, service: 80, message: 5000 };
+const languages = new Set(['de','it','en','fr']);
+const services = new Set(['','cnc-drehen','drehfraesen','prototypen-serien','unsicher']);
+export function parseRequestId(value) { if (typeof value !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)) throw new Error('invalid_request_id'); return value.toLowerCase(); }
+export function validateLeadFields(input) {
+  const errors = []; if (!input || typeof input !== 'object' || Array.isArray(input)) return { ok:false, errors:['invalid_request'] };
+  for (const key of Object.keys(fieldLimits)) if (input[key] != null && typeof input[key] !== 'string') errors.push('invalid_request');
+  const values = Object.fromEntries(Object.keys(fieldLimits).map(k=>[k,String(input[k]??'').trim()]));
+  if (!values.company) errors.push('company'); if (!values.name) errors.push('name'); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) errors.push('email');
+  if (Object.entries(fieldLimits).some(([k,n])=>values[k].length>n)) errors.push('payload_too_large');
+  if (input.language != null && (typeof input.language !== 'string' || !languages.has(String(input.language).trim()))) errors.push('language');
+  if (input.service != null && (typeof input.service !== 'string' || !services.has(String(input.service).trim()))) errors.push('service');
+  return {ok:errors.length===0, errors:[...new Set(errors)], values};
+}
+const mime = {pdf:new Set(['application/pdf']),jpg:new Set(['image/jpeg']),jpeg:new Set(['image/jpeg']),png:new Set(['image/png']),step:new Set(['application/step','application/octet-stream']),stp:new Set(['application/step','application/octet-stream']),dxf:new Set(['application/dxf','application/octet-stream'])};
+const text = b => new TextDecoder('utf-8',{fatal:true}).decode(b);
+function executableHeader(b){return (b[0]===0x4d&&b[1]===0x5a)||(b[0]===0x7f&&b[1]===0x45&&b[2]===0x4c&&b[3]===0x46)||(b[0]===0x50&&b[1]===0x4b&&b[2]===0x03&&b[3]===0x04)||(b[0]===0x23&&b[1]===0x21);}
+function validSignature(ext,b){
+  if(executableHeader(b)) return false;
+  if(ext==='pdf') return b.length>=8&&b[0]===0x25&&b[1]===0x50&&b[2]===0x44&&b[3]===0x46&&text(b).includes('%%EOF');
+  if(ext==='jpg'||ext==='jpeg') return b.length>=4&&b[0]===0xff&&b[1]===0xd8&&b[b.length-2]===0xff&&b[b.length-1]===0xd9;
+  if(ext==='png') return b.length>=40&&b[0]===0x89&&b[1]===0x50&&b[2]===0x4e&&b[3]===0x47&&text(b.slice(12,16))==='IHDR'&&text(b.slice(-8,-4))==='IEND';
+  if(ext==='step'||ext==='stp'){const t=text(b);return t.includes('ISO-10303-21;')&&t.includes('END-ISO-10303-21;');}
+  if(ext==='dxf'){const t=text(b);return /(?:^|\r?\n)0\s*\r?\nSECTION(?:\r?\n|$)/.test(t)&&/(?:^|\r?\n)0\s*\r?\nEOF\s*(?:\r?\n|$)/.test(t);}
+  return false;
+}
+export async function validateUploadFile(file){
+  const name=String(file?.name||''); const extension=name.toLowerCase().split('.').pop(); const type=String(file?.type||'application/octet-stream').toLowerCase().split(';')[0].trim();
+  let bytes; try{bytes=file?.bytes instanceof Uint8Array?file.bytes:new Uint8Array(await file.arrayBuffer());}catch{return{ok:false,extension,detectedType:type,reason:'invalid_file'};}
+  let ok=Boolean(mime[extension]?.has(type))&&bytes.byteLength<=limitCases.maxFileBytes; try{if(ok)ok=validSignature(extension,bytes);}catch{ok=false;}
+  let sha256=''; if(ok){const hash=await crypto.subtle.digest('SHA-256',bytes);sha256=[...new Uint8Array(hash)].map(v=>v.toString(16).padStart(2,'0')).join('');}
+  return {ok,extension,detectedType:type,sha256,reason:ok?undefined:'invalid_file'};
+}
+function parseBoundary(headers){const ct=headers?.get?.('Content-Type')||headers?.get?.('content-type')||'';const m=/multipart\/form-data\s*;\s*boundary=(?:"([^"]+)"|([^;\s]+))/i.exec(ct);if(!m)throw new Error('invalid_boundary');return m[1]||m[2];}
+function indexOfBytes(h,n,start=0){outer:for(let i=start;i<=h.length-n.length;i++){for(let j=0;j<n.length;j++)if(h[i+j]!==n[j])continue outer;return i;}return -1;}
+export async function readMultipartRequest(request){
+  if(!request?.body)throw new Error('invalid_request'); const boundary=parseBoundary(request.headers); const reader=request.body.getReader(); const chunks=[]; let total=0;
+  try{while(true){const {done,value}=await reader.read();if(done)break;const c=value instanceof Uint8Array?value:new Uint8Array(value);total+=c.byteLength;if(total>limitCases.maxBodyBytes){await reader.cancel();throw new Error('payload_too_large');}chunks.push(c);}}catch(e){try{await reader.cancel();}catch{}chunks.length=0;throw e;}finally{reader.releaseLock();}
+  const all=new Uint8Array(total);let off=0;for(const c of chunks){all.set(c,off);off+=c.length;}chunks.length=0;const enc=new TextEncoder(),del=enc.encode(`--${boundary}`);let pos=indexOfBytes(all,del);if(pos!==0)throw new Error('invalid_multipart');const fields=new FormData(),files=[],dec=new TextDecoder();
+  while(pos<all.length){pos+=del.length;if(all[pos]===45&&all[pos+1]===45)break;if(all[pos]!==13||all[pos+1]!==10)throw new Error('invalid_multipart');pos+=2;const he=indexOfBytes(all,new Uint8Array([13,10,13,10]),pos);if(he<0)throw new Error('truncated_headers');const header=dec.decode(all.slice(pos,he));pos=he+4;const next=indexOfBytes(all,new Uint8Array([13,10,...del]),pos);if(next<0)throw new Error('truncated_multipart');const content=all.slice(pos,next);pos=next+2;const cd=/^Content-Disposition:\s*form-data;\s*name="([^"]+)"(?:;\s*filename="([^"]*)")?/im.exec(header);if(!cd)throw new Error('invalid_content_disposition');
+    if(cd[2]!=null){if(files.length>=limitCases.maxFiles)throw new Error('too_many_files');const tm=/^Content-Type:\s*([^\r\n]+)/im.exec(header);if(content.length>limitCases.maxFileBytes)throw new Error('file_too_large');files.push({name:cd[2],type:tm?tm[1].trim():'application/octet-stream',bytes:content});}else fields.set(cd[1],dec.decode(content));}
+  return {fields,files,bytes:total};
 }
