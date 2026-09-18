@@ -24,7 +24,7 @@
     <p>F&uuml;r Ihre Anfrage k&ouml;nnen Sie vorab die <a href="/leistungen/">CNC-Fertigungsverfahren</a>, <a href="/werkstoffe/">Werkstoffangaben f&uuml;r CNC-Drehteile</a> und <a href="/qualitaet/">Pr&uuml;fanforderungen</a> einordnen.</p>
   </div>
   <div class="form-card">
-    <form id="leadForm" data-form="lead-form" onsubmit="submitForm(event)">
+    <form id="leadForm" action="/api/leads" method="post" enctype="multipart/form-data" data-form="lead-form" onsubmit="submitForm(event)">
       <div class="form-grid">
         <div class="form-row">
           <div class="form-group"><label for="f_company" data-key="f_company"></label><input id="f_company" required></div>
@@ -39,10 +39,20 @@
           <select id="f_service"><option value=""></option><option value="cnc-drehen"></option><option value="drehfraesen"></option><option value="prototypen-serien"></option><option value="unsicher"></option></select>
         </div>
         <div class="form-group"><label for="f_msg" data-key="f_msg"></label><textarea id="f_msg"></textarea></div>
+        <div class="form-group upload-field">
+          <label for="f_files" data-key="f_files">Technische Dateien (optional)</label>
+          <input id="f_files" name="files" type="file" multiple accept=".pdf,.dxf,.step,.stp,.jpg,.jpeg,.png,application/pdf,application/dxf,application/step,image/jpeg,image/png" aria-describedby="f_upload_help">
+          <p id="f_upload_help" class="form-help" data-key="upload_help">PDF, ASCII-DXF, STEP, STP, JPG, JPEG oder PNG; maximal 5 Dateien, 8 MiB je Datei und 16 MiB pro Anfrage.</p>
+        </div>
+        <div class="turnstile-field" aria-live="polite">
+          <div id="turnstile-widget" data-turnstile-sitekey="" aria-label="Turnstile verification"></div>
+          <input id="turnstile_token" name="turnstile_token" type="hidden" value="">
+          <p class="form-help" data-key="turnstile_help">Bitte bestätigen Sie die Sicherheitsprüfung, bevor Sie die Anfrage senden.</p>
+        </div>
         <p class="form-privacy-note"><strong>Datenschutzhinweis:</strong> Die von Ihnen übermittelten Angaben werden zur Bearbeitung Ihrer Anfrage verarbeitet. Weitere Informationen finden Sie in unserer <a href="/datenschutz/">Datenschutzerklärung</a>.</p>
         <button id="cta-contact-submit" type="submit" class="btn btn-primary btn-lg" data-key="f_submit" data-cta="contact-form-submit" data-track-event="lead_form_submit"></button>
         <div class="success-banner" id="successBanner" role="status" aria-live="polite" data-form-success="lead-form" data-track-event="lead_form_success" hidden></div>
-        <div class="error-banner" id="errorBanner" role="alert" aria-live="assertive" hidden></div>
+        <div class="error-banner" id="errorBanner" role="alert" aria-live="assertive" tabindex="-1" hidden></div>
       </div>
     </form>
   </div>

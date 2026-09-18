@@ -103,6 +103,10 @@ export function loadBrowserScript(relativePath, overrides = {}) {
       unobserve() {}
     },
     HTMLInputElement: class {},
+    FormData,
+    File,
+    Blob,
+    crypto: overrides.crypto || { randomUUID() { return '123e4567-e89b-42d3-a456-426614174000'; } },
     console: overrides.console || console,
     T: overrides.T || {
       de: {

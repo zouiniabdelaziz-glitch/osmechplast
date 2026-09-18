@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createElement, loadBrowserScript } from './helpers/load-browser-script.mjs';
+import fs from 'node:fs';
 
 function response(status, body = {}) {
   return {
@@ -10,6 +11,47 @@ function response(status, body = {}) {
     async text() { return JSON.stringify(body); }
   };
 }
+
+test('contact form exposes one accessible technical-file input with the approved limits', () => {
+  const html = fs.readFileSync('modules/kontakt.html', 'utf8');
+  assert.equal((html.match(/<input[^>]+type=["']file["']/gi) || []).length, 1);
+  assert.match(html, /accept=["'][^"']*\.pdf[^"']*\.dxf[^"']*\.step[^"']*\.stp[^"']*\.jpe?g[^"']*\.png/i);
+  assert.match(html, /multiple/i);
+  assert.match(html, /5 Dateien|five files|cinque file/i);
+  assert.match(html, /8 MiB|8 MB/i);
+  assert.match(html, /16 MiB|16 MB/i);
+});
+
+test('German, Italian and English upload copy includes the same formats and limits', () => {
+  const source = fs.readFileSync('js/translations.js', 'utf8');
+  assert.equal((source.match(/upload_help:/g) || []).length >= 3, true);
+  assert.equal((source.match(/turnstile_help:/g) || []).length >= 3, true);
+  for (const term of ['PDF', 'DXF', 'STEP', 'STP', 'JPG', 'PNG', '8 MiB', '16 MiB']) assert.ok(source.includes(term), term);
+});
+
+test('creates a UUID request id and chooses JSON or multipart based on selected files', async () => {
+  const calls = [];
+  const fixture = makeFixture(async (url, options) => { calls.push({ url, options }); return response(200, { ok: true }); });
+  assert.match(fixture.context.createRequestId(), /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+  await fixture.context.submitLead(fixture.form);
+  assert.equal(calls[0].options.headers['Content-Type'], 'application/json');
+  const file = new File([new Uint8Array([1])], 'part.pdf', { type: 'application/pdf' });
+  fixture.context.document.getElementById('f_files').files = [file];
+  await fixture.context.submitLead(fixture.form);
+  assert.equal(calls[1].options.body instanceof FormData, true);
+  assert.equal(calls[1].options.headers['X-Request-ID'].length, 36);
+});
+
+test('includes the current Turnstile token in JSON and multipart submissions', async () => {
+  const calls = [];
+  const fixture = makeFixture(async (url, options) => { calls.push(options); return response(200, { ok: true }); });
+  fixture.context.window.turnstile = { getResponse() { return 'turnstile-test-token'; } };
+  await fixture.context.submitLead(fixture.form);
+  assert.equal(JSON.parse(calls[0].options?.body || calls[0].body).turnstile_token, 'turnstile-test-token');
+  fixture.context.document.getElementById('f_files').files = [new File([new Uint8Array([1])], 'part.pdf')];
+  await fixture.context.submitLead(fixture.form);
+  assert.equal(calls[1].body.get('turnstile_token'), 'turnstile-test-token');
+});
 
 function deferred() {
   let resolve;
@@ -43,12 +85,13 @@ function makeFixture(fetchImpl) {
   };
   const elements = { leadForm: form, successBanner, errorBanner };
   for (const [id, value] of Object.entries(values)) elements[id] = { value };
+  elements.f_files = { files: [] };
 
   const tracked = [];
   const context = loadBrowserScript('js/app.js', {
     elements,
     fetch: fetchImpl,
-    window: { OSMPAnalytics: { track(name) { tracked.push(name); } } }
+    window: { OSMPAnalytics: { track(name) { tracked.push(name); } }, turnstile: { getResponse() { return 'test-token'; } } }
   });
   const event = { target: form, preventDefault() {} };
   return { context, event, form, submitButton, successBanner, errorBanner, values, tracked };
@@ -134,5 +177,16 @@ test('does not emit lead_form_success for any failed request', async () => {
     const fixture = makeFixture(async () => response(status, { ok: false, error: 'request_failed' }));
     await fixture.context.submitForm(fixture.event);
     assert.deepEqual(fixture.tracked, [], `unexpected success event for HTTP ${status}`);
+  }
+});
+
+test('maps upload and rate-limit errors to focused accessible messages without resetting files', async () => {
+  for (const [status, expected] of [[413, 'groß|größe'], [415, 'Format'], [422, 'prüfen'], [429, 'viele'], [500, 'gespeichert']]) {
+    const fixture = makeFixture(async () => response(status, { ok: false, error: 'request_failed' }));
+    fixture.errorBanner.focus = () => { fixture.errorBanner.focused = true; };
+    await fixture.context.submitForm(fixture.event);
+    assert.match(fixture.errorBanner.textContent, new RegExp(expected, 'i'), String(status));
+    assert.equal(fixture.errorBanner.focused, true, String(status));
+    assert.equal(fixture.form.resetCount, 0, String(status));
   }
 });

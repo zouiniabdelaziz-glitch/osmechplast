@@ -138,6 +138,64 @@ function buildStaticTranslationDictionary(lang) {
   return dict;
 }
 
+function createRequestId() {
+  if (!crypto?.randomUUID) throw new Error('request_id_unavailable');
+  return crypto.randomUUID();
+}
+
+function readLeadFormValues() {
+  return {
+    company: document.getElementById('f_company')?.value || '',
+    name: document.getElementById('f_name')?.value || '',
+    email: document.getElementById('f_email')?.value || '',
+    phone: document.getElementById('f_phone')?.value || '',
+    service: document.getElementById('f_service')?.value || '',
+    message: document.getElementById('f_msg')?.value || '',
+    language: currentLang,
+    source: 'website',
+    status: 'new'
+  };
+}
+
+async function submitLead(form) {
+  const requestId = createRequestId();
+  const payload = readLeadFormValues();
+  const turnstileToken = window.turnstile?.getResponse?.() || document.getElementById('turnstile_token')?.value || '';
+  if (!turnstileToken) {
+    const error = new Error('verification_required');
+    error.kind = 'validation';
+    error.status = 403;
+    throw error;
+  }
+  payload.turnstile_token = turnstileToken;
+  const files = Array.from(document.getElementById('f_files')?.files || []);
+  const headers = { 'X-Request-ID': requestId };
+  let body;
+  if (files.length) {
+    body = new FormData();
+    Object.entries(payload).forEach(([key, value]) => body.append(key, value));
+    files.forEach(file => body.append('files', file, file.name));
+  } else {
+    headers['Content-Type'] = 'application/json';
+    body = JSON.stringify(payload);
+  }
+  let res;
+  try {
+    res = await fetch('/api/leads', { method: 'POST', headers, body });
+  } catch {
+    const error = new Error('network_error');
+    error.kind = 'network';
+    throw error;
+  }
+  if (!res.ok) {
+    const error = new Error('request_failed');
+    error.kind = res.status >= 400 && res.status < 500 ? 'validation' : 'server';
+    error.status = res.status;
+    throw error;
+  }
+  return res;
+}
+
 /* â”€â”€ CLOUDFLARE D1 LEAD SPEICHERN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function saveLead(payload) {
   let res;
@@ -196,37 +254,37 @@ async function submitForm(e) {
   const errorBanner = document.getElementById('errorBanner');
   hideFormBanner(successBanner);
   hideFormBanner(errorBanner);
-  const payload = {
-    company:     document.getElementById('f_company')?.value || '',
-    name:        document.getElementById('f_name')?.value || '',
-    email:       document.getElementById('f_email')?.value || '',
-    phone:       document.getElementById('f_phone')?.value || '',
-    service:     document.getElementById('f_service')?.value || '',
-    message:     document.getElementById('f_msg')?.value || '',
-    ai_analysis: null,
-    language:    currentLang,
-    source:      'website',
-    status:      'new',
-    created_at:  new Date().toISOString()
-  };
   try {
-    await saveLead(payload);
+    await submitLead(form);
     window.OSMPAnalytics?.track?.('lead_form_success');
     showFormBanner(successBanner, T[currentLang]?.f_success || '✓ Danke!');
     setTimeout(() => hideFormBanner(successBanner), 5000);
     form.reset();
   } catch (error) {
-    const errorKey = error.kind === 'validation'
-      ? 'f_error_validation'
-      : error.kind === 'network'
-        ? 'f_error_network'
-        : 'f_error_server';
-    const fallback = error.kind === 'validation'
-      ? 'Bitte prüfen Sie Ihre Angaben.'
-      : error.kind === 'network'
-        ? 'Die Verbindung ist fehlgeschlagen.'
-        : 'Die Anfrage konnte nicht gespeichert werden.';
+    const errorKey = error.kind === 'network'
+      ? 'f_error_network'
+      : error.status === 413
+        ? 'f_error_size'
+        : error.status === 415
+          ? 'f_error_format'
+          : error.status === 429
+            ? 'f_error_rate'
+            : error.kind === 'validation' || error.status === 422
+              ? 'f_error_validation'
+              : 'f_error_server';
+    const fallback = error.kind === 'network'
+      ? 'Die Verbindung ist fehlgeschlagen.'
+      : error.status === 413
+        ? 'Die ausgewählten Dateien oder Angaben sind zu groß.'
+        : error.status === 415
+          ? 'Das Dateiformat wird nicht unterstützt.'
+          : error.status === 429
+            ? 'Zu viele Anfragen in kurzer Zeit. Bitte versuchen Sie es später erneut.'
+            : error.kind === 'validation' || error.status === 422
+              ? 'Bitte prüfen Sie Ihre Angaben.'
+              : 'Die Anfrage konnte nicht gespeichert werden.';
     showFormBanner(errorBanner, T[currentLang]?.[errorKey] || fallback);
+    errorBanner?.focus?.();
   } finally {
     delete form.dataset.submitting;
     form.removeAttribute('aria-busy');
