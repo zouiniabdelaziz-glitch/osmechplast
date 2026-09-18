@@ -22,6 +22,14 @@ test('contact form exposes one accessible technical-file input with the approved
   assert.match(html, /16 MiB|16 MB/i);
 });
 
+test('Turnstile widget is explicitly initialized and clears expired tokens', () => {
+  const source = fs.readFileSync('js/app.js', 'utf8');
+  assert.match(source, /turnstile\.render/);
+  assert.match(source, /expired-callback/);
+  assert.match(source, /turnstile\.reset/);
+  assert.match(source, /OSMP_TURNSTILE_SITE_KEY/);
+});
+
 test('German, Italian and English upload copy includes the same formats and limits', () => {
   const source = fs.readFileSync('js/translations.js', 'utf8');
   assert.equal((source.match(/upload_help:/g) || []).length >= 3, true);
@@ -86,6 +94,7 @@ function makeFixture(fetchImpl) {
   const elements = { leadForm: form, successBanner, errorBanner };
   for (const [id, value] of Object.entries(values)) elements[id] = { value };
   elements.f_files = { files: [] };
+  elements.turnstile_token = { value: '' };
 
   const tracked = [];
   const context = loadBrowserScript('js/app.js', {
@@ -107,6 +116,19 @@ test('shows success, tracks success and resets only after a 2xx response', async
   assert.equal(fixture.successBanner.textContent, 'Anfrage gespeichert.');
   assert.equal(fixture.successBanner.hidden, false);
   assert.equal(fixture.errorBanner.textContent, '');
+});
+
+test('resets the Turnstile widget and clears its token after every submission attempt', async () => {
+  const fixture = makeFixture(async () => response(400, { ok: false, error: 'invalid_request' }));
+  let resets = 0;
+  fixture.context.window.OSMP_TURNSTILE_WIDGET_ID = 'widget-1';
+  fixture.context.window.turnstile.reset = id => { if (id === 'widget-1') resets += 1; };
+  fixture.context.document.getElementById('turnstile_token').value = 'used-token';
+
+  await fixture.context.submitForm(fixture.event);
+
+  assert.equal(resets, 1);
+  assert.equal(fixture.context.document.getElementById('turnstile_token').value, '');
 });
 
 test('keeps all values and shows a validation error after HTTP 400', async () => {

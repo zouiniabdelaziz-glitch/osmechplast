@@ -10,6 +10,8 @@ async function loadApi() {
 
 function makeDb({ error } = {}) {
   const calls = [];
+  const requests = new Map();
+  let leadId = 0;
   return {
     calls,
     prepare(sql) {
@@ -19,7 +21,24 @@ function makeDb({ error } = {}) {
           return {
             async run() {
               if (error) throw error;
+              if (/INSERT INTO lead_requests/i.test(sql)) {
+                const id = values[0];
+                if (requests.has(id)) return { success: true, meta: { changes: 0 } };
+                requests.set(id, { request_id: id, state: 'processing', created_at: values[1] });
+                return { success: true, meta: { changes: 1 } };
+              }
+              if (/INSERT INTO leads/i.test(sql)) {
+                leadId += 1;
+                return { success: true, meta: { last_row_id: leadId, changes: 1 } };
+              }
+              if (/UPDATE lead_requests SET state/i.test(sql)) {
+                const id = values[values.length - 2]; const row = requests.get(id);
+                if (row) { row.state = values[0]; row.lead_id = values[1]; row.response_code = values[2]; row.response_body = values[3]; }
+              }
               return { success: true };
+            },
+            async first() {
+              return requests.get(values[0]) || null;
             }
           };
         }
@@ -46,15 +65,18 @@ function validLead(overrides = {}) {
 }
 
 function requestWith(body, headers = {}, url = 'https://osmechplast.com/api/leads') {
+  const requestId = headers['X-Request-ID'] || headers['x-request-id'] || body?.request_id || '123e4567-e89b-42d3-a456-426614174000';
   return new Request(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Origin: 'https://osmechplast.com', ...headers },
+    headers: { 'Content-Type': 'application/json', Origin: 'https://osmechplast.com', 'X-Request-ID': requestId, ...headers },
     body: typeof body === 'string' ? body : JSON.stringify(body)
   });
 }
 
-function testEnv(db) {
-  return { DB: db, TURNSTILE_TEST_MODE: '1', TURNSTILE_TEST_TOKEN: 'expected', RATE_LIMIT_TEST_MODE: '1', rateLimitStore: new Map() };
+function testEnv(db, local = false) {
+  return local
+    ? { DB: db, TURNSTILE_TEST_MODE: '1', TURNSTILE_TEST_TOKEN: 'expected', RUNTIME_ENV: 'local', RATE_LIMIT_TEST_MODE: '1', rateLimitStore: new Map() }
+    : { DB: db, TURNSTILE_SECRET_KEY: 'test-secret', fetchImpl: async () => new Response(JSON.stringify({ success: true }), { status: 200 }), RUNTIME_ENV: 'production', RATE_LIMIT_TEST_MODE: '1', rateLimitStore: new Map() };
 }
 
 function byteLength(value) {
@@ -126,7 +148,7 @@ for (const origin of allowedOrigins) {
     });
     assert.equal(response.status, 200);
     assert.deepEqual(await response.json(), { ok: true });
-    assert.equal(db.calls.length, 1);
+    assert.equal(db.calls.filter((call) => /INSERT INTO leads/i.test(call.sql)).length, 1);
   });
 }
 
@@ -179,15 +201,16 @@ test('accepts one valid same-origin JSON lead and writes normalized values once'
 
   assert.equal(response.status, 200);
   assert.deepEqual(body, { ok: true });
-  assert.equal(db.calls.length, 1);
-  assert.deepEqual(db.calls[0].values.slice(0, 6), [
+  const leadCall = db.calls.find((call) => /INSERT INTO leads/i.test(call.sql));
+  assert.ok(leadCall);
+  assert.deepEqual(leadCall.values.slice(0, 6), [
     'Muster GmbH', 'Erika Muster', 'einkauf@example.com', '+49 123 456',
     'cnc-drehen', 'Bitte Machbarkeit prüfen.'
   ]);
-  assert.equal(db.calls[0].values[7], 'de');
-  assert.equal(db.calls[0].values[8], 'website');
-  assert.equal(db.calls[0].values[9], 'new');
-  assert.notEqual(db.calls[0].values[10], '2000-01-01T00:00:00.000Z');
+  assert.equal(leadCall.values[7], 'de');
+  assert.equal(leadCall.values[8], 'website');
+  assert.equal(leadCall.values[9], 'new');
+  assert.notEqual(leadCall.values[10], '2000-01-01T00:00:00.000Z');
 });
 
 test('rejects malformed JSON with 400 and a public error code', async () => {
@@ -254,6 +277,22 @@ test('rejects fields above their limits with 413 without touching D1', async () 
   }
 });
 
+test('JSON idempotency replays success without creating a second lead', async () => {
+  const api = await loadApi(); const db = makeDb(); const env = testEnv(db);
+  const requestId = '223e4567-e89b-42d3-a456-426614174000';
+  const first = await api.onRequestPost({ request: requestWith(validLead(), { 'X-Request-ID': requestId }), env });
+  const second = await api.onRequestPost({ request: requestWith(validLead(), { 'X-Request-ID': requestId }), env });
+  assert.equal(first.status, 200); assert.equal(second.status, 200);
+  assert.equal(db.calls.filter((call) => /INSERT INTO leads/i.test(call.sql)).length, 1);
+});
+
+test('local Turnstile test mode is rejected on production hosts', async () => {
+  const api = await loadApi(); const db = makeDb();
+  const response = await api.onRequestPost({ request: requestWith(validLead(), {}, 'https://osmechplast.com/api/leads'), env: { ...testEnv(db, true), RUNTIME_ENV: 'production' } });
+  assert.equal(response.status, 403);
+  assert.equal(db.calls.some((call) => /INSERT INTO leads/i.test(call.sql)), false);
+});
+
 test('rejects a JSON request without Turnstile before D1 access', async () => {
   const api = await loadApi();
   const db = makeDb();
@@ -317,7 +356,7 @@ test('accepts exactly 16 KiB and rejects 16 KiB plus one byte', async () => {
     request: requestWith(exact, { 'Content-Length': '16384' }), env: testEnv(exactDb)
   });
   assert.equal(accepted.status, 200);
-  assert.equal(exactDb.calls.length, 1);
+  assert.equal(exactDb.calls.filter((call) => /INSERT INTO leads/i.test(call.sql)).length, 1);
 
   const oversizedDb = makeDb();
   const oversized = bodyWithExactBytes(16385);

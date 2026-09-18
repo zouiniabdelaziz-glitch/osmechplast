@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync, sign } from 'node:crypto';
-import { verifyAccessJwt } from '../functions/internal/access-jwt.mjs';
+import { verifyAccessJwt, normalizeTeamDomain } from '../functions/internal/access-jwt.mjs';
 
 const b64 = (v) => Buffer.from(JSON.stringify(v)).toString('base64url');
 
@@ -24,4 +24,12 @@ test('Access verifier validates signature, issuer, audience and employee claim',
   });
   assert.equal(result.ok, true);
   assert.equal(result.subject, 'employee@example.com');
+});
+
+test('Access verifier accepts HTTPS team URL and rejects unsafe variants', async () => {
+  assert.equal(normalizeTeamDomain('https://team.example'), 'https://team.example');
+  assert.equal(normalizeTeamDomain('team.example'), 'https://team.example');
+  assert.throws(() => normalizeTeamDomain('http://team.example'));
+  assert.throws(() => normalizeTeamDomain('https://team.example/path'));
+  assert.throws(() => normalizeTeamDomain('https://team.example?x=1'));
 });

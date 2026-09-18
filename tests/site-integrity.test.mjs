@@ -96,5 +96,7 @@ test('contact form remains semantically usable without JavaScript', () => {
     assert.match(html, /<form[^>]+action=["']\/api\/leads["']/i, file);
     assert.match(html, /method=["']post["']/i, file);
     assert.match(html, /enctype=["']multipart\/form-data["']/i, file);
+    for (const name of ['company', 'name', 'email', 'phone', 'service', 'message']) assert.match(html, new RegExp(`name=["']${name}["']`, 'i'), `${file}:${name}`);
+    assert.match(html, /Turnstile/i, file);
   }
 });

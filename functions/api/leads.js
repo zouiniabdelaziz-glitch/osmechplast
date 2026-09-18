@@ -30,10 +30,14 @@ export async function storeLeadAndUploads({ db, r2, lead, files, requestId, now 
   const leadId = lead.id ?? leadResult?.meta?.last_row_id;
   if (leadId == null) throw new Error('lead_insert_failed');
   const uploads = [];
-  for (const file of files) {
-    const uploadId = crypto.randomUUID();
-    const key = createR2Key(leadId, uploadId, file.extension);
-    await db.prepare(`
+  const storedKeys = [];
+  let currentUploadId = null;
+  try {
+    for (const file of files) {
+      const uploadId = crypto.randomUUID();
+      currentUploadId = uploadId;
+      const key = createR2Key(leadId, uploadId, file.extension);
+      await db.prepare(`
       INSERT INTO lead_uploads (
         id, lead_id, sha256, original_name, extension, detected_type, r2_key,
         byte_size, storage_status, security_status, created_at
@@ -41,28 +45,28 @@ export async function storeLeadAndUploads({ db, r2, lead, files, requestId, now 
     `).bind(
       uploadId, leadId, file.sha256, file.originalName, file.extension,
       file.detectedType, key, file.bytes.byteLength, now
-    ).run();
-    try {
+      ).run();
       await r2.put(key, file.bytes, { httpMetadata: { contentType: file.detectedType } });
-    } catch {
-      await db.prepare(`UPDATE lead_uploads SET storage_status = 'failed', error_code = ? WHERE id = ?`)
-        .bind('r2_put_failed', uploadId).run();
-      throw new Error('upload_failed');
-    }
-    try {
+      storedKeys.push({ key, uploadId });
       await db.prepare(`UPDATE lead_uploads SET storage_status = 'stored', stored_at = ? WHERE id = ?`)
         .bind(now, uploadId).run();
-    } catch {
-      try { await r2.delete(key); } catch { /* cleanup is retried by the cleanup worker */ }
-      throw new Error('upload_failed');
+      uploads.push({ id: uploadId, lead_id: leadId, r2_key: key, storage_status: 'stored', security_status: 'quarantine', sha256: file.sha256, byte_size: file.bytes.byteLength });
     }
-    uploads.push({ id: uploadId, lead_id: leadId, r2_key: key, storage_status: 'stored', security_status: 'quarantine', sha256: file.sha256, byte_size: file.bytes.byteLength });
+  } catch {
+    if (currentUploadId) await db.prepare("UPDATE lead_uploads SET storage_status = 'failed', error_code = ? WHERE id = ?").bind('upload_failed', currentUploadId).run().catch(() => {});
+    for (const stored of storedKeys) {
+      try { await r2.delete(stored.key); }
+      catch { await db.prepare("UPDATE lead_uploads SET storage_status = 'delete_pending', error_code = ? WHERE id = ?").bind('cleanup_required', stored.uploadId).run().catch(() => {}); }
+      await db.prepare("UPDATE lead_uploads SET storage_status = 'failed', error_code = ? WHERE id = ? AND storage_status != 'delete_pending'").bind('upload_transaction_failed', stored.uploadId).run().catch(() => {});
+    }
+    await db.prepare("UPDATE leads SET status = 'upload_failed' WHERE id = ?").bind(leadId).run().catch(() => {});
+    throw new Error('upload_failed');
   }
   return { leadId, requestId, uploads };
 }
 
 export async function verifyTurnstile(token, remoteIp, env = {}) {
-  if (env.TURNSTILE_TEST_MODE === "1") {
+  if (env.TURNSTILE_TEST_MODE === "1" && env.RUNTIME_ENV === 'local' && /^(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/i.test(String(env.requestHost || ''))) {
     return Boolean(env.TURNSTILE_TEST_TOKEN && token && token === env.TURNSTILE_TEST_TOKEN);
   }
   if (!token || !env.TURNSTILE_SECRET_KEY) return false;
@@ -198,6 +202,8 @@ export async function onRequestPost(context) {
     const { request, env } = context;
     // Prevent bypassing the custom-domain rate limit via Pages deployment URLs.
     const hostname = new URL(request.url).hostname.toLowerCase().replace(/\.$/, "");
+    const verificationEnv = Object.create(env || null);
+    verificationEnv.requestHost = new URL(request.url).host;
     if (hostname.endsWith(".pages.dev")) {
       return json({ ok: false, error: "forbidden" }, 403);
     }
@@ -218,7 +224,7 @@ export async function onRequestPost(context) {
       }
       const token = multipart.fields.get('turnstile_token') || '';
       const remoteIp = request.headers.get("CF-Connecting-IP") || "";
-      if (!(await verifyTurnstile(token, remoteIp, env))) return json({ ok: false, error: "verification_failed" }, 403);
+      if (!(await verifyTurnstile(token, remoteIp, verificationEnv))) return json({ ok: false, error: "verification_failed" }, 403);
       const input = Object.fromEntries(multipart.fields.entries());
       const leadValidation = validateLeadFields(input);
       if (!leadValidation.ok) return json({ ok: false, error: leadValidation.errors.includes('payload_too_large') ? 'payload_too_large' : 'invalid_request' }, leadValidation.errors.includes('payload_too_large') ? 413 : 400);
@@ -270,7 +276,7 @@ export async function onRequestPost(context) {
 
     const turnstileToken = typeof body.turnstile_token === "string" ? body.turnstile_token : "";
     const remoteIp = request.headers.get("CF-Connecting-IP") || "";
-    if (!(await verifyTurnstile(turnstileToken, remoteIp, env))) {
+    if (!(await verifyTurnstile(turnstileToken, remoteIp, verificationEnv))) {
       return json({ ok: false, error: "verification_failed" }, 403);
     }
 
@@ -302,11 +308,20 @@ export async function onRequestPost(context) {
       return json({ ok: false, error: "invalid_request" }, 400);
     }
 
+    const requestIdValue = request.headers.get('X-Request-ID') || body.request_id;
+    let requestId;
+    try { requestId = parseRequestId(requestIdValue); } catch { return json({ ok: false, error: 'invalid_request' }, 400); }
+    const reservation = await reserveRequest(env.DB, requestId);
+    if (reservation.state === 'succeeded' && reservation.response) return json(reservation.response.body, reservation.response.code);
+    if (reservation.state === 'failed' && reservation.response) return json(reservation.response.body, reservation.response.code);
+    if (reservation.state !== 'processing') return json({ ok: false, error: 'duplicate_request' }, 409);
+
     const source = "website";
     const status = "new";
     const created_at = new Date().toISOString();
 
-    await env.DB.prepare(`
+    try {
+      const leadResult = await env.DB.prepare(`
       INSERT INTO leads (
         company,
         name,
@@ -321,7 +336,7 @@ export async function onRequestPost(context) {
         created_at
       )
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `)
+      `)
       .bind(
         company,
         name,
@@ -336,8 +351,14 @@ export async function onRequestPost(context) {
         created_at
       )
       .run();
-
-    return json({ ok: true });
+      const responseBody = { ok: true };
+      await completeRequest(env.DB, requestId, leadResult?.meta?.last_row_id ?? null, 200, responseBody);
+      return json(responseBody);
+    } catch {
+      const responseBody = { ok: false, error: 'server_error' };
+      await failRequest(env.DB, requestId, 500, responseBody).catch(() => {});
+      return json(responseBody, 500);
+    }
   } catch (error) {
     console.error("Lead API error", error);
     return json({ ok: false, error: "server_error" }, 500);

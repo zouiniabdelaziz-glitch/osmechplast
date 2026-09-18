@@ -30,11 +30,12 @@ export function validateLeadFields(input) {
 const mime = {pdf:new Set(['application/pdf']),jpg:new Set(['image/jpeg']),jpeg:new Set(['image/jpeg']),png:new Set(['image/png']),step:new Set(['application/step','application/octet-stream']),stp:new Set(['application/step','application/octet-stream']),dxf:new Set(['application/dxf','application/octet-stream'])};
 const text = b => new TextDecoder('utf-8',{fatal:true}).decode(b);
 function executableHeader(b){return (b[0]===0x4d&&b[1]===0x5a)||(b[0]===0x7f&&b[1]===0x45&&b[2]===0x4c&&b[3]===0x46)||(b[0]===0x50&&b[1]===0x4b&&b[2]===0x03&&b[3]===0x04)||(b[0]===0x23&&b[1]===0x21);}
+function onlyWhitespaceAfter(b, offset){for(let i=offset;i<b.length;i++){if(![9,10,13,32].includes(b[i]))return false;}return true;}
 function validSignature(ext,b){
   if(executableHeader(b)) return false;
-  if(ext==='pdf') return b.length>=8&&b[0]===0x25&&b[1]===0x50&&b[2]===0x44&&b[3]===0x46&&text(b).includes('%%EOF');
-  if(ext==='jpg'||ext==='jpeg') return b.length>=4&&b[0]===0xff&&b[1]===0xd8&&b[b.length-2]===0xff&&b[b.length-1]===0xd9;
-  if(ext==='png') return b.length>=40&&b[0]===0x89&&b[1]===0x50&&b[2]===0x4e&&b[3]===0x47&&text(b.slice(12,16))==='IHDR'&&text(b.slice(-8,-4))==='IEND';
+  if(ext==='pdf'){const end=text(b).lastIndexOf('%%EOF');return b.length>=8&&b[0]===0x25&&b[1]===0x50&&b[2]===0x44&&b[3]===0x46&&end>=0&&onlyWhitespaceAfter(b,end+5);}
+  if(ext==='jpg'||ext==='jpeg'){let end=-1;for(let i=0;i<b.length-1;i++)if(b[i]===0xff&&b[i+1]===0xd9)end=i+2;return b.length>=4&&b[0]===0xff&&b[1]===0xd8&&end>0&&onlyWhitespaceAfter(b,end);}
+  if(ext==='png'){let end=-1;for(let i=0;i<=b.length-4;i++)if(b[i]===0x49&&b[i+1]===0x45&&b[i+2]===0x4e&&b[i+3]===0x44)end=i;return b.length>=40&&b[0]===0x89&&b[1]===0x50&&b[2]===0x4e&&b[3]===0x47&&text(b.slice(12,16))==='IHDR'&&end>=0&&onlyWhitespaceAfter(b,end+8);}
   if(ext==='step'||ext==='stp'){const t=text(b);return t.includes('ISO-10303-21;')&&t.includes('END-ISO-10303-21;');}
   if(ext==='dxf'){const t=text(b);return /(?:^|\r?\n)0\s*\r?\nSECTION(?:\r?\n|$)/.test(t)&&/(?:^|\r?\n)0\s*\r?\nEOF\s*(?:\r?\n|$)/.test(t);}
   return false;

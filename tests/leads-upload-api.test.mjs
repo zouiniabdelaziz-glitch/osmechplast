@@ -112,6 +112,18 @@ test('storeLeadAndUploads marks R2 failure and removes objects when final D1 upd
   assert.equal((await r2.list()).objects.length, 0);
 });
 
+test('storeLeadAndUploads rolls back all prior objects when file two or three fails', async () => {
+  const api = await loadApi();
+  for (const failAt of [2, 3]) {
+    let puts = 0; const deleted = []; const calls = [];
+    const db = { prepare(sql) { return { bind(...values) { calls.push({ sql, values }); return { async run() { return { meta: { last_row_id: 9, changes: 1 } }; } }; } }; } };
+    const r2 = { async put(key) { puts += 1; if (puts === failAt) throw new Error('put_failed'); }, async delete(key) { deleted.push(key); }, async list() { return { objects: [] }; } };
+    await assert.rejects(() => api.storeLeadAndUploads({ db, r2, lead: { company: 'A', name: 'B', email: 'a@b.test' }, files: [1,2,3].map((n) => ({ originalName: `a${n}.pdf`, extension: 'pdf', detectedType: 'application/pdf', bytes: new Uint8Array([n]), sha256: `h${n}` })) }));
+    assert.equal(deleted.length, failAt - 1);
+    assert.ok(calls.some((call) => /UPDATE leads SET status = 'upload_failed'/i.test(call.sql)));
+  }
+});
+
 test('multipart request is parsed and validated before upload transaction', async () => {
   const api = await loadApi();
   const form = new FormData();
@@ -120,7 +132,7 @@ test('multipart request is parsed and validated before upload transaction', asyn
   form.append('files', new File([new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x0a, 0x25, 0x25, 0x45, 0x4f, 0x46])], 'part.pdf', { type: 'application/pdf' }));
   const db = requestDb();
   const r2 = new FakeR2Bucket();
-  const response = await api.onRequestPost({ request: new Request('https://osmechplast.com/api/leads', { method: 'POST', body: form, headers: { 'X-Request-ID': '123e4567-e89b-42d3-a456-426614174000' } }), env: { DB: db, RFQ_UPLOADS: r2, TURNSTILE_TEST_MODE: '1', TURNSTILE_TEST_TOKEN: 'expected', RATE_LIMIT_TEST_MODE: '1', rateLimitStore: new Map() } });
+  const response = await api.onRequestPost({ request: new Request('http://localhost:8080/api/leads', { method: 'POST', body: form, headers: { 'X-Request-ID': '123e4567-e89b-42d3-a456-426614174000' } }), env: { DB: db, RFQ_UPLOADS: r2, TURNSTILE_TEST_MODE: '1', TURNSTILE_TEST_TOKEN: 'expected', RUNTIME_ENV: 'local', RATE_LIMIT_TEST_MODE: '1', rateLimitStore: new Map() } });
   assert.equal(response.status, 200);
   assert.equal((await r2.list()).objects.length, 1);
 });

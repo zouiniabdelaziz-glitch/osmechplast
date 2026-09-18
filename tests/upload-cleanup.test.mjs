@@ -13,3 +13,11 @@ test('cleanup processes stale rows, orphans and missing objects in a bounded run
   assert.ok(result.processed >= 2);
   assert.ok(deleted.includes('private/old') || deleted.includes('private/failed'));
 });
+
+test('cleanup queries expired idempotency and audits cleanup decisions', async () => {
+  const sql = []; const env = { DB: { prepare(statement) { sql.push(statement); return { bind() { return { async all() { return { results: [] }; }, async run() { return {}; } }; }, async all() { return { results: [] }; } }; } }, RFQ_UPLOADS: { async list() { return { objects: [] }; } } };
+  await runUploadCleanup(env, new Date('2025-01-01T00:00:00Z'));
+  assert.ok(sql.some((statement) => /lead_requests/i.test(statement)));
+  assert.ok(sql.some((statement) => /upload_audit_log/i.test(statement)));
+  assert.ok(sql.some((statement) => /leads\//.test(statement) || /r2_key LIKE/i.test(statement)));
+});

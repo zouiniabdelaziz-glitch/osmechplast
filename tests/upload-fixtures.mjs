@@ -45,3 +45,15 @@ test('rejects mismatched MIME, executable headers, truncation and oversized file
   assert.equal((await validateUploadFile({ name:'x.jpg', type:'image/jpeg', bytes:new Uint8Array([0xff,0xd8]) })).ok, false);
   assert.equal((await validateUploadFile({ name:'x.pdf', type:'application/pdf', bytes:new Uint8Array(8*1024*1024+1) })).ok, false);
 });
+
+test('rejects simple appended archive, executable and script payloads in image/PDF fixtures', async () => {
+  for (const key of ['pdf', 'jpg', 'png']) {
+    const fixture = validFiles[key];
+    for (const payload of [new Uint8Array([0x50, 0x4b, 3, 4]), new Uint8Array([0x4d, 0x5a]), new TextEncoder().encode('#!/bin/sh\necho x')]) {
+      const bytes = new Uint8Array(fixture.bytes.length + payload.length);
+      bytes.set(fixture.bytes); bytes.set(payload, fixture.bytes.length);
+      const result = await validateUploadFile({ name: fixture.name, type: fixture.type, bytes });
+      assert.equal(result.ok, false, `${key} accepted appended payload`);
+    }
+  }
+});

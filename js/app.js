@@ -286,6 +286,7 @@ async function submitForm(e) {
     showFormBanner(errorBanner, T[currentLang]?.[errorKey] || fallback);
     errorBanner?.focus?.();
   } finally {
+    resetTurnstileWidget();
     delete form.dataset.submitting;
     form.removeAttribute('aria-busy');
     if (submitButton) {
@@ -446,7 +447,33 @@ function initAnalyticsConsent() {
   document.body.appendChild(script);
 }
 
+function initTurnstile() {
+  const widget = document.getElementById('turnstile-widget');
+  const tokenInput = document.getElementById('turnstile_token');
+  if (!widget || !tokenInput) return;
+  const siteKey = widget.dataset.turnstileSitekey || window.OSMP_TURNSTILE_SITE_KEY || '';
+  if (!siteKey || !window.turnstile?.render) {
+    widget.setAttribute('aria-disabled', 'true');
+    return;
+  }
+  window.OSMP_TURNSTILE_WIDGET_ID = window.turnstile.render(widget, {
+    sitekey: siteKey,
+    callback: token => { tokenInput.value = token || ''; },
+    'expired-callback': () => { tokenInput.value = ''; },
+    'error-callback': () => { tokenInput.value = ''; }
+  });
+}
+
 /* â”€â”€ SCROLL-REVEAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+function resetTurnstileWidget() {
+  const tokenInput = document.getElementById('turnstile_token');
+  if (tokenInput) tokenInput.value = '';
+  const widgetId = window.OSMP_TURNSTILE_WIDGET_ID;
+  if (widgetId != null && window.turnstile?.reset) {
+    try { window.turnstile.reset(widgetId); } catch {}
+  }
+}
+
 function initReveal() {
   const els = document.querySelectorAll(
     '.svc-card,.mach-card,.ind-card,.media-card,.step,.usp,.mat-box,.sec-head,.cta-band,.faq details,.spec-table,.form-card,.contact-info,.robot-cell,.map-card,.flow-steps div,.location-points div,.request-assistant,.process-step'
@@ -464,6 +491,7 @@ function initReveal() {
 /* â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 document.addEventListener('DOMContentLoaded', async () => {
   await loadModules();
+  initTurnstile();
   scrollToHashTarget();
   currentLang = getSavedLang();
   initLanguageSelects();

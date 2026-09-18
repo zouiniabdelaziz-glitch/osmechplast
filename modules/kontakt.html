@@ -27,18 +27,18 @@
     <form id="leadForm" action="/api/leads" method="post" enctype="multipart/form-data" data-form="lead-form" onsubmit="submitForm(event)">
       <div class="form-grid">
         <div class="form-row">
-          <div class="form-group"><label for="f_company" data-key="f_company"></label><input id="f_company" required></div>
-          <div class="form-group"><label for="f_name" data-key="f_name"></label><input id="f_name" required></div>
+          <div class="form-group"><label for="f_company" data-key="f_company"></label><input id="f_company" name="company" required></div>
+          <div class="form-group"><label for="f_name" data-key="f_name"></label><input id="f_name" name="name" required></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label for="f_email">E-Mail *</label><input id="f_email" type="email" required></div>
-          <div class="form-group"><label for="f_phone" data-key="f_phone"></label><input id="f_phone"></div>
+          <div class="form-group"><label for="f_email">E-Mail *</label><input id="f_email" name="email" type="email" required></div>
+          <div class="form-group"><label for="f_phone" data-key="f_phone"></label><input id="f_phone" name="phone"></div>
         </div>
         <div class="form-group">
           <label for="f_service" data-key="f_service"></label>
-          <select id="f_service"><option value=""></option><option value="cnc-drehen"></option><option value="drehfraesen"></option><option value="prototypen-serien"></option><option value="unsicher"></option></select>
+          <select id="f_service" name="service"><option value=""></option><option value="cnc-drehen"></option><option value="drehfraesen"></option><option value="prototypen-serien"></option><option value="unsicher"></option></select>
         </div>
-        <div class="form-group"><label for="f_msg" data-key="f_msg"></label><textarea id="f_msg"></textarea></div>
+        <div class="form-group"><label for="f_msg" data-key="f_msg"></label><textarea id="f_msg" name="message"></textarea></div>
         <div class="form-group upload-field">
           <label for="f_files" data-key="f_files">Technische Dateien (optional)</label>
           <input id="f_files" name="files" type="file" multiple accept=".pdf,.dxf,.step,.stp,.jpg,.jpeg,.png,application/pdf,application/dxf,application/step,image/jpeg,image/png" aria-describedby="f_upload_help">
@@ -48,6 +48,7 @@
           <div id="turnstile-widget" data-turnstile-sitekey="" aria-label="Turnstile verification"></div>
           <input id="turnstile_token" name="turnstile_token" type="hidden" value="">
           <p class="form-help" data-key="turnstile_help">Bitte bestätigen Sie die Sicherheitsprüfung, bevor Sie die Anfrage senden.</p>
+          <noscript><p class="form-help">Für den Versand ist JavaScript erforderlich, weil die Sicherheitsprüfung per Turnstile erfolgt.</p></noscript>
         </div>
         <p class="form-privacy-note"><strong>Datenschutzhinweis:</strong> Die von Ihnen übermittelten Angaben werden zur Bearbeitung Ihrer Anfrage verarbeitet. Weitere Informationen finden Sie in unserer <a href="/datenschutz/">Datenschutzerklärung</a>.</p>
         <button id="cta-contact-submit" type="submit" class="btn btn-primary btn-lg" data-key="f_submit" data-cta="contact-form-submit" data-track-event="lead_form_submit"></button>
