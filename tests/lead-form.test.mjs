@@ -30,6 +30,37 @@ test('Turnstile widget is explicitly initialized and clears expired tokens', () 
   assert.match(source, /OSMP_TURNSTILE_SITE_KEY/);
 });
 
+test('initializes Turnstile at runtime, handles callbacks and fails closed without a site key', () => {
+  const widget = createElement('div');
+  widget.dataset.turnstileSitekey = 'site-key-test';
+  const tokenInput = createElement('input');
+  const elements = { 'turnstile-widget': widget, turnstile_token: tokenInput };
+  let config;
+  const context = loadBrowserScript('js/app.js', {
+    elements,
+    window: { turnstile: { render(_widget, options) { config = options; return 'widget-1'; } } }
+  });
+  context.initTurnstile();
+  assert.equal(config.sitekey, 'site-key-test');
+  config.callback('token-1');
+  assert.equal(tokenInput.value, 'token-1');
+  config['expired-callback']();
+  assert.equal(tokenInput.value, '');
+  config.callback('token-2');
+  config['error-callback']();
+  assert.equal(tokenInput.value, '');
+
+  const noKeyWidget = createElement('div');
+  const noKeyToken = createElement('input');
+  const noKeyContext = loadBrowserScript('js/app.js', {
+    elements: { 'turnstile-widget': noKeyWidget, turnstile_token: noKeyToken },
+    fetch: async () => { throw new Error('fetch must not run'); },
+    window: { turnstile: { render() { throw new Error('render must not run'); } } }
+  });
+  noKeyContext.initTurnstile();
+  assert.equal(noKeyWidget.getAttribute('aria-disabled'), 'true');
+});
+
 test('German, Italian and English upload copy includes the same formats and limits', () => {
   const source = fs.readFileSync('js/translations.js', 'utf8');
   assert.equal((source.match(/upload_help:/g) || []).length >= 3, true);

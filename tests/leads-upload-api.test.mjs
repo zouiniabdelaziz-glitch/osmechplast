@@ -43,9 +43,9 @@ function requestDb(rows = [], insertedChanges = rows.length ? 0 : 1) {
 test('reserveRequest creates a processing row and exposes duplicate states', async () => {
   const api = await loadApi();
   const db = requestDb();
-  assert.deepEqual(await api.reserveRequest(db, '123e4567-e89b-42d3-a456-426614174000', '2026-01-01'), { state: 'processing' });
+  assert.deepEqual(await api.reserveRequest(db, '123e4567-e89b-42d3-a456-426614174000', '2026-01-01'), { state: 'processing', fresh: true });
   const duplicateDb = requestDb([{ request_id: '123e4567-e89b-42d3-a456-426614174000', state: 'processing' }]);
-  assert.deepEqual(await api.reserveRequest(duplicateDb, '123e4567-e89b-42d3-a456-426614174000', '2026-01-01'), { state: 'processing' });
+  assert.deepEqual(await api.reserveRequest(duplicateDb, '123e4567-e89b-42d3-a456-426614174000', '2026-01-01'), { state: 'processing', fresh: false });
   assert.equal(duplicateDb.calls.filter(call => /INSERT INTO leads|INSERT INTO lead_uploads/i.test(call.sql)).length, 0);
 });
 

@@ -117,7 +117,7 @@ export async function reserveRequest(db, requestId, now = new Date().toISOString
     VALUES (?, 'processing', ?)
     ON CONFLICT(request_id) DO NOTHING
   `).bind(requestId, now).run();
-  if (inserted?.meta?.changes === 1) return { state: 'processing' };
+  if (inserted?.meta?.changes === 1) return { state: 'processing', fresh: true };
   const row = await db.prepare('SELECT request_id, lead_id, state, response_code, response_body FROM lead_requests WHERE request_id = ?').bind(requestId).first();
   if (!row) return { state: 'failed' };
   if (row.state === 'succeeded') {
@@ -130,7 +130,7 @@ export async function reserveRequest(db, requestId, now = new Date().toISOString
     try { response = row.response_body ? JSON.parse(row.response_body) : undefined; } catch { response = undefined; }
     return { state: 'failed', response: response == null ? undefined : { code: row.response_code, body: response } };
   }
-  return { state: row.state };
+  return { state: row.state, fresh: false };
 }
 
 export async function completeRequest(db, requestId, leadId, responseCode, responseBody, now = new Date().toISOString()) {
@@ -234,7 +234,7 @@ export async function onRequestPost(context) {
       const reservation = await reserveRequest(env.DB, requestId);
       if (reservation.state === 'succeeded' && reservation.response) return json(reservation.response.body, reservation.response.code);
       if (reservation.state === 'failed' && reservation.response) return json(reservation.response.body, reservation.response.code);
-      if (reservation.state !== 'processing') return json({ ok: false, error: 'duplicate_request' }, 409);
+      if (reservation.state !== 'processing' || reservation.fresh === false) return json({ ok: false, error: 'duplicate_request' }, 409);
       const files = [];
       for (const file of multipart.files) {
         const checked = await validateUploadFile({ name: file.name, type: file.type, bytes: file.bytes });
@@ -314,7 +314,7 @@ export async function onRequestPost(context) {
     const reservation = await reserveRequest(env.DB, requestId);
     if (reservation.state === 'succeeded' && reservation.response) return json(reservation.response.body, reservation.response.code);
     if (reservation.state === 'failed' && reservation.response) return json(reservation.response.body, reservation.response.code);
-    if (reservation.state !== 'processing') return json({ ok: false, error: 'duplicate_request' }, 409);
+    if (reservation.state !== 'processing' || reservation.fresh === false) return json({ ok: false, error: 'duplicate_request' }, 409);
 
     const source = "website";
     const status = "new";

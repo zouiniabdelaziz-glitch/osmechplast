@@ -286,6 +286,45 @@ test('JSON idempotency replays success without creating a second lead', async ()
   assert.equal(db.calls.filter((call) => /INSERT INTO leads/i.test(call.sql)).length, 1);
 });
 
+test('parallel JSON requests with one request id create at most one lead', async () => {
+  const api = await loadApi();
+  const calls = [];
+  const requests = new Map();
+  let leads = 0;
+  let releaseFirst;
+  const firstInsert = new Promise(resolve => { releaseFirst = resolve; });
+  let reservations = 0;
+  const db = { prepare(sql) {
+    return { bind(...values) { calls.push({ sql, values }); return {
+      async run() {
+        if (/INSERT INTO lead_requests/i.test(sql)) {
+          if (requests.has(values[0])) return { meta: { changes: 0 } };
+          requests.set(values[0], { request_id: values[0], state: 'processing' });
+          reservations += 1;
+          if (reservations === 1) await firstInsert;
+          return { meta: { changes: 1 } };
+        }
+        if (/INSERT INTO leads/i.test(sql)) { leads += 1; return { meta: { last_row_id: 9, changes: 1 } }; }
+        if (/UPDATE lead_requests SET state/i.test(sql)) { const row = requests.get(values[values.length - 2]); if (row) row.state = values[0]; }
+        return { meta: { changes: 1 } };
+      },
+      async first() { return requests.get(values[0]) || null; }
+    }; } };
+  } };
+  const env = testEnv(db);
+  const requestId = '123e4567-e89b-42d3-a456-426614174001';
+  const first = api.onRequestPost({ request: requestWith(validLead(), { 'X-Request-ID': requestId }), env });
+  await new Promise(resolve => setTimeout(resolve, 0));
+  const second = api.onRequestPost({ request: requestWith(validLead(), { 'X-Request-ID': requestId }), env });
+  const secondResponse = await second;
+  releaseFirst();
+  const firstResponse = await first;
+  assert.equal(leads, 1);
+  assert.equal(secondResponse.status, 409);
+  assert.equal(firstResponse.status, 200);
+  assert.equal(calls.filter(call => /INSERT INTO leads/i.test(call.sql)).length, 1);
+});
+
 test('local Turnstile test mode is rejected on production hosts', async () => {
   const api = await loadApi(); const db = makeDb();
   const response = await api.onRequestPost({ request: requestWith(validLead(), {}, 'https://osmechplast.com/api/leads'), env: { ...testEnv(db, true), RUNTIME_ENV: 'production' } });
