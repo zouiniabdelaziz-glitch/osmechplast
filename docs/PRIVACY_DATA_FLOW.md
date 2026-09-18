@@ -11,7 +11,7 @@ Dieses Dokument beschreibt ausschließlich die im Repository nachweisbaren Daten
 |---|---|---|---|---|---|
 | Kontaktformular | Absenden durch Nutzer | Firma, Name, E-Mail, optional Telefon, Leistung, Nachricht, Sprache | Same-Origin-Endpunkt `/api/leads`; Cloudflare Pages Function; D1-Tabelle `leads` | Im Code verifiziert | Rechtsgrundlage, Aufbewahrungs- und Löschfrist |
 | Serverseitige Lead-Metadaten | Erfolgreiche API-Anfrage | `source=website`, `status=new`, serverseitiger Zeitstempel; `ai_analysis=null` | Cloudflare D1 | Im Code verifiziert | Berechtigungskonzept und Löschprozess in Cloudflare |
-| Zeichnungs-Upload | — | Keine Datei | Kein Upload-Endpunkt, kein Dateispeicher | Feld und zugehörige Logik am 2026-08-29 entfernt | Erst bei einer späteren echten Upload-Lösung neu bewerten |
+| Zeichnungs-Upload | Formular mit erlaubter Datei | PDF, ASCII-DXF, STEP, STP, JPG, JPEG oder PNG; Dateiname und technische Metadaten | Same-Origin `/api/leads`, private R2-Ablage und D1-Metadaten | Dateien starten in Quarantäne; Zugriff nur über geschützte Mitarbeiterroute | Aufbewahrung, Malwareprüfung und Freigabeprozess organisatorisch bestätigen |
 | Sprachwahl | Auswahl im Seitenkopf | Sprachcode `de`, `it`, `en` oder `fr` | Local Storage: `oscnc_lang` | Im Code verifiziert | Einordnung als technisch erforderlich prüfen |
 | Consent-Entscheidung | Zustimmung oder Ablehnung | `granted` oder `denied` | Local Storage: `osmp_analytics_clarity_consent` | Im Code verifiziert | Speicherdauer und Text juristisch prüfen |
 | Google Analytics 4 | Nur nach Zustimmung | Seitenaufrufe, Klick- und Formularereignisse gemäß `js/analytics.js` | Google; Measurement-ID `G-KFFN0VWBGK` | Ladeblockade vor Zustimmung automatisiert getestet | Vertrag, Drittlandtransfer, Aufbewahrung und vollständige Ereignisliste prüfen |
@@ -25,10 +25,10 @@ Dieses Dokument beschreibt ausschließlich die im Repository nachweisbaren Daten
 
 - Pflichtfelder im Frontend: Firma, Ansprechpartner und E-Mail.
 - Serverseitig zwingend validiert: formal plausible E-Mail; erlaubte Sprach- und Leistungswerte; Feld- und Body-Grenzen.
-- Der Browser sendet JSON ausschließlich an den relativen Same-Origin-Pfad `/api/leads`.
+- Der Browser sendet JSON ohne Datei oder Multipart mit Dateien an den relativen Same-Origin-Pfad `/api/leads`.
 - Clientwerte für Quelle, Status, Zeitstempel und Analyse werden nicht vertraut; die Function setzt sie selbst.
 - Bei einem Fehler bleiben Eingaben im Formular erhalten. Nur eine erfolgreiche 2xx-Antwort setzt das Formular zurück und erzeugt das Erfolgsereignis.
-- Es werden keine Zeichnungen oder sonstigen Dateien übertragen.
+- Uploads werden serverseitig validiert, privat gespeichert und zunächst als `security_status=quarantine` geführt. Eine vollständige Schadsoftwareprüfung ist nicht Bestandteil dieser technischen Prüfung.
 
 ## Consent-Vertrag
 

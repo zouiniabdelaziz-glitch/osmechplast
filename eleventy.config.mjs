@@ -85,6 +85,7 @@ const publicDirectories = [
 ];
 
 const publicRootFiles = [
+  '_routes.json',
   '_headers',
   '_redirects',
   'robots.txt',
