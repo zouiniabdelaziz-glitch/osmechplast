@@ -56,8 +56,23 @@ test('SQLite enforces status checks, nullable audit links and ON DELETE SET NULL
 
 test('numbered upload migrations execute together in SQLite', () => {
   const db = new DatabaseSync(':memory:');
-  db.exec(`CREATE TABLE leads (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL, created_at TEXT NOT NULL);`);
-  for (const file of ['migrations/0002_lead_uploads.sql', 'migrations/0003_lead_requests.sql', 'migrations/0004_upload_audit_log.sql']) db.exec(fs.readFileSync(file, 'utf8'));
-  const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('lead_uploads','lead_requests','upload_audit_log') ORDER BY name").all().map(row => row.name);
-  assert.deepEqual(tables, ['lead_requests', 'lead_uploads', 'upload_audit_log']);
+  db.exec('PRAGMA foreign_keys = ON');
+  for (const file of ['migrations/0001_leads.sql', 'migrations/0002_lead_uploads.sql', 'migrations/0003_lead_requests.sql', 'migrations/0004_upload_audit_log.sql']) db.exec(fs.readFileSync(file, 'utf8'));
+  const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('leads','lead_uploads','lead_requests','upload_audit_log') ORDER BY name").all().map(row => row.name);
+  assert.deepEqual(tables, ['lead_requests', 'lead_uploads', 'leads', 'upload_audit_log']);
+  const leadColumns = db.prepare('PRAGMA table_info(leads)').all().map(row => row.name);
+  assert.deepEqual(leadColumns, ['id', 'company', 'name', 'email', 'phone', 'service', 'message', 'ai_analysis', 'language', 'source', 'status', 'created_at']);
+  const indexes = db.prepare("SELECT name FROM sqlite_master WHERE type='index' ORDER BY name").all().map(row => row.name);
+  assert.ok(indexes.includes('idx_lead_uploads_cleanup'));
+  assert.ok(indexes.includes('idx_lead_requests_cleanup'));
+  assert.ok(indexes.includes('idx_upload_audit_time'));
+  const uploadForeignKeys = db.prepare('PRAGMA foreign_key_list(lead_uploads)').all();
+  const auditForeignKeys = db.prepare('PRAGMA foreign_key_list(upload_audit_log)').all();
+  assert.equal(uploadForeignKeys.some((row) => row.table === 'leads'), true);
+  assert.equal(auditForeignKeys.filter((row) => row.on_delete === 'SET NULL').length, 2);
+  db.prepare("INSERT INTO leads (email, created_at) VALUES ('chain@example.com', '2026-01-01')").run();
+  assert.throws(() => db.prepare("INSERT INTO lead_uploads (id, lead_id, sha256, original_name, extension, detected_type, r2_key, byte_size, storage_status, security_status, created_at) VALUES ('bad', 1, 'x', 'x.pdf', 'pdf', 'application/pdf', 'leads/1/bad.pdf', 1, 'invalid', 'quarantine', '2026-01-01')").run());
+  const normalizeSql = (value) => value.replaceAll('\r\n', '\n').trim();
+  const referenceLead = fs.readFileSync('schema.sql', 'utf8').split(/\n\s*CREATE TABLE IF NOT EXISTS lead_uploads/)[0];
+  assert.equal(normalizeSql(fs.readFileSync('migrations/0001_leads.sql', 'utf8')), normalizeSql(referenceLead));
 });

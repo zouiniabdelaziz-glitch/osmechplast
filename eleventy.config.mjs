@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import {
@@ -12,6 +12,7 @@ import { renderKnowledgeImage } from './scripts/wissen-image.mjs';
 import { PUBLIC_SITEMAP_XML } from './content/_data/public-sitemap.mjs';
 import { isLocalPreview, draftUrl } from './scripts/preview-mode.mjs';
 import { installEditorial, tocFromHtml, serviceLabel, imageLayout, imageSize } from './scripts/wissen-editorial.mjs';
+import { injectTurnstileSiteKeyIntoFiles } from './scripts/turnstile-sitekey.mjs';
 
 const ROOT = process.cwd();
 const OUTPUT = path.join(ROOT, isLocalPreview() ? '_preview' : '_site');
@@ -192,6 +193,7 @@ export default function (eleventyConfig) {
   });
 
   eleventyConfig.on('eleventy.after', () => {
+    injectTurnstileSiteKeyIntoFiles(OUTPUT, (filePath) => readFileSync(filePath, 'utf8'), writeFileSync, existsSync);
     cleanKnowledgeImageOutput(OUTPUT, publishedKnowledgeItems);
   });
 

@@ -5,8 +5,8 @@
   "triggers": { "crons": ["0 3 * * *"] },
   "env": {
     "preview": {
-      "d1_databases": [{ "binding": "DB_PREVIEW", "database_name": "TODO_PREVIEW_D1", "database_id": "TODO_PREVIEW_D1_ID" }],
-      "r2_buckets": [{ "binding": "RFQ_UPLOADS_PREVIEW", "bucket_name": "TODO_PREVIEW_R2" }]
+      "d1_databases": [{ "binding": "DB", "database_name": "TODO_PREVIEW_D1", "database_id": "TODO_PREVIEW_D1_ID" }],
+      "r2_buckets": [{ "binding": "RFQ_UPLOADS", "bucket_name": "TODO_PREVIEW_R2" }]
     },
     "production": {
       "d1_databases": [{ "binding": "DB", "database_name": "TODO_PRODUCTION_D1", "database_id": "TODO_PRODUCTION_D1_ID" }],
