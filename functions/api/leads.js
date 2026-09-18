@@ -1,3 +1,5 @@
+import { readMultipartRequest, validateUploadFile, validateLeadFields, parseRequestId } from "../upload/validation.mjs";
+
 const MAX_BODY_BYTES = 16384;
 const FIELD_LIMITS = {
   company: 200,
@@ -9,6 +11,55 @@ const FIELD_LIMITS = {
 };
 const ALLOWED_LANGUAGES = new Set(["de", "it", "en", "fr"]);
 const ALLOWED_SERVICES = new Set(["", "cnc-drehen", "drehfraesen", "prototypen-serien", "unsicher"]);
+
+export function createR2Key(leadId, uploadId, extension) {
+  const safeLeadId = String(leadId).replace(/[^A-Za-z0-9_-]/g, "-");
+  const safeUploadId = String(uploadId).replace(/[^A-Za-z0-9_-]/g, "-");
+  const safeExtension = String(extension).toLowerCase().replace(/[^a-z0-9]/g, "");
+  return `leads/${safeLeadId}/${safeUploadId}.${safeExtension}`;
+}
+
+export async function storeLeadAndUploads({ db, r2, lead, files, requestId, now = new Date().toISOString() }) {
+  const leadResult = await db.prepare(`
+    INSERT INTO leads (company, name, email, phone, service, message, language, source, status, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).bind(
+    lead.company || '', lead.name || '', lead.email || '', lead.phone || '',
+    lead.service || '', lead.message || '', lead.language || 'de', 'website', 'new', now
+  ).run();
+  const leadId = lead.id ?? leadResult?.meta?.last_row_id;
+  if (leadId == null) throw new Error('lead_insert_failed');
+  const uploads = [];
+  for (const file of files) {
+    const uploadId = crypto.randomUUID();
+    const key = createR2Key(leadId, uploadId, file.extension);
+    await db.prepare(`
+      INSERT INTO lead_uploads (
+        id, lead_id, sha256, original_name, extension, detected_type, r2_key,
+        byte_size, storage_status, security_status, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'quarantine', ?)
+    `).bind(
+      uploadId, leadId, file.sha256, file.originalName, file.extension,
+      file.detectedType, key, file.bytes.byteLength, now
+    ).run();
+    try {
+      await r2.put(key, file.bytes, { httpMetadata: { contentType: file.detectedType } });
+    } catch {
+      await db.prepare(`UPDATE lead_uploads SET storage_status = 'failed', error_code = ? WHERE id = ?`)
+        .bind('r2_put_failed', uploadId).run();
+      throw new Error('upload_failed');
+    }
+    try {
+      await db.prepare(`UPDATE lead_uploads SET storage_status = 'stored', stored_at = ? WHERE id = ?`)
+        .bind(now, uploadId).run();
+    } catch {
+      try { await r2.delete(key); } catch { /* cleanup is retried by the cleanup worker */ }
+      throw new Error('upload_failed');
+    }
+    uploads.push({ id: uploadId, lead_id: leadId, r2_key: key, storage_status: 'stored', security_status: 'quarantine', sha256: file.sha256, byte_size: file.bytes.byteLength });
+  }
+  return { leadId, requestId, uploads };
+}
 
 export async function verifyTurnstile(token, remoteIp, env = {}) {
   if (env.TURNSTILE_TEST_MODE === "1") {
@@ -29,6 +80,31 @@ export async function verifyTurnstile(token, remoteIp, env = {}) {
   } catch {
     return false;
   }
+}
+
+export async function checkUploadRateLimit({ request, env = {} }) {
+  const key = request?.headers?.get('CF-Connecting-IP') || 'unknown';
+  if (env.RATE_LIMIT_TEST_MODE === '1') {
+    const now = Date.now();
+    const windowMs = Number(env.RATE_LIMIT_TEST_WINDOW_MS || 10000);
+    const max = Number(env.RATE_LIMIT_TEST_MAX || 5);
+    const store = env.rateLimitStore || new Map();
+    const entry = store.get(key);
+    if (!entry || now - entry.startedAt >= windowMs) {
+      store.set(key, { startedAt: now, count: 1 });
+      return { allowed: true };
+    }
+    if (entry.count < max) { entry.count += 1; return { allowed: true }; }
+    return { allowed: false, retryAfter: Math.max(1, Math.ceil((windowMs - (now - entry.startedAt)) / 1000)) };
+  }
+  if (env.RATE_LIMITER?.limit) {
+    try {
+      const result = await env.RATE_LIMITER.limit({ key });
+      return result?.success === true ? { allowed: true } : { allowed: false, retryAfter: 10 };
+    } catch { return { allowed: false, retryAfter: 60 }; }
+  }
+  if (env.RATE_LIMIT_RULE_CONFIRMED === '1') return { allowed: true };
+  return { allowed: false, retryAfter: 60 };
 }
 
 export async function reserveRequest(db, requestId, now = new Date().toISOString()) {
@@ -125,8 +201,50 @@ export async function onRequestPost(context) {
     if (hostname.endsWith(".pages.dev")) {
       return json({ ok: false, error: "forbidden" }, 403);
     }
+    const rateLimit = await checkUploadRateLimit({ request, env });
+    if (!rateLimit.allowed) {
+      const response = json({ ok: false, error: "rate_limited" }, 429);
+      if (rateLimit.retryAfter) response.headers.set('Retry-After', String(rateLimit.retryAfter));
+      return response;
+    }
 
     const contentType = (request.headers.get("Content-Type") || "").split(";", 1)[0].trim().toLowerCase();
+    if (contentType.startsWith("multipart/form-data")) {
+      if (!env.RFQ_UPLOADS) return json({ ok: false, error: "server_error" }, 500);
+      let multipart;
+      try { multipart = await readMultipartRequest(request); } catch (error) {
+        const status = error?.message === 'payload_too_large' || error?.message === 'file_too_large' ? 413 : 400;
+        return json({ ok: false, error: status === 413 ? 'payload_too_large' : 'invalid_request' }, status);
+      }
+      const token = multipart.fields.get('turnstile_token') || '';
+      const remoteIp = request.headers.get("CF-Connecting-IP") || "";
+      if (!(await verifyTurnstile(token, remoteIp, env))) return json({ ok: false, error: "verification_failed" }, 403);
+      const input = Object.fromEntries(multipart.fields.entries());
+      const leadValidation = validateLeadFields(input);
+      if (!leadValidation.ok) return json({ ok: false, error: leadValidation.errors.includes('payload_too_large') ? 'payload_too_large' : 'invalid_request' }, leadValidation.errors.includes('payload_too_large') ? 413 : 400);
+      const requestIdValue = request.headers.get('X-Request-ID') || input.request_id;
+      let requestId;
+      try { requestId = parseRequestId(requestIdValue); } catch { return json({ ok: false, error: 'invalid_request' }, 400); }
+      const reservation = await reserveRequest(env.DB, requestId);
+      if (reservation.state === 'succeeded' && reservation.response) return json(reservation.response.body, reservation.response.code);
+      if (reservation.state === 'failed' && reservation.response) return json(reservation.response.body, reservation.response.code);
+      if (reservation.state !== 'processing') return json({ ok: false, error: 'duplicate_request' }, 409);
+      const files = [];
+      for (const file of multipart.files) {
+        const checked = await validateUploadFile({ name: file.name, type: file.type, bytes: file.bytes });
+        if (!checked.ok) { await failRequest(env.DB, requestId, 400, { ok: false, error: 'invalid_file' }); return json({ ok: false, error: 'invalid_file' }, 400); }
+        files.push({ originalName: file.name, extension: checked.extension, detectedType: checked.detectedType, bytes: file.bytes, sha256: checked.sha256 });
+      }
+      try {
+        const stored = await storeLeadAndUploads({ db: env.DB, r2: env.RFQ_UPLOADS, lead: leadValidation.values, files, requestId });
+        const responseBody = { ok: true, lead_id: stored.leadId };
+        await completeRequest(env.DB, requestId, stored.leadId, 200, responseBody);
+        return json(responseBody, 200);
+      } catch {
+        await failRequest(env.DB, requestId, 500, { ok: false, error: 'server_error' });
+        return json({ ok: false, error: 'server_error' }, 500);
+      }
+    }
     if (contentType !== "application/json") {
       return json({ ok: false, error: "invalid_request" }, 400);
     }
@@ -148,6 +266,12 @@ export async function onRequestPost(context) {
     }
     if (!body || typeof body !== "object" || Array.isArray(body)) {
       return json({ ok: false, error: "invalid_request" }, 400);
+    }
+
+    const turnstileToken = typeof body.turnstile_token === "string" ? body.turnstile_token : "";
+    const remoteIp = request.headers.get("CF-Connecting-IP") || "";
+    if (!(await verifyTurnstile(turnstileToken, remoteIp, env))) {
+      return json({ ok: false, error: "verification_failed" }, 403);
     }
 
     const fields = ["company", "name", "email", "phone", "service", "message", "language"];

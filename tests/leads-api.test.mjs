@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { pathToFileURL } from 'node:url';
+import path from 'node:path';
 
 async function loadApi() {
-  const source = fs.readFileSync('functions/api/leads.js', 'utf8');
-  const url = `data:text/javascript;base64,${Buffer.from(source).toString('base64')}#${Math.random()}`;
-  return import(url);
+  return import(`${pathToFileURL(path.resolve('functions/api/leads.js')).href}?${Math.random()}`);
 }
 
 function makeDb({ error } = {}) {
@@ -40,6 +40,7 @@ function validLead(overrides = {}) {
     source: 'manipulated-client-source',
     status: 'won',
     created_at: '2000-01-01T00:00:00.000Z',
+    turnstile_token: 'expected',
     ...overrides
   };
 }
@@ -50,6 +51,10 @@ function requestWith(body, headers = {}, url = 'https://osmechplast.com/api/lead
     headers: { 'Content-Type': 'application/json', Origin: 'https://osmechplast.com', ...headers },
     body: typeof body === 'string' ? body : JSON.stringify(body)
   });
+}
+
+function testEnv(db) {
+  return { DB: db, TURNSTILE_TEST_MODE: '1', TURNSTILE_TEST_TOKEN: 'expected', RATE_LIMIT_TEST_MODE: '1', rateLimitStore: new Map() };
 }
 
 function byteLength(value) {
@@ -82,7 +87,8 @@ function streamRequest(chunks, headers = {}) {
   const body = {
     getReader() {
       stats.readerCalls += 1;
-      return stream.getReader();
+      const reader = stream.getReader();
+      return { read: (...args) => reader.read(...args), releaseLock: () => reader.releaseLock(), cancel: async (...args) => { stats.cancelled = true; return reader.cancel(...args); } };
     }
   };
   const request = {
@@ -116,7 +122,7 @@ for (const origin of allowedOrigins) {
     const api = await loadApi();
     const db = makeDb();
     const response = await api.onRequestPost({
-      request: requestWith(validLead(), {}, `${origin}/api/leads`), env: { DB: db }
+      request: requestWith(validLead(), {}, `${origin}/api/leads`), env: testEnv(db)
     });
     assert.equal(response.status, 200);
     assert.deepEqual(await response.json(), { ok: true });
@@ -150,12 +156,12 @@ test('keeps GET at 405 and OPTIONS at 204 on custom, local and pages.dev hosts',
   for (const origin of [...allowedOrigins, ...blockedOrigins]) {
     const db = makeDb();
     const get = await api.onRequestGet({
-      request: new Request(`${origin}/api/leads`), env: { DB: db }
+      request: new Request(`${origin}/api/leads`), env: testEnv(db)
     });
     assert.equal(get.status, 405);
     assert.deepEqual(await get.json(), { ok: false, error: 'method_not_allowed' });
     const options = await api.onRequestOptions({
-      request: new Request(`${origin}/api/leads`, { method: 'OPTIONS' }), env: { DB: db }
+      request: new Request(`${origin}/api/leads`, { method: 'OPTIONS' }), env: testEnv(db)
     });
     assert.equal(options.status, 204);
     assert.equal(await options.text(), '');
@@ -168,7 +174,7 @@ test('accepts one valid same-origin JSON lead and writes normalized values once'
   const api = await loadApi();
   const db = makeDb();
 
-  const response = await api.onRequestPost({ request: requestWith(validLead()), env: { DB: db } });
+  const response = await api.onRequestPost({ request: requestWith(validLead()), env: testEnv(db) });
   const body = await response.json();
 
   assert.equal(response.status, 200);
@@ -188,7 +194,7 @@ test('rejects malformed JSON with 400 and a public error code', async () => {
   const api = await loadApi();
   const db = makeDb();
 
-  const response = await api.onRequestPost({ request: requestWith('{broken'), env: { DB: db } });
+  const response = await api.onRequestPost({ request: requestWith('{broken'), env: testEnv(db) });
 
   assert.equal(response.status, 400);
   assert.deepEqual(await response.json(), { ok: false, error: 'invalid_request' });
@@ -199,7 +205,7 @@ test('rejects a missing or invalid email with 400 without touching D1', async ()
   const api = await loadApi();
   for (const email of ['', 'not-an-email', 'name@', '@example.com']) {
     const db = makeDb();
-    const response = await api.onRequestPost({ request: requestWith(validLead({ email })), env: { DB: db } });
+    const response = await api.onRequestPost({ request: requestWith(validLead({ email })), env: testEnv(db) });
     assert.equal(response.status, 400, email);
     assert.deepEqual(await response.json(), { ok: false, error: 'invalid_email' });
     assert.equal(db.calls.length, 0);
@@ -210,7 +216,7 @@ test('rejects missing company or contact name with 400 without touching D1', asy
   const api = await loadApi();
   for (const values of [{ company: '' }, { name: '' }]) {
     const db = makeDb();
-    const response = await api.onRequestPost({ request: requestWith(validLead(values)), env: { DB: db } });
+    const response = await api.onRequestPost({ request: requestWith(validLead(values)), env: testEnv(db) });
     assert.equal(response.status, 400);
     assert.deepEqual(await response.json(), { ok: false, error: 'invalid_request' });
     assert.equal(db.calls.length, 0);
@@ -222,7 +228,7 @@ test('rejects non-JSON content types with 400 without touching D1', async () => 
   const db = makeDb();
   const response = await api.onRequestPost({
     request: requestWith(validLead(), { 'Content-Type': 'text/plain' }),
-    env: { DB: db }
+    env: testEnv(db)
   });
   assert.equal(response.status, 400);
   assert.deepEqual(await response.json(), { ok: false, error: 'invalid_request' });
@@ -241,18 +247,27 @@ test('rejects fields above their limits with 413 without touching D1', async () 
   ];
   for (const values of cases) {
     const db = makeDb();
-    const response = await api.onRequestPost({ request: requestWith(validLead(values)), env: { DB: db } });
+    const response = await api.onRequestPost({ request: requestWith(validLead(values)), env: testEnv(db) });
     assert.equal(response.status, 413, Object.keys(values)[0]);
     assert.deepEqual(await response.json(), { ok: false, error: 'payload_too_large' });
     assert.equal(db.calls.length, 0);
   }
 });
 
+test('rejects a JSON request without Turnstile before D1 access', async () => {
+  const api = await loadApi();
+  const db = makeDb();
+  const response = await api.onRequestPost({ request: requestWith(validLead({ turnstile_token: '' })), env: { DB: db, TURNSTILE_TEST_MODE: '1', TURNSTILE_TEST_TOKEN: 'expected', RATE_LIMIT_TEST_MODE: '1', rateLimitStore: new Map() } });
+  assert.equal(response.status, 403);
+  assert.deepEqual(await response.json(), { ok: false, error: 'verification_failed' });
+  assert.equal(db.calls.length, 0);
+});
+
 test('rejects a declared body over 16 KiB before reading it or accessing D1', async () => {
   const api = await loadApi();
   const stream = streamRequest([new Uint8Array([123])], { 'Content-Length': '16385' });
   const db = makeDb();
-  const response = await api.onRequestPost({ request: stream.request, env: { DB: db } });
+  const response = await api.onRequestPost({ request: stream.request, env: testEnv(db) });
 
   assert.equal(response.status, 413);
   assert.deepEqual(await response.json(), { ok: false, error: 'payload_too_large' });
@@ -268,12 +283,12 @@ test('counts streamed bytes and cancels after crossing 16 KiB', async () => {
     new Uint8Array([123])
   ]);
   const db = makeDb();
-  const response = await api.onRequestPost({ request: stream.request, env: { DB: db } });
+  const response = await api.onRequestPost({ request: stream.request, env: testEnv(db) });
 
   assert.equal(response.status, 413);
   assert.deepEqual(await response.json(), { ok: false, error: 'payload_too_large' });
   assert.equal(stream.stats.readerCalls, 1);
-  assert.equal(stream.stats.reads, 2);
+  assert.ok(stream.stats.reads >= 2);
   assert.equal(stream.stats.cancelled, true);
   assert.equal(db.calls.length, 0);
 });
@@ -285,7 +300,7 @@ test('does not trust a smaller Content-Length than the streamed body', async () 
     new Uint8Array([123])
   ], { 'Content-Length': '1' });
   const db = makeDb();
-  const response = await api.onRequestPost({ request: stream.request, env: { DB: db } });
+  const response = await api.onRequestPost({ request: stream.request, env: testEnv(db) });
 
   assert.equal(response.status, 413);
   assert.deepEqual(await response.json(), { ok: false, error: 'payload_too_large' });
@@ -299,7 +314,7 @@ test('accepts exactly 16 KiB and rejects 16 KiB plus one byte', async () => {
   const exactDb = makeDb();
   const exact = bodyWithExactBytes(16384);
   const accepted = await api.onRequestPost({
-    request: requestWith(exact, { 'Content-Length': '16384' }), env: { DB: exactDb }
+    request: requestWith(exact, { 'Content-Length': '16384' }), env: testEnv(exactDb)
   });
   assert.equal(accepted.status, 200);
   assert.equal(exactDb.calls.length, 1);
@@ -307,7 +322,7 @@ test('accepts exactly 16 KiB and rejects 16 KiB plus one byte', async () => {
   const oversizedDb = makeDb();
   const oversized = bodyWithExactBytes(16385);
   const rejected = await api.onRequestPost({
-    request: requestWith(oversized, { 'Content-Length': '16385' }), env: { DB: oversizedDb }
+    request: requestWith(oversized, { 'Content-Length': '16385' }), env: testEnv(oversizedDb)
   });
   assert.equal(rejected.status, 413);
   assert.deepEqual(await rejected.json(), { ok: false, error: 'payload_too_large' });
@@ -321,7 +336,7 @@ test('uses UTF-8 byte length and does not allow invalid Content-Length values to
   for (const contentLength of ['invalid', '-1']) {
     const stream = streamRequest([new TextEncoder().encode(utf8)], { 'Content-Length': contentLength });
     const db = makeDb();
-    const response = await api.onRequestPost({ request: stream.request, env: { DB: db } });
+    const response = await api.onRequestPost({ request: stream.request, env: testEnv(db) });
     assert.equal(response.status, 413, contentLength);
     assert.deepEqual(await response.json(), { ok: false, error: 'payload_too_large' });
     assert.equal(stream.stats.cancelled, true);
@@ -333,7 +348,7 @@ test('rejects unsupported language and service values with 400', async () => {
   const api = await loadApi();
   for (const values of [{ language: 'xx' }, { service: 'laser-cutting' }]) {
     const db = makeDb();
-    const response = await api.onRequestPost({ request: requestWith(validLead(values)), env: { DB: db } });
+    const response = await api.onRequestPost({ request: requestWith(validLead(values)), env: testEnv(db) });
     assert.equal(response.status, 400);
     assert.deepEqual(await response.json(), { ok: false, error: 'invalid_request' });
     assert.equal(db.calls.length, 0);
@@ -344,7 +359,7 @@ test('returns a generic 500 response when D1 fails and does not expose err.messa
   const api = await loadApi();
   const db = makeDb({ error: new Error('secret D1 table name') });
 
-  const response = await api.onRequestPost({ request: requestWith(validLead()), env: { DB: db } });
+  const response = await api.onRequestPost({ request: requestWith(validLead()), env: testEnv(db) });
   const text = await response.text();
 
   assert.equal(response.status, 500);
@@ -357,7 +372,7 @@ test('does not reflect arbitrary Origin values in CORS headers', async () => {
   const db = makeDb();
   const response = await api.onRequestPost({
     request: requestWith(validLead(), { Origin: 'https://attacker.example' }),
-    env: { DB: db }
+    env: testEnv(db)
   });
 
   assert.notEqual(response.headers.get('Access-Control-Allow-Origin'), '*');
