@@ -5,8 +5,8 @@
   "triggers": { "crons": ["0 3 * * *"] },
   "env": {
     "preview": {
-      "d1_databases": [{ "binding": "DB", "database_name": "TODO_PREVIEW_D1", "database_id": "TODO_PREVIEW_D1_ID" }],
-      "r2_buckets": [{ "binding": "RFQ_UPLOADS", "bucket_name": "TODO_PREVIEW_R2" }]
+      "d1_databases": [{ "binding": "DB", "database_name": "osmechplast_leads_preview", "database_id": "a8d31d80-5ff8-444a-8390-81acb43323ac" }],
+      "r2_buckets": [{ "binding": "RFQ_UPLOADS", "bucket_name": "osmp-rfq-preview-private" }]
     },
     "production": {
       "d1_databases": [{ "binding": "DB", "database_name": "TODO_PRODUCTION_D1", "database_id": "TODO_PRODUCTION_D1_ID" }],
