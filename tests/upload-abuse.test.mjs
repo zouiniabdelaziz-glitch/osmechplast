@@ -29,7 +29,7 @@ test('blocked upload returns 429 before reading body or touching D1/R2', async (
   const api = await loadApi();
   const db = { prepare() { throw new Error('D1 must not be touched'); } };
   const request = { url: 'https://osmechplast.com/api/leads', headers: new Headers({ 'Content-Type': 'application/json', 'CF-Connecting-IP': '127.0.0.1' }), get body() { throw new Error('body must not be read'); } };
-  const env = { DB: db, RATE_LIMIT_TEST_MODE: '1', RATE_LIMIT_TEST_MAX: '0', rateLimitStore: new Map([['127.0.0.1', { startedAt: Date.now(), count: 0 }]]) };
+  const env = { DB: db, RATE_LIMIT_TEST_MODE: '1', RATE_LIMIT_TEST_MAX: '0', rateLimitStore: new Map([['/api/leads:127.0.0.1', { startedAt: Date.now(), count: 0 }]]) };
   const response = await api.onRequestPost({ request, env });
   assert.equal(response.status, 429);
   assert.deepEqual(await response.json(), { ok: false, error: 'rate_limited' });

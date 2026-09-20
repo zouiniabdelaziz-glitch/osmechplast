@@ -97,7 +97,8 @@ export async function verifyTurnstile(token, remoteIp, env = {}) {
 }
 
 export async function checkUploadRateLimit({ request, env = {} }) {
-  const key = request?.headers?.get('CF-Connecting-IP') || 'unknown';
+  const clientIp = request?.headers?.get('CF-Connecting-IP')?.trim() || 'unknown-client';
+  const key = `/api/leads:${clientIp}`;
   if (env.RATE_LIMIT_TEST_MODE === '1') {
     const now = Date.now();
     const windowMs = Number(env.RATE_LIMIT_TEST_WINDOW_MS || 10000);
@@ -111,13 +112,23 @@ export async function checkUploadRateLimit({ request, env = {} }) {
     if (entry.count < max) { entry.count += 1; return { allowed: true }; }
     return { allowed: false, retryAfter: Math.max(1, Math.ceil((windowMs - (now - entry.startedAt)) / 1000)) };
   }
-  if (env.RATE_LIMITER?.limit) {
+  if (env.RATE_LIMIT_SERVICE?.fetch) {
     try {
-      const result = await env.RATE_LIMITER.limit({ key });
-      return result?.success === true ? { allowed: true } : { allowed: false, retryAfter: 10 };
+      const serviceRequest = new Request('https://rate-limit.internal/check', {
+        method: 'POST',
+        headers: { 'X-Rate-Limit-Key': key }
+      });
+      const response = await env.RATE_LIMIT_SERVICE.fetch(serviceRequest);
+      if (!response?.ok) return { allowed: false, retryAfter: 60 };
+      const result = await response.json();
+      if (result?.allowed === true) return { allowed: true };
+      if (result?.allowed === false) {
+        const retryAfter = Number(result.retryAfter);
+        return { allowed: false, retryAfter: Number.isInteger(retryAfter) && retryAfter > 0 ? retryAfter : 10 };
+      }
+      return { allowed: false, retryAfter: 60 };
     } catch { return { allowed: false, retryAfter: 60 }; }
   }
-  if (env.RATE_LIMIT_RULE_CONFIRMED === '1') return { allowed: true };
   return { allowed: false, retryAfter: 60 };
 }
 
