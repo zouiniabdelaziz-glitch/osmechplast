@@ -11,6 +11,16 @@ const FIELD_LIMITS = {
 };
 const ALLOWED_LANGUAGES = new Set(["de", "it", "en", "fr"]);
 const ALLOWED_SERVICES = new Set(["", "cnc-drehen", "drehfraesen", "prototypen-serien", "unsicher"]);
+const STABLE_PREVIEW_HOST = 'rfq-upload-preview.osmechplast.pages.dev';
+
+export function isAllowedPagesHost(hostname, env = {}) {
+  const normalizedHost = String(hostname || '').toLowerCase().replace(/\.$/, '');
+  if (!normalizedHost.endsWith('.pages.dev')) return true;
+  return normalizedHost === STABLE_PREVIEW_HOST
+    && env.RUNTIME_ENV === 'preview'
+    && env.PREVIEW_API_ENABLED === '1'
+    && env.PREVIEW_API_HOST === STABLE_PREVIEW_HOST;
+}
 
 export function createR2Key(leadId, uploadId, extension) {
   const safeLeadId = String(leadId).replace(/[^A-Za-z0-9_-]/g, "-");
@@ -204,7 +214,7 @@ export async function onRequestPost(context) {
     const hostname = new URL(request.url).hostname.toLowerCase().replace(/\.$/, "");
     const verificationEnv = Object.create(env || null);
     verificationEnv.requestHost = new URL(request.url).host;
-    if (hostname.endsWith(".pages.dev")) {
+    if (!isAllowedPagesHost(hostname, env)) {
       return json({ ok: false, error: "forbidden" }, 403);
     }
     const rateLimit = await checkUploadRateLimit({ request, env });

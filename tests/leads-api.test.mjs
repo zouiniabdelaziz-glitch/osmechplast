@@ -139,6 +139,65 @@ const blockedOrigins = [
   'https://osmechplast.pages.dev.'
 ];
 
+const previewOrigin = 'https://rfq-upload-preview.osmechplast.pages.dev';
+
+function previewEnv(db, overrides = {}) {
+  return {
+    ...testEnv(db),
+    RUNTIME_ENV: 'preview',
+    PREVIEW_API_ENABLED: '1',
+    PREVIEW_API_HOST: 'rfq-upload-preview.osmechplast.pages.dev',
+    ...overrides
+  };
+}
+
+test('accepts POST on the explicitly configured stable preview host', async () => {
+  const api = await loadApi();
+  const db = makeDb();
+  const response = await api.onRequestPost({ request: requestWith(validLead(), {}, `${previewOrigin}/api/leads`), env: previewEnv(db) });
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { ok: true });
+});
+
+test('rejects a stable preview host when explicit preview configuration is missing', async () => {
+  const api = await loadApi();
+  const db = makeDb();
+  const response = await api.onRequestPost({ request: requestWith(validLead(), {}, `${previewOrigin}/api/leads`), env: testEnv(db) });
+  assert.equal(response.status, 403);
+  assert.deepEqual(await response.json(), { ok: false, error: 'forbidden' });
+  assert.equal(db.calls.length, 0);
+});
+
+test('rejects a stable preview host when its explicit host configuration is wrong', async () => {
+  const api = await loadApi();
+  const db = makeDb();
+  const response = await api.onRequestPost({ request: requestWith(validLead(), {}, `${previewOrigin}/api/leads`), env: previewEnv(db, { PREVIEW_API_HOST: 'other.osmechplast.pages.dev' }) });
+  assert.equal(response.status, 403);
+  assert.deepEqual(await response.json(), { ok: false, error: 'forbidden' });
+  assert.equal(db.calls.length, 0);
+});
+
+test('rejects random and foreign pages.dev hosts even when preview is configured', async () => {
+  const api = await loadApi();
+  for (const origin of ['https://HASH.osmechplast.pages.dev', 'https://other.pages.dev']) {
+    const db = makeDb();
+    const response = await api.onRequestPost({ request: requestWith(validLead(), {}, `${origin}/api/leads`), env: previewEnv(db) });
+    assert.equal(response.status, 403);
+    assert.deepEqual(await response.json(), { ok: false, error: 'forbidden' });
+    assert.equal(db.calls.length, 0);
+  }
+});
+
+test('production hosts remain allowed regardless of preview configuration', async () => {
+  const api = await loadApi();
+  for (const origin of ['https://osmechplast.com', 'https://www.osmechplast.com']) {
+    const db = makeDb();
+    const response = await api.onRequestPost({ request: requestWith(validLead(), {}, `${origin}/api/leads`), env: previewEnv(db, { RUNTIME_ENV: 'production', PREVIEW_API_ENABLED: undefined, PREVIEW_API_HOST: undefined }) });
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { ok: true });
+  }
+});
+
 for (const origin of allowedOrigins) {
   test(`accepts a valid POST on ${origin}`, async () => {
     const api = await loadApi();
