@@ -188,9 +188,16 @@ async function submitLead(form) {
     throw error;
   }
   if (!res.ok) {
-    const error = new Error('request_failed');
+    let errorCode = '';
+    try {
+      const errorResponse = typeof res.clone === 'function' ? res.clone() : res;
+      const payload = await errorResponse.json();
+      errorCode = typeof payload?.error === 'string' ? payload.error : '';
+    } catch {}
+    const error = new Error(errorCode || 'request_failed');
     error.kind = res.status >= 400 && res.status < 500 ? 'validation' : 'server';
     error.status = res.status;
+    error.code = errorCode;
     throw error;
   }
   return res;
@@ -261,7 +268,9 @@ async function submitForm(e) {
     setTimeout(() => hideFormBanner(successBanner), 5000);
     form.reset();
   } catch (error) {
-    const errorKey = error.kind === 'network'
+    const errorKey = error.code === 'invalid_file'
+      ? 'f_error_format'
+      : error.kind === 'network'
       ? 'f_error_network'
       : error.status === 413
         ? 'f_error_size'
@@ -272,7 +281,9 @@ async function submitForm(e) {
             : error.kind === 'validation' || error.status === 422
               ? 'f_error_validation'
               : 'f_error_server';
-    const fallback = error.kind === 'network'
+    const fallback = error.code === 'invalid_file'
+      ? 'Das Dateiformat oder der Dateiinhalt wird nicht unterstützt.'
+      : error.kind === 'network'
       ? 'Die Verbindung ist fehlgeschlagen.'
       : error.status === 413
         ? 'Die ausgewählten Dateien oder Angaben sind zu groß.'

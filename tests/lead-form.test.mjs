@@ -173,6 +173,18 @@ test('keeps all values and shows a validation error after HTTP 400', async () =>
   assert.equal(fixture.context.document.getElementById('f_email').value, fixture.values.f_email);
 });
 
+test('shows a specific file-format error for invalid_file without resetting the form', async () => {
+  const fixture = makeFixture(async () => response(400, { ok: false, error: 'invalid_file' }));
+  fixture.errorBanner.focus = () => { fixture.errorBanner.focused = true; };
+
+  await fixture.context.submitForm(fixture.event);
+
+  assert.match(fixture.errorBanner.textContent, /Dateiformat|Dateiinhalt/i);
+  assert.equal(fixture.errorBanner.hidden, false);
+  assert.equal(fixture.errorBanner.focused, true);
+  assert.equal(fixture.form.resetCount, 0);
+});
+
 test('keeps all values and shows a server error after HTTP 500', async () => {
   const fixture = makeFixture(async () => response(500, { ok: false, error: 'server_error' }));
 

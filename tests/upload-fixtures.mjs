@@ -57,3 +57,22 @@ test('rejects simple appended archive, executable and script payloads in image/P
     }
   }
 });
+
+test('accepts a realistic Microsoft Print to PDF stream with binary bytes', async () => {
+  const enc = new TextEncoder();
+  const header = enc.encode('%PDF-1.7\r\n1 0 obj\r\nstream\r\n');
+  const binaryStream = new Uint8Array([0xff, 0x00, 0x80, 0x91, 0xfe]);
+  const trailer = enc.encode('\r\nendstream\r\nendobj\r\nstartxref\r\n0\r\n%%EOF\r\n');
+  const bytes = new Uint8Array(header.length + binaryStream.length + trailer.length);
+  bytes.set(header);
+  bytes.set(binaryStream, header.length);
+  bytes.set(trailer, header.length + binaryStream.length);
+  const result = await validateUploadFile({ name: 'Microsoft Print to PDF.pdf', type: 'application/pdf', bytes });
+  assert.equal(result.ok, true);
+});
+
+test('requires the PDF magic bytes to start with %PDF-', async () => {
+  const bytes = new TextEncoder().encode('%PDFX-1.7\r\n%%EOF\r\n');
+  const result = await validateUploadFile({ name: 'invalid-header.pdf', type: 'application/pdf', bytes });
+  assert.equal(result.ok, false);
+});

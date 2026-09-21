@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readMultipartRequest, limitCases } from '../functions/upload/validation.mjs';
+import { readMultipartRequest, limitCases, validateUploadFile } from '../functions/upload/validation.mjs';
 
 test('rejects a streamed multipart body beyond aggregate limit', async () => {
   const stream = new ReadableStream({ start(controller) { controller.enqueue(new Uint8Array(limitCases.maxBodyBytes + 1)); controller.close(); } });
@@ -68,4 +68,21 @@ test('stops reading immediately when one file exceeds 8 MiB', async () => {
   let reads = 0; let cancelled = false; const chunks = [head, new Uint8Array(limitCases.maxFileBytes), new Uint8Array(1)]; const reader = { async read() { if (reads >= chunks.length) return { done: true }; return { done: false, value: chunks[reads++] }; }, async cancel() { cancelled = true; }, releaseLock() {} };
   await assert.rejects(() => readMultipartRequest({ body: { getReader() { return reader; } }, headers: new Headers({ 'Content-Type': 'multipart/form-data; boundary=x' }) }), /file_too_large/);
   assert.equal(reads, 3); assert.equal(cancelled, true);
+});
+
+test('preserves binary PDF bytes through multipart parsing', async () => {
+  const enc = new TextEncoder();
+  const header = enc.encode('%PDF-1.7\r\n1 0 obj\r\nstream\r\n');
+  const binaryStream = new Uint8Array([0xff, 0x00, 0x80, 0x91, 0xfe]);
+  const trailer = enc.encode('\r\nendstream\r\nendobj\r\nstartxref\r\n0\r\n%%EOF\r\n');
+  const pdf = new Uint8Array(header.length + binaryStream.length + trailer.length);
+  pdf.set(header); pdf.set(binaryStream, header.length); pdf.set(trailer, header.length + binaryStream.length);
+  const boundary = 'realistic';
+  const multipartHeader = enc.encode(`--${boundary}\r\nContent-Disposition: form-data; name="files"; filename="Microsoft Print to PDF.pdf"\r\nContent-Type: application/pdf\r\n\r\n`);
+  const multipartTail = enc.encode(`\r\n--${boundary}--\r\n`);
+  const body = new Uint8Array(multipartHeader.length + pdf.length + multipartTail.length);
+  body.set(multipartHeader); body.set(pdf, multipartHeader.length); body.set(multipartTail, multipartHeader.length + pdf.length);
+  const parsed = await readMultipartRequest({ body: new ReadableStream({ start(controller) { controller.enqueue(body); controller.close(); } }), headers: new Headers({ 'Content-Type': `multipart/form-data; boundary=${boundary}` }) });
+  assert.deepEqual(parsed.files[0].bytes, pdf);
+  assert.equal((await validateUploadFile({ name: parsed.files[0].name, type: parsed.files[0].type, bytes: parsed.files[0].bytes })).ok, true);
 });

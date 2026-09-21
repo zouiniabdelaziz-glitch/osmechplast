@@ -31,9 +31,10 @@ const mime = {pdf:new Set(['application/pdf']),jpg:new Set(['image/jpeg']),jpeg:
 const text = b => new TextDecoder('utf-8',{fatal:true}).decode(b);
 function executableHeader(b){return (b[0]===0x4d&&b[1]===0x5a)||(b[0]===0x7f&&b[1]===0x45&&b[2]===0x4c&&b[3]===0x46)||(b[0]===0x50&&b[1]===0x4b&&b[2]===0x03&&b[3]===0x04)||(b[0]===0x23&&b[1]===0x21);}
 function onlyWhitespaceAfter(b, offset){for(let i=offset;i<b.length;i++){if(![9,10,13,32].includes(b[i]))return false;}return true;}
+function lastIndexOfBytes(h,n){for(let i=h.length-n.length;i>=0;i--){let match=true;for(let j=0;j<n.length;j++){if(h[i+j]!==n[j]){match=false;break;}}if(match)return i;}return -1;}
 function validSignature(ext,b){
   if(executableHeader(b)) return false;
-  if(ext==='pdf'){const end=text(b).lastIndexOf('%%EOF');return b.length>=8&&b[0]===0x25&&b[1]===0x50&&b[2]===0x44&&b[3]===0x46&&end>=0&&onlyWhitespaceAfter(b,end+5);}
+  if(ext==='pdf'){const end=lastIndexOfBytes(b,new Uint8Array([0x25,0x25,0x45,0x4f,0x46]));return b.length>=8&&b[0]===0x25&&b[1]===0x50&&b[2]===0x44&&b[3]===0x46&&b[4]===0x2d&&end>=0&&onlyWhitespaceAfter(b,end+5);}
   if(ext==='jpg'||ext==='jpeg'){let end=-1;for(let i=0;i<b.length-1;i++)if(b[i]===0xff&&b[i+1]===0xd9)end=i+2;return b.length>=4&&b[0]===0xff&&b[1]===0xd8&&end>0&&onlyWhitespaceAfter(b,end);}
   if(ext==='png'){let end=-1;for(let i=0;i<=b.length-4;i++)if(b[i]===0x49&&b[i+1]===0x45&&b[i+2]===0x4e&&b[i+3]===0x44)end=i;return b.length>=40&&b[0]===0x89&&b[1]===0x50&&b[2]===0x4e&&b[3]===0x47&&text(b.slice(12,16))==='IHDR'&&end>=0&&onlyWhitespaceAfter(b,end+8);}
   if(ext==='step'||ext==='stp'){const t=text(b);return t.includes('ISO-10303-21;')&&t.includes('END-ISO-10303-21;');}
