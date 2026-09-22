@@ -41,6 +41,7 @@ export async function storeLeadAndUploads({ db, r2, lead, files, requestId, now 
   if (leadId == null) throw new Error('lead_insert_failed');
   const uploads = [];
   const storedKeys = [];
+  const auditedUploadIds = [];
   let currentUploadId = null;
   try {
     for (const file of files) {
@@ -60,9 +61,18 @@ export async function storeLeadAndUploads({ db, r2, lead, files, requestId, now 
       storedKeys.push({ key, uploadId });
       await db.prepare(`UPDATE lead_uploads SET storage_status = 'stored', stored_at = ? WHERE id = ?`)
         .bind(now, uploadId).run();
+      await db.prepare(`
+        INSERT INTO upload_audit_log (
+          upload_id, lead_id, actor_type, actor_id, occurred_at, action, result, detail_code
+        ) VALUES (?, ?, 'public', NULL, ?, 'upload_stored', 'success', 'stored')
+      `).bind(uploadId, leadId, now).run();
+      auditedUploadIds.push(uploadId);
       uploads.push({ id: uploadId, lead_id: leadId, r2_key: key, storage_status: 'stored', security_status: 'quarantine', sha256: file.sha256, byte_size: file.bytes.byteLength });
     }
   } catch {
+    for (const uploadId of auditedUploadIds) {
+      await db.prepare('DELETE FROM upload_audit_log WHERE upload_id = ?').bind(uploadId).run().catch(() => {});
+    }
     if (currentUploadId) await db.prepare("UPDATE lead_uploads SET storage_status = 'failed', error_code = ? WHERE id = ?").bind('upload_failed', currentUploadId).run().catch(() => {});
     for (const stored of storedKeys) {
       try { await r2.delete(stored.key); }

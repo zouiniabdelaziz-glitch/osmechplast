@@ -107,10 +107,12 @@ function makeFixture(fetchImpl) {
   submitButton.textContent = 'Anfrage senden';
   const form = createElement('form');
   form.resetCount = 0;
-  form.reset = () => { form.resetCount += 1; };
+  const fileInput = { files: [] };
+  form.reset = () => { form.resetCount += 1; fileInput.files = []; };
   form.querySelector = selector => selector === '[type="submit"]' ? submitButton : null;
 
   const successBanner = createElement('div');
+  successBanner.id = 'successBanner';
   successBanner.hidden = true;
   const errorBanner = createElement('div');
   errorBanner.hidden = true;
@@ -124,7 +126,7 @@ function makeFixture(fetchImpl) {
   };
   const elements = { leadForm: form, successBanner, errorBanner };
   for (const [id, value] of Object.entries(values)) elements[id] = { value };
-  elements.f_files = { files: [] };
+  elements.f_files = fileInput;
   elements.turnstile_token = { value: '' };
 
   const tracked = [];
@@ -134,11 +136,13 @@ function makeFixture(fetchImpl) {
     window: { OSMPAnalytics: { track(name) { tracked.push(name); } }, turnstile: { getResponse() { return 'test-token'; } } }
   });
   const event = { target: form, preventDefault() {} };
-  return { context, event, form, submitButton, successBanner, errorBanner, values, tracked };
+  return { context, event, form, submitButton, successBanner, errorBanner, values, tracked, fileInput };
 }
 
 test('shows success, tracks success and resets only after a 2xx response', async () => {
   const fixture = makeFixture(async () => response(201, { ok: true }));
+  fixture.successBanner.focus = () => { fixture.successBanner.focused = true; };
+  fixture.fileInput.files = [new File([new Uint8Array([1])], 'part.pdf', { type: 'application/pdf' })];
 
   await fixture.context.submitForm(fixture.event);
 
@@ -146,7 +150,17 @@ test('shows success, tracks success and resets only after a 2xx response', async
   assert.deepEqual(fixture.tracked, ['lead_form_success']);
   assert.equal(fixture.successBanner.textContent, 'Anfrage gespeichert.');
   assert.equal(fixture.successBanner.hidden, false);
+  assert.equal(fixture.successBanner.focused, true);
+  assert.equal(fixture.successBanner.getAttribute('aria-hidden'), 'false');
+  assert.equal(fixture.errorBanner.hidden, true);
   assert.equal(fixture.errorBanner.textContent, '');
+  assert.equal(fixture.fileInput.files.length, 0);
+});
+
+test('contact markup has one focusable live success banner', () => {
+  const html = fs.readFileSync('kontakt/index.html', 'utf8');
+  assert.equal((html.match(/id=["']successBanner["']/g) || []).length, 1);
+  assert.match(html, /id=["']successBanner["'][^>]*role=["']status["'][^>]*aria-live=["']polite["'][^>]*tabindex=["']-1["']/i);
 });
 
 test('resets the Turnstile widget and clears its token after every submission attempt', async () => {

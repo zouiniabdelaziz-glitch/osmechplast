@@ -94,6 +94,55 @@ test('storeLeadAndUploads persists metadata, private objects and quarantine stat
   assert.ok(calls.some(call => /UPDATE lead_uploads/i.test(call.sql)));
 });
 
+test('storeLeadAndUploads audits each successfully stored upload without sensitive values', async () => {
+  const api = await loadApi();
+  const calls = [];
+  const db = { prepare(sql) { return { bind(...values) { calls.push({ sql, values }); return { async run() { return { meta: { last_row_id: 42, changes: 1 } }; } }; } }; } };
+  const r2 = new FakeR2Bucket();
+  const file = { originalName: 'part.step', extension: 'step', detectedType: 'model/step', bytes: new Uint8Array([1, 2, 3]), sha256: 'abc123' };
+  const result = await api.storeLeadAndUploads({ db, r2, lead: { company: 'ACME', name: 'Test', email: 'test@example.com' }, files: [file], requestId: '123e4567-e89b-42d3-a456-426614174000', now: '2026-01-01T00:00:00.000Z' });
+  const uploadInsert = calls.find(call => /INSERT INTO lead_uploads/i.test(call.sql));
+  const auditInsert = calls.find(call => /INSERT INTO upload_audit_log/i.test(call.sql));
+  assert.ok(auditInsert, 'successful storage must write an audit row');
+  assert.equal(auditInsert.values[0], uploadInsert.values[0]);
+  assert.equal(auditInsert.values[1], result.leadId);
+  assert.equal(auditInsert.values[2], '2026-01-01T00:00:00.000Z');
+  assert.match(auditInsert.sql, /'public'/i);
+  assert.match(auditInsert.sql, /'upload_stored'/i);
+  assert.match(auditInsert.sql, /'success'/i);
+  assert.match(auditInsert.sql, /'stored'/i);
+  assert.equal(auditInsert.values.some(value => String(value).includes('leads/')), false);
+  assert.equal(auditInsert.values.some(value => value instanceof Uint8Array), false);
+});
+
+test('audit failure rolls back the stored object and does not report success', async () => {
+  const api = await loadApi();
+  const calls = [];
+  const db = { prepare(sql) { return { bind(...values) { calls.push({ sql, values }); return { async run() {
+    if (/INSERT INTO upload_audit_log/i.test(sql)) throw new Error('audit_write_failed');
+    return { meta: { last_row_id: 42, changes: 1 } };
+  } }; } }; } };
+  const r2 = new FakeR2Bucket();
+  await assert.rejects(() => api.storeLeadAndUploads({ db, r2, lead: { company: 'ACME', name: 'Test', email: 'test@example.com' }, files: [{ originalName: 'part.pdf', extension: 'pdf', detectedType: 'application/pdf', bytes: new Uint8Array([37, 80, 68, 70, 45, 49, 10, 37, 37, 69, 79, 70]), sha256: 'abc123' }], requestId: '123e4567-e89b-42d3-a456-426614174000' }));
+  assert.equal((await r2.list()).objects.length, 0);
+  assert.ok(calls.some(call => /UPDATE leads SET status = 'upload_failed'/i.test(call.sql)));
+});
+
+test('a later audit failure removes earlier audit rows during multi-file rollback', async () => {
+  const api = await loadApi();
+  const calls = [];
+  let auditWrites = 0;
+  const db = { prepare(sql) { return { bind(...values) { calls.push({ sql, values }); return { async run() {
+    if (/INSERT INTO upload_audit_log/i.test(sql) && ++auditWrites === 2) throw new Error('audit_write_failed');
+    return { meta: { last_row_id: 42, changes: 1 } };
+  } }; } }; } };
+  const r2 = new FakeR2Bucket();
+  const file = (name) => ({ originalName: name, extension: 'pdf', detectedType: 'application/pdf', bytes: new Uint8Array([37, 80, 68, 70, 45, 49, 10, 37, 37, 69, 79, 70]), sha256: name });
+  await assert.rejects(() => api.storeLeadAndUploads({ db, r2, lead: { company: 'ACME', name: 'Test', email: 'test@example.com' }, files: [file('a.pdf'), file('b.pdf')], requestId: '123e4567-e89b-42d3-a456-426614174000' }));
+  assert.ok(calls.some(call => /DELETE FROM upload_audit_log/i.test(call.sql)));
+  assert.equal((await r2.list()).objects.length, 0);
+});
+
 test('storeLeadAndUploads marks R2 failure and removes objects when final D1 update fails', async () => {
   const api = await loadApi();
   const sqlCalls = [];

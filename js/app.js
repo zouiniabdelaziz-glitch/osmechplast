@@ -234,13 +234,16 @@ function showFormBanner(banner, message) {
   if (!banner) return;
   banner.textContent = message;
   banner.hidden = false;
+  banner.setAttribute?.('aria-hidden', 'false');
   banner.style.display = 'block';
+  if (banner.id === 'successBanner') banner.focus?.({ preventScroll: true });
 }
 
 function hideFormBanner(banner) {
   if (!banner) return;
   banner.textContent = '';
   banner.hidden = true;
+  banner.setAttribute?.('aria-hidden', 'true');
   banner.style.display = 'none';
 }
 
@@ -265,7 +268,6 @@ async function submitForm(e) {
     await submitLead(form);
     window.OSMPAnalytics?.track?.('lead_form_success');
     showFormBanner(successBanner, T[currentLang]?.f_success || '✓ Danke!');
-    setTimeout(() => hideFormBanner(successBanner), 5000);
     form.reset();
   } catch (error) {
     const errorKey = error.code === 'invalid_file'
