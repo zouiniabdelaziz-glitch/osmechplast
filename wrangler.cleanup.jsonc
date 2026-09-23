@@ -9,8 +9,8 @@
       "r2_buckets": [{ "binding": "RFQ_UPLOADS", "bucket_name": "osmp-rfq-preview-private" }]
     },
     "production": {
-      "d1_databases": [{ "binding": "DB", "database_name": "TODO_PRODUCTION_D1", "database_id": "TODO_PRODUCTION_D1_ID" }],
-      "r2_buckets": [{ "binding": "RFQ_UPLOADS", "bucket_name": "TODO_PRODUCTION_R2" }]
+      "d1_databases": [{ "binding": "DB", "database_name": "osmechplast_leads", "database_id": "e2415049-5c46-4477-a88f-afe12cd8c59b" }],
+      "r2_buckets": [{ "binding": "RFQ_UPLOADS", "bucket_name": "osmp-rfq-production-private" }]
     }
   }
 }
