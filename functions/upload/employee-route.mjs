@@ -48,7 +48,10 @@ export async function onRequestPost({ request, env, params, action = 'approve' }
   const row = await rowFor(env, params.leadId, params.uploadId);
   if (!row) return json({ error: 'not_found' }, 404);
   let next;
-  try { next = transitionUpload(row.security_status, action, { type: 'employee', id: verified.subject }); } catch { return json({ error: 'invalid_state' }, 409); }
+  try { next = transitionUpload(row.security_status, action, { type: 'employee', id: verified.subject }); } catch {
+    await audit(env, row, verified.subject, auditActionForTransition(action), 'denied', 'invalid_state');
+    return json({ error: 'invalid_state' }, 409);
+  }
   const reason = action === 'reject' ? ((await request.json().catch(() => ({}))).reason || 'review_rejected').slice(0, 200) : null;
   const update = await env.DB.prepare("UPDATE lead_uploads SET security_status = ?, reviewed_at = ?, reviewed_by = ?, rejection_reason = ? WHERE id = ? AND lead_id = ? AND security_status = 'quarantine'")
     .bind(next, new Date().toISOString(), verified.subject, reason, params.uploadId, Number(params.leadId)).run();

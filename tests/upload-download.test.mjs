@@ -6,7 +6,7 @@ import { onRequestGet, onRequestPost } from '../functions/upload/employee-route.
 function env() {
   const row = { id: 'u1', lead_id: 7, r2_key: 'private/u1', original_name: 'part.pdf', detected_type: 'application/pdf', security_status: 'quarantine', storage_status: 'stored' };
   const calls = [];
-  return { calls, env: {
+  return { calls, row, env: {
     ACCESS_TEAM_DOMAIN: 'team.example', ACCESS_POLICY_AUD: 'aud', ACCESS_ALLOWED_SUBJECTS: 'employee@example.com',
     DB: { prepare(sql) { return { bind(...args) { return { async first() { calls.push(['first', sql, args]); return row; }, async run() { calls.push(['run', sql, args]); return {}; } }; } }; } },
     RFQ_UPLOADS: { async get(key) { calls.push(['get', key]); return new Response('data'); } },
@@ -59,4 +59,28 @@ test('review action rejects a concurrent second transition when no row changed',
   const response = await onRequestPost({ request: new Request('https://example', { method: 'POST', headers: { 'Cf-Access-Jwt-Assertion': assertion.token } }), env: e, params: { leadId: '7', uploadId: 'u1' }, action: 'approve' });
   assert.equal(response.status, 409);
   assert.ok(calls.some(([kind, sql, args]) => kind === 'run' && /upload_audit_log/i.test(sql) && args.includes('invalid_state')));
+});
+
+test('review action audits an invalid transition from rejected state', async () => {
+  const fixture = env();
+  fixture.row.security_status = 'rejected';
+  const assertion = signedAssertion();
+  fixture.env.fetchImpl = async () => new Response(JSON.stringify({ keys: [{ ...assertion.jwk, kid: 'k1', alg: 'RS256', use: 'sig' }] }));
+  const response = await onRequestPost({
+    request: new Request('https://example', { method: 'POST', headers: { 'Cf-Access-Jwt-Assertion': assertion.token } }),
+    env: fixture.env,
+    params: { leadId: '7', uploadId: 'u1' },
+    action: 'approve'
+  });
+  assert.equal(response.status, 409);
+  assert.deepEqual(await response.json(), { error: 'invalid_state' });
+  const auditCall = fixture.calls.find(([kind, sql, args]) => kind === 'run' && /upload_audit_log/i.test(sql) && args.includes('invalid_state'));
+  assert.ok(auditCall, 'invalid transition must be audited');
+  assert.equal(auditCall[2][0], 'u1');
+  assert.equal(auditCall[2][1], 7);
+  assert.equal(auditCall[2][2], 'employee');
+  assert.equal(auditCall[2][3], 'employee@example.com');
+  assert.equal(auditCall[2][5], 'file_approved');
+  assert.equal(auditCall[2][6], 'denied');
+  assert.equal(auditCall[2][7], 'invalid_state');
 });
