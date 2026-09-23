@@ -109,13 +109,20 @@ test('rate-limit worker fails closed without binding or with invalid input', asy
   }
 });
 
-test('preview worker is private and uses a distinct positive namespace from production placeholder', () => {
-  const config = fs.readFileSync(path.resolve('wrangler.rate-limit.preview.jsonc'), 'utf8');
-  assert.match(config, /"workers_dev"\s*:\s*false/);
-  assert.match(config, /"name"\s*:\s*"RATE_LIMITER"/);
-  assert.match(config, /"namespace_id"\s*:\s*"91001"/);
-  assert.match(config, /"limit"\s*:\s*5/);
-  assert.match(config, /"period"\s*:\s*10/);
-  assert.doesNotMatch(config, /TODO_PRODUCTION_NAMESPACE_ID/);
-  assert.match(config, /Production namespace must be different/i);
+test('rate-limit configs are private and use distinct production and preview namespaces', () => {
+  const preview = fs.readFileSync(path.resolve('wrangler.rate-limit.preview.jsonc'), 'utf8');
+  const production = fs.readFileSync(path.resolve('wrangler.rate-limit.production.jsonc'), 'utf8');
+
+  for (const config of [preview, production]) {
+    assert.match(config, /"workers_dev"\s*:\s*false/);
+    assert.match(config, /"name"\s*:\s*"RATE_LIMITER"/);
+    assert.match(config, /"limit"\s*:\s*5/);
+    assert.match(config, /"period"\s*:\s*10/);
+  }
+
+  assert.match(preview, /"name"\s*:\s*"osmp-rfq-rate-limit-preview"/);
+  assert.match(preview, /"namespace_id"\s*:\s*"91001"/);
+  assert.match(production, /"name"\s*:\s*"osmp-rfq-rate-limit-production"/);
+  assert.match(production, /"namespace_id"\s*:\s*"91002"/);
+  assert.notEqual('91001', '91002');
 });
