@@ -13,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css?v=20260618-light-industrial-logo-v2">
   <link rel="stylesheet" href="/css/oncc-system.css?v=20260810-contact-details-v1">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
 
 
 
@@ -72,7 +73,7 @@
           "name": "Welche Dateiformate können mit der Anfrage ausgewählt werden?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Das Anfrageformular nimmt keine Dateien entgegen. Nach der Kontaktaufnahme können vollständige Zeichnungsdaten wie PDF, DXF, STEP, STP oder Bilddateien per E-Mail übermittelt werden."
+          "text": "Das Anfrageformular nimmt PDF, ASCII-DXF, STEP, STP, JPG, JPEG und PNG an. Es sind maximal 5 Dateien mit bis zu 8 MiB je Datei und 16 MiB pro Anfrage möglich; Dateien werden zunächst quarantänisiert geprüft."
           }
         },
         {
@@ -236,25 +237,36 @@
     <p>F&uuml;r Ihre Anfrage k&ouml;nnen Sie vorab die <a href="/leistungen/">CNC-Fertigungsverfahren</a>, <a href="/werkstoffe/">Werkstoffangaben f&uuml;r CNC-Drehteile</a> und <a href="/qualitaet/">Pr&uuml;fanforderungen</a> einordnen.</p>
   </div>
   <div class="form-card">
-    <form id="leadForm" data-form="lead-form" onsubmit="submitForm(event)">
+    <form id="leadForm" action="/api/leads" method="post" enctype="multipart/form-data" data-form="lead-form" onsubmit="submitForm(event)">
       <div class="form-grid">
         <div class="form-row">
-          <div class="form-group"><label for="f_company" data-key="f_company"></label><input id="f_company" required></div>
-          <div class="form-group"><label for="f_name" data-key="f_name"></label><input id="f_name" required></div>
+          <div class="form-group"><label for="f_company" data-key="f_company"></label><input id="f_company" name="company" required></div>
+          <div class="form-group"><label for="f_name" data-key="f_name"></label><input id="f_name" name="name" required></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label for="f_email">E-Mail *</label><input id="f_email" type="email" required></div>
-          <div class="form-group"><label for="f_phone" data-key="f_phone"></label><input id="f_phone"></div>
+          <div class="form-group"><label for="f_email">E-Mail *</label><input id="f_email" name="email" type="email" required></div>
+          <div class="form-group"><label for="f_phone" data-key="f_phone"></label><input id="f_phone" name="phone"></div>
         </div>
         <div class="form-group">
           <label for="f_service" data-key="f_service"></label>
-          <select id="f_service"><option value=""></option><option value="cnc-drehen"></option><option value="drehfraesen"></option><option value="prototypen-serien"></option><option value="unsicher"></option></select>
+          <select id="f_service" name="service"><option value=""></option><option value="cnc-drehen"></option><option value="drehfraesen"></option><option value="prototypen-serien"></option><option value="unsicher"></option></select>
         </div>
-        <div class="form-group"><label for="f_msg" data-key="f_msg"></label><textarea id="f_msg"></textarea></div>
+        <div class="form-group"><label for="f_msg" data-key="f_msg"></label><textarea id="f_msg" name="message"></textarea></div>
+        <div class="form-group upload-field">
+          <label for="f_files" data-key="f_files">Technische Dateien (optional)</label>
+          <input id="f_files" name="files" type="file" multiple accept=".pdf,.dxf,.step,.stp,.jpg,.jpeg,.png,application/pdf,application/dxf,application/step,image/jpeg,image/png" aria-describedby="f_upload_help">
+          <p id="f_upload_help" class="form-help" data-key="upload_help">PDF, ASCII-DXF, STEP, STP, JPG, JPEG oder PNG; maximal 5 Dateien, 8 MiB je Datei und 16 MiB pro Anfrage.</p>
+        </div>
+        <div class="turnstile-field" aria-live="polite">
+          <div id="turnstile-widget" data-turnstile-sitekey="" aria-label="Turnstile verification"></div>
+          <input id="turnstile_token" name="turnstile_token" type="hidden" value="">
+          <p class="form-help" data-key="turnstile_help">Bitte bestätigen Sie die Sicherheitsprüfung, bevor Sie die Anfrage senden.</p>
+          <noscript><p class="form-help">Für den Versand ist JavaScript erforderlich, weil die Sicherheitsprüfung per Turnstile erfolgt.</p></noscript>
+        </div>
         <p class="form-privacy-note"><strong>Datenschutzhinweis:</strong> Die von Ihnen übermittelten Angaben werden zur Bearbeitung Ihrer Anfrage verarbeitet. Weitere Informationen finden Sie in unserer <a href="/datenschutz/">Datenschutzerklärung</a>.</p>
         <button id="cta-contact-submit" type="submit" class="btn btn-primary btn-lg" data-key="f_submit" data-cta="contact-form-submit" data-track-event="lead_form_submit"></button>
-        <div class="success-banner" id="successBanner" role="status" aria-live="polite" data-form-success="lead-form" data-track-event="lead_form_success" hidden></div>
-        <div class="error-banner" id="errorBanner" role="alert" aria-live="assertive" hidden></div>
+        <div class="success-banner" id="successBanner" role="status" aria-live="polite" tabindex="-1" data-form-success="lead-form" data-track-event="lead_form_success" hidden></div>
+        <div class="error-banner" id="errorBanner" role="alert" aria-live="assertive" tabindex="-1" hidden></div>
       </div>
     </form>
   </div>
@@ -278,7 +290,7 @@
 
     <details>
       <summary data-key="faq_files_q">Welche Dateiformate können mit der Anfrage ausgewählt werden?</summary>
-      <p data-key="faq_files_a">Das Anfrageformular nimmt keine Dateien entgegen. Nach der Kontaktaufnahme können vollständige Zeichnungsdaten wie PDF, DXF, STEP, STP oder Bilddateien per E-Mail übermittelt werden.</p>
+          <p data-key="faq_files_a">Das Anfrageformular nimmt PDF, ASCII-DXF, STEP, STP, JPG, JPEG und PNG an. Es sind maximal 5 Dateien mit bis zu 8 MiB je Datei und 16 MiB pro Anfrage möglich; Dateien werden zunächst quarantänisiert geprüft.</p>
     </details>
 
     <details>

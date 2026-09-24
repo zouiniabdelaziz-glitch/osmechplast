@@ -138,6 +138,71 @@ function buildStaticTranslationDictionary(lang) {
   return dict;
 }
 
+function createRequestId() {
+  if (!crypto?.randomUUID) throw new Error('request_id_unavailable');
+  return crypto.randomUUID();
+}
+
+function readLeadFormValues() {
+  return {
+    company: document.getElementById('f_company')?.value || '',
+    name: document.getElementById('f_name')?.value || '',
+    email: document.getElementById('f_email')?.value || '',
+    phone: document.getElementById('f_phone')?.value || '',
+    service: document.getElementById('f_service')?.value || '',
+    message: document.getElementById('f_msg')?.value || '',
+    language: currentLang,
+    source: 'website',
+    status: 'new'
+  };
+}
+
+async function submitLead(form) {
+  const requestId = createRequestId();
+  const payload = readLeadFormValues();
+  const turnstileToken = window.turnstile?.getResponse?.() || document.getElementById('turnstile_token')?.value || '';
+  if (!turnstileToken) {
+    const error = new Error('verification_required');
+    error.kind = 'validation';
+    error.status = 403;
+    throw error;
+  }
+  payload.turnstile_token = turnstileToken;
+  const files = Array.from(document.getElementById('f_files')?.files || []);
+  const headers = { 'X-Request-ID': requestId };
+  let body;
+  if (files.length) {
+    body = new FormData();
+    Object.entries(payload).forEach(([key, value]) => body.append(key, value));
+    files.forEach(file => body.append('files', file, file.name));
+  } else {
+    headers['Content-Type'] = 'application/json';
+    body = JSON.stringify(payload);
+  }
+  let res;
+  try {
+    res = await fetch('/api/leads', { method: 'POST', headers, body });
+  } catch {
+    const error = new Error('network_error');
+    error.kind = 'network';
+    throw error;
+  }
+  if (!res.ok) {
+    let errorCode = '';
+    try {
+      const errorResponse = typeof res.clone === 'function' ? res.clone() : res;
+      const payload = await errorResponse.json();
+      errorCode = typeof payload?.error === 'string' ? payload.error : '';
+    } catch {}
+    const error = new Error(errorCode || 'request_failed');
+    error.kind = res.status >= 400 && res.status < 500 ? 'validation' : 'server';
+    error.status = res.status;
+    error.code = errorCode;
+    throw error;
+  }
+  return res;
+}
+
 /* â”€â”€ CLOUDFLARE D1 LEAD SPEICHERN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function saveLead(payload) {
   let res;
@@ -169,13 +234,16 @@ function showFormBanner(banner, message) {
   if (!banner) return;
   banner.textContent = message;
   banner.hidden = false;
+  banner.setAttribute?.('aria-hidden', 'false');
   banner.style.display = 'block';
+  if (banner.id === 'successBanner') banner.focus?.({ preventScroll: true });
 }
 
 function hideFormBanner(banner) {
   if (!banner) return;
   banner.textContent = '';
   banner.hidden = true;
+  banner.setAttribute?.('aria-hidden', 'true');
   banner.style.display = 'none';
 }
 
@@ -196,38 +264,42 @@ async function submitForm(e) {
   const errorBanner = document.getElementById('errorBanner');
   hideFormBanner(successBanner);
   hideFormBanner(errorBanner);
-  const payload = {
-    company:     document.getElementById('f_company')?.value || '',
-    name:        document.getElementById('f_name')?.value || '',
-    email:       document.getElementById('f_email')?.value || '',
-    phone:       document.getElementById('f_phone')?.value || '',
-    service:     document.getElementById('f_service')?.value || '',
-    message:     document.getElementById('f_msg')?.value || '',
-    ai_analysis: null,
-    language:    currentLang,
-    source:      'website',
-    status:      'new',
-    created_at:  new Date().toISOString()
-  };
   try {
-    await saveLead(payload);
+    await submitLead(form);
     window.OSMPAnalytics?.track?.('lead_form_success');
     showFormBanner(successBanner, T[currentLang]?.f_success || '✓ Danke!');
-    setTimeout(() => hideFormBanner(successBanner), 5000);
     form.reset();
   } catch (error) {
-    const errorKey = error.kind === 'validation'
-      ? 'f_error_validation'
+    const errorKey = error.code === 'invalid_file'
+      ? 'f_error_format'
       : error.kind === 'network'
-        ? 'f_error_network'
-        : 'f_error_server';
-    const fallback = error.kind === 'validation'
-      ? 'Bitte prüfen Sie Ihre Angaben.'
+      ? 'f_error_network'
+      : error.status === 413
+        ? 'f_error_size'
+        : error.status === 415
+          ? 'f_error_format'
+          : error.status === 429
+            ? 'f_error_rate'
+            : error.kind === 'validation' || error.status === 422
+              ? 'f_error_validation'
+              : 'f_error_server';
+    const fallback = error.code === 'invalid_file'
+      ? 'Das Dateiformat oder der Dateiinhalt wird nicht unterstützt.'
       : error.kind === 'network'
-        ? 'Die Verbindung ist fehlgeschlagen.'
-        : 'Die Anfrage konnte nicht gespeichert werden.';
+      ? 'Die Verbindung ist fehlgeschlagen.'
+      : error.status === 413
+        ? 'Die ausgewählten Dateien oder Angaben sind zu groß.'
+        : error.status === 415
+          ? 'Das Dateiformat wird nicht unterstützt.'
+          : error.status === 429
+            ? 'Zu viele Anfragen in kurzer Zeit. Bitte versuchen Sie es später erneut.'
+            : error.kind === 'validation' || error.status === 422
+              ? 'Bitte prüfen Sie Ihre Angaben.'
+              : 'Die Anfrage konnte nicht gespeichert werden.';
     showFormBanner(errorBanner, T[currentLang]?.[errorKey] || fallback);
+    errorBanner?.focus?.();
   } finally {
+    resetTurnstileWidget();
     delete form.dataset.submitting;
     form.removeAttribute('aria-busy');
     if (submitButton) {
@@ -388,7 +460,33 @@ function initAnalyticsConsent() {
   document.body.appendChild(script);
 }
 
+function initTurnstile() {
+  const widget = document.getElementById('turnstile-widget');
+  const tokenInput = document.getElementById('turnstile_token');
+  if (!widget || !tokenInput) return;
+  const siteKey = widget.dataset.turnstileSitekey || window.OSMP_TURNSTILE_SITE_KEY || '';
+  if (!siteKey || !window.turnstile?.render) {
+    widget.setAttribute('aria-disabled', 'true');
+    return;
+  }
+  window.OSMP_TURNSTILE_WIDGET_ID = window.turnstile.render(widget, {
+    sitekey: siteKey,
+    callback: token => { tokenInput.value = token || ''; },
+    'expired-callback': () => { tokenInput.value = ''; },
+    'error-callback': () => { tokenInput.value = ''; }
+  });
+}
+
 /* â”€â”€ SCROLL-REVEAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+function resetTurnstileWidget() {
+  const tokenInput = document.getElementById('turnstile_token');
+  if (tokenInput) tokenInput.value = '';
+  const widgetId = window.OSMP_TURNSTILE_WIDGET_ID;
+  if (widgetId != null && window.turnstile?.reset) {
+    try { window.turnstile.reset(widgetId); } catch {}
+  }
+}
+
 function initReveal() {
   const els = document.querySelectorAll(
     '.svc-card,.mach-card,.ind-card,.media-card,.step,.usp,.mat-box,.sec-head,.cta-band,.faq details,.spec-table,.form-card,.contact-info,.robot-cell,.map-card,.flow-steps div,.location-points div,.request-assistant,.process-step'
@@ -406,6 +504,7 @@ function initReveal() {
 /* â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 document.addEventListener('DOMContentLoaded', async () => {
   await loadModules();
+  initTurnstile();
   scrollToHashTarget();
   currentLang = getSavedLang();
   initLanguageSelects();

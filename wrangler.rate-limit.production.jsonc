@@ -1,0 +1,17 @@
+{
+  "name": "osmp-rfq-rate-limit-production",
+  "main": "workers/rfq-rate-limit-preview.js",
+  "compatibility_date": "2026-09-20",
+  "workers_dev": false,
+  "ratelimits": [
+    {
+      "name": "RATE_LIMITER",
+      "namespace_id": "91002",
+      "simple": {
+        "limit": 5,
+        "period": 10
+      }
+    }
+  ]
+  // Dedicated production namespace.
+}

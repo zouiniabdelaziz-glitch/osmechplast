@@ -17,12 +17,15 @@ function read(file) {
   return fs.readFileSync(file, 'utf8');
 }
 
-test('contact output offers no drawing upload while the removal decision is active', () => {
+test('contact output offers one bounded technical drawing upload', () => {
   for (const file of ['modules/kontakt.html', 'kontakt/index.html']) {
     const html = read(file);
-    assert.doesNotMatch(html, /<input[^>]+type=["']file["']/i, file);
-    assert.doesNotMatch(html, /class=["'][^"']*upload-zone/i, file);
-    assert.doesNotMatch(html, /Datei hierher|Drag file|Trascinate il file|Glissez le fichier/i, file);
+    assert.equal((html.match(/<input[^>]+type=["']file["']/gi) || []).length, 1, file);
+    assert.match(html, /accept=["'][^"']*\.pdf[^"']*\.dxf[^"']*\.step[^"']*\.stp[^"']*\.jpe?g[^"']*\.png/i, file);
+    assert.match(html, /multiple/i, file);
+    assert.match(html, /5 Dateien|5 file|5 file/i, file);
+    assert.match(html, /8 MiB|8 MB/i, file);
+    assert.match(html, /16 MiB|16 MB/i, file);
   }
 });
 
@@ -42,17 +45,17 @@ test('contact form links to the privacy page without a TODO privacy notice', () 
   }
 });
 
-test('contact page has one honest inquiry form with unique IDs and no upload promise', () => {
+test('contact page has one inquiry form with unique IDs and bounded upload copy', () => {
   const html = read('kontakt/index.html');
   assert.equal((html.match(/<form\b/gi) || []).length, 1);
   assert.equal((html.match(/type=["']submit["']/gi) || []).length, 1);
   const ids = [...html.matchAll(/\bid=["']([^"']+)["']/gi)].map(match => match[1]);
   assert.equal(new Set(ids).size, ids.length, 'contact page contains duplicate IDs');
   assert.doesNotMatch(html, /TODO:\s*Reale Kontaktzeiten/i);
-  assert.doesNotMatch(html, /Im Anfrageformular sind PDF, DXF, STEP, STP und Bilddateien auswählbar/i);
+  assert.match(html, /PDF.*DXF.*STEP.*STP.*JPG.*PNG/i);
   assert.doesNotMatch(html, /data-key=["']hnav_cta["'][^>]*>Zeichnung senden</i);
   assert.doesNotMatch(html, /class=["'][^"']*btn[^"']*["'][^>]*>Zeichnung senden</i);
-  assert.match(html, /Zeichnungsdaten.*per E-Mail|per E-Mail.*Zeichnungsdaten/i);
+  assert.match(html, /PDF.*DXF.*STEP.*STP.*JPG.*PNG/i);
   assert.match(html, /href=["']\/datenschutz\/["']/i);
   assert.match(html, /id=["']leadForm["']/i);
   assert.match(read('js/app.js'), /fetch\(["']\/api\/leads["']/i);
@@ -84,5 +87,16 @@ test('service options use stable language-independent values', () => {
     for (const value of values) {
       assert.match(html, new RegExp(`<option value=["']${value}["']`, 'i'), `${file}: ${value}`);
     }
+  }
+});
+
+test('contact form remains semantically usable without JavaScript', () => {
+  for (const file of ['modules/kontakt.html', 'kontakt/index.html']) {
+    const html = read(file);
+    assert.match(html, /<form[^>]+action=["']\/api\/leads["']/i, file);
+    assert.match(html, /method=["']post["']/i, file);
+    assert.match(html, /enctype=["']multipart\/form-data["']/i, file);
+    for (const name of ['company', 'name', 'email', 'phone', 'service', 'message']) assert.match(html, new RegExp(`name=["']${name}["']`, 'i'), `${file}:${name}`);
+    assert.match(html, /Turnstile/i, file);
   }
 });
