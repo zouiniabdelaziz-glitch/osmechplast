@@ -16,6 +16,9 @@ _site/
 _preview/
 .cache/
 .npm-cache/
+.tmp/
+.wrangler/
+.superpowers/
 node_modules/
 
 # Local environment and secrets

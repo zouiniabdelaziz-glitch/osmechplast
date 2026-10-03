@@ -1,0 +1,13 @@
+{
+  "name": "internal-leads-local-tests",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-09-25",
+  "workers_dev": false,
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "internal-leads-local",
+    "database_id": "00000000-0000-0000-0000-000000000001",
+    "migrations_dir": "../../../migrations"
+  }],
+  "r2_buckets": [{ "binding": "RFQ_UPLOADS", "bucket_name": "internal-leads-local-private" }]
+}

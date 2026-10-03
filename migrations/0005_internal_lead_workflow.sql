@@ -1,74 +1,14 @@
-CREATE TABLE IF NOT EXISTS leads (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  company TEXT,
-  name TEXT,
-  email TEXT NOT NULL,
-  phone TEXT,
-  service TEXT,
-  message TEXT,
-  ai_analysis TEXT,
-  language TEXT DEFAULT 'de',
-  source TEXT DEFAULT 'website',
-  status TEXT DEFAULT 'new',
-  created_at TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS lead_uploads (
-  id TEXT PRIMARY KEY,
-  lead_id INTEGER NOT NULL,
-  sha256 TEXT NOT NULL,
-  original_name TEXT NOT NULL,
-  extension TEXT NOT NULL,
-  detected_type TEXT NOT NULL,
-  r2_key TEXT NOT NULL UNIQUE,
-  byte_size INTEGER NOT NULL,
-  storage_status TEXT NOT NULL CHECK (storage_status IN ('pending','stored','delete_pending','deleted','failed')),
-  security_status TEXT NOT NULL CHECK (security_status IN ('quarantine','approved','rejected')),
-  created_at TEXT NOT NULL,
-  stored_at TEXT,
-  reviewed_at TEXT,
-  reviewed_by TEXT,
-  rejection_reason TEXT,
-  deleted_at TEXT,
-  error_code TEXT,
-  FOREIGN KEY (lead_id) REFERENCES leads(id)
-);
-CREATE INDEX IF NOT EXISTS idx_lead_uploads_lead ON lead_uploads(lead_id);
-CREATE INDEX IF NOT EXISTS idx_lead_uploads_cleanup ON lead_uploads(storage_status, created_at);
-
-CREATE TABLE IF NOT EXISTS lead_requests (
-  request_id TEXT PRIMARY KEY,
-  lead_id INTEGER,
-  state TEXT NOT NULL CHECK (state IN ('processing','succeeded','failed')),
-  response_code INTEGER,
-  response_body TEXT,
-  created_at TEXT NOT NULL,
-  completed_at TEXT,
-  FOREIGN KEY (lead_id) REFERENCES leads(id)
-);
-CREATE INDEX IF NOT EXISTS idx_lead_requests_completed ON lead_requests(completed_at);
-CREATE INDEX IF NOT EXISTS idx_lead_requests_cleanup ON lead_requests(state, completed_at);
-
-CREATE TABLE IF NOT EXISTS upload_audit_log (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  upload_id TEXT,
-  lead_id INTEGER,
-  actor_type TEXT NOT NULL,
-  actor_id TEXT,
-  occurred_at TEXT NOT NULL,
-  action TEXT NOT NULL CHECK (action IN ('upload_stored','validation_failed','file_approved','file_rejected','download_allowed','download_denied','deletion_requested','file_deleted','cleanup_failed')),
-  result TEXT NOT NULL,
-  detail_code TEXT,
-  FOREIGN KEY (upload_id) REFERENCES lead_uploads(id) ON DELETE SET NULL,
-  FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE SET NULL
-);
-CREATE INDEX IF NOT EXISTS idx_upload_audit_upload ON upload_audit_log(upload_id, occurred_at);
-CREATE INDEX IF NOT EXISTS idx_upload_audit_time ON upload_audit_log(occurred_at, action);
-
 ALTER TABLE leads ADD COLUMN workflow_status TEXT NOT NULL DEFAULT 'new'
   CHECK (workflow_status IN ('new', 'in_progress', 'completed'));
 ALTER TABLE leads ADD COLUMN workflow_version INTEGER NOT NULL DEFAULT 0
   CHECK (typeof(workflow_version) = 'integer' AND workflow_version BETWEEN 0 AND 9007199254740991);
+
+UPDATE leads
+SET workflow_status = CASE
+  WHEN status IN ('new', 'in_progress', 'completed') THEN status
+  ELSE 'new'
+END;
+
 ALTER TABLE lead_uploads ADD COLUMN review_request_id TEXT;
 
 CREATE TABLE internal_review_control (
@@ -157,10 +97,10 @@ BEGIN
     AND workflow_status = NEW.expected_status
     AND workflow_version = NEW.expected_version;
 
-  SELECT CASE
+  SELECT (CASE
     WHEN NEW.response_code = 200 AND changes() <> 1
     THEN RAISE(ABORT, 'status_write_conflict')
-  END;
+  END);
 
   INSERT INTO lead_status_audit (
     request_id, lead_id, actor_type, actor_id, action, result, detail_code,
@@ -184,46 +124,3 @@ BEGIN
     NEW.occurred_at
   WHERE NEW.response_code <> 200;
 END;
-
-UPDATE internal_review_control
-SET enabled = 0, changed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
-WHERE id = 1;
-
-CREATE TRIGGER upload_review_guard
-BEFORE UPDATE OF security_status ON lead_uploads
-WHEN NEW.security_status IS NOT OLD.security_status
-BEGIN
-  SELECT CASE WHEN COALESCE((SELECT enabled FROM internal_review_control WHERE id = 1), 0) <> 1
-    THEN RAISE(ABORT, 'review_unavailable') END;
-  SELECT CASE WHEN COALESCE((SELECT protocol_version FROM internal_review_control WHERE id = 1), 0) <> 2
-    THEN RAISE(ABORT, 'review_unavailable') END;
-  SELECT CASE WHEN OLD.storage_status <> 'stored' OR NEW.storage_status <> 'stored'
-    THEN RAISE(ABORT, 'invalid_state') END;
-  SELECT CASE WHEN OLD.security_status <> 'quarantine'
-    THEN RAISE(ABORT, 'invalid_state') END;
-  SELECT CASE WHEN NEW.security_status NOT IN ('approved', 'rejected')
-    THEN RAISE(ABORT, 'invalid_state') END;
-  SELECT CASE WHEN NEW.reviewed_by IS NULL OR trim(NEW.reviewed_by) = '' OR NEW.reviewed_at IS NULL OR trim(NEW.reviewed_at) = ''
-    THEN RAISE(ABORT, 'invalid_state') END;
-  SELECT CASE WHEN NEW.review_request_id IS NULL OR NEW.review_request_id = OLD.review_request_id
-    THEN RAISE(ABORT, 'review_unavailable') END;
-  SELECT CASE WHEN NEW.security_status = 'rejected' AND (NEW.rejection_reason IS NULL OR trim(NEW.rejection_reason) = '' OR length(NEW.rejection_reason) > 200)
-    THEN RAISE(ABORT, 'invalid_rejection_reason') END;
-  SELECT CASE WHEN NEW.security_status = 'approved' AND NEW.rejection_reason IS NOT NULL
-    THEN RAISE(ABORT, 'invalid_state') END;
-END;
-
-CREATE TRIGGER upload_review_success_audit
-AFTER UPDATE OF security_status ON lead_uploads
-WHEN NEW.security_status IS NOT OLD.security_status
-BEGIN
-  INSERT INTO upload_audit_log (
-    upload_id, lead_id, actor_type, actor_id, occurred_at, action, result, detail_code
-  ) VALUES (
-    NEW.id, NEW.lead_id, 'employee', NEW.reviewed_by, NEW.reviewed_at,
-    CASE WHEN NEW.security_status = 'approved' THEN 'file_approved' ELSE 'file_rejected' END,
-    'success', NEW.security_status
-  );
-END;
-
-DROP TRIGGER upload_review_migration_block;
