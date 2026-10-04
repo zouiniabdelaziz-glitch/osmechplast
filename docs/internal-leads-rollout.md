@@ -167,10 +167,22 @@ Nicht Bestandteil des Commit-Vorschlags, aber erhalten bleiben: `docs/internal-l
 
 Der Commit `bb5bc8a8366911a7e9b370348858a9f495afd497` war unvollständig: `functions/internal/api/leads/index.js` fehlte. Die frühere Testsuite prüfte `listLeads` direkt, aber nicht die Pages-Routenzuordnung; deshalb blieb die Lücke unentdeckt. Die Korrektur umfasst ausschließlich diese Route, den gezielten Routentest und diese Dokumentationsänderung. Der echte lokale Pages-HTTP-Nachweis für den exportierten Git-Index ist am 04.10.2026 bestanden; ein Remote-Preview-Nachweis ist damit nicht gemeint.
 
+### Korrektur der `/internal`-Routenzuordnung
+
+Ausgangsbefund im Release-Stand `ad7baac8194e2b35a453f8a566368b033656cdab`: `_routes.json` enthielt `/internal/*`, aber nicht den exakten Pfad `/internal`. Der neue Konfigurationsregressionstest schlug am unveränderten Stand deshalb gezielt fehl.
+
+Die lokale Korrektur ergänzt ausschließlich `/internal` neben der bestehenden Regel `/internal/*`; bestehende Regeln bleiben erhalten. Der Test `node --test tests/internal-pages-routing.test.mjs` prüft nun getrennt die Konfiguration (beide Include-Regeln) und den authentifizierten Listenhandler.
+
+**04.10.2026, echter lokaler Pages-HTTP-Nachweis in isolierter Kopie des Release-Commits:** Beide isolierten HTTP-Läufe wurden aus dem unveränderten Commit `ad7baac8194e2b35a453f8a566368b033656cdab` erzeugt. Sie verwendeten daher die ursprüngliche `_routes.json` mit `/internal/*`, nicht die spätere lokale Ergänzung `/internal`. Redirects wurden im vorhandenen Harness ausdrücklich mit `redirect: 'manual'` nicht verfolgt.
+
+Der erste Lauf prüfte ohne JWT `/internal`, `/internal/`, `/internal/internal.css` und `/internal/api/unknown`; alle lieferten `401`. Der zweite Lauf erweiterte ausschließlich im temporären Harness die Prüfung auf die fünf verlangten Pfade. Ohne JWT lieferten `/internal`, `/internal/`, `/internal/internal.css`, `/internal/internal.js` und `/internal/api/leads` jeweils `401`. Mit lokaler signierter Testauthentifizierung lieferten `/internal/` `200` und das geschützte CSS `200` mit Sicherheitsheadern. `INTERNAL_UI_ENABLED=0` lieferte `404`. Es wurden ausschließlich synthetische lokale Daten verwendet; Pages-Prozesse und temporäre Daten wurden bereinigt. Dies ist ein lokaler Nachweis, kein Remote-Preview-Test.
+
+Die ursprüngliche Schutzlücke ist damit nicht als ausnutzbarer HTTP-Bypass nachgewiesen: Auch die unveränderte Konfiguration aus `ad7baac` lieferte für alle fünf anonym geprüften Pfade `401`. Nachgewiesen war jedoch die fehlende explizite Include-Regel für den exakten Pfad `/internal`; die lokale Ergänzung macht die Routenkonfiguration eindeutig. Der Konfigurationsregressionstest schlug ohne `/internal` gezielt fehl und bestand nach der Ergänzung. Konfigurationsnachweis und echter HTTP-Nachweis bleiben getrennt.
+
 ### Commit-Vorschlag und Freigabestatus
 
 Vorschlag: `feat(internal): add authenticated lead review workspace`
 
 Der ursprüngliche Release-Commit ist erstellt; der Korrektur-Commit ist noch nicht erstellt. Vor dessen Erstellung müssen ausschließlich die drei Korrekturdateien einzeln gestaged werden. Push, Deployment, Remote-Migration und Gate-Eingriff bleiben ausgeschlossen.
 
-Verbleibender Release-Blocker: kein technischer Routingnachweis innerhalb dieses Korrekturumfangs. Der Korrektur-Commit ist noch ausstehend; die Produktionsfreigabe bleibt ein separater Schritt und der lokale Stand ist nicht als Identitätsnachweis für das Preview-Deployment zu behandeln.
+Verbleibender Release-Blocker: Der Korrektur-Commit ist noch ausstehend; die Produktionsfreigabe bleibt ein separater Schritt und der lokale Stand ist nicht als Identitätsnachweis für das Preview-Deployment zu behandeln.
