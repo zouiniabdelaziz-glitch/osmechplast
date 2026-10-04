@@ -78,7 +78,7 @@ Danach UI deaktivieren, Access erhalten und additive Tabellen/Spalten/Trigger/Au
 ### Aktueller lokaler Stand
 
 - Branch: `internal-leads-local`
-- HEAD: `d597c433b9f7bf36c7f527b1b9957142812b99df`
+- HEAD: `bb5bc8a8366911a7e9b370348858a9f495afd497`
 - Arbeitsbaum: absichtlich nicht sauber; Produktcode, Tests, Dokumentation und untracked Dateien wurden vollständig inventarisiert.
 - Der lokale Stand ist nicht automatisch identisch mit dem Preview-Deployment `ed772bae-4f28-4bdb-8eb7-4f1c1f5f0a4b`. Der gemeinsame HEAD-Commit ersetzt keinen Byte-/Manifestvergleich; ein solcher Vergleich wurde nicht durchgeführt.
 
@@ -98,6 +98,7 @@ functions/_middleware.js
 functions/internal/_middleware.js
 functions/internal/access-jwt.mjs
 functions/internal/api/[[path]].js
+functions/internal/api/leads/index.js
 functions/internal/api/leads/[leadId]/index.js
 functions/internal/api/leads/[leadId]/status.js
 functions/internal/lead-workflow.mjs
@@ -126,6 +127,7 @@ tests/fixtures/internal/worker.mjs
 tests/fixtures/internal/wrangler.jsonc
 tests/helpers/internal-sqlite.mjs
 tests/internal-build.test.mjs
+tests/internal-pages-routing.test.mjs
 tests/internal-fixtures.mjs
 tests/internal-lead-status.test.mjs
 tests/internal-leads-api.test.mjs
@@ -156,13 +158,19 @@ Nicht Bestandteil des Commit-Vorschlags, aber erhalten bleiben: `docs/internal-l
 - `node --test tests/browser/internal-ui.browser.test.mjs` mit den vorhandenen lokalen Playwright-/Chrome-Pfaden: 2 bestanden, 0 fehlgeschlagen, 0 übersprungen. Dies war ein lokaler automatisierter Regressionstest, keine Wiederholung der manuellen Preview-Abnahme.
 - `node --check` für 80 JavaScript-/ESM-Dateien: bestanden.
 - `git diff --check`: bestanden.
+- Der gezielte Regressionstest `node --test tests/internal-pages-routing.test.mjs` prüft die explizite Route-Datei und ihren authentifizierten Listenhandler mit signierter synthetischer Testauthentifizierung und synthetischem Listen-Datensatz. Das ist ein direkter Modul-/Handlernachweis, kein echter Pages-HTTP-Routennachweis.
+- **04.10.2026, vom Nutzer ausgeführter lokaler Pages-HTTP-Test:** Der aktuelle Git-Index wurde isoliert exportiert; ausschließlich lokale synthetische D1-Daten und ein lokal signiertes Test-JWT wurden verwendet. Ohne Authentifizierung: `401`, `{"error":"unauthorized"}`. Mit Testauthentifizierung: `200`, `ids=[42]`, `page=1`, `hasMore=false`. Der eigene Pages-Prozess und temporäre Daten wurden ohne Cleanup-Fehler beendet. Dies ist ein lokaler Nachweis für den exportierten Git-Index, kein Remote-Preview-Test.
 - Build-Ausschlussprüfung: keine `.dev.vars`, Secrets, SQL-/DB-Dateien, Sicherungen, Caches oder `node_modules` in `_site`.
 - Der Testlauf schreibt bei einem absichtlich simulierten D1-Fehler eine synthetische Fehlermeldung in die lokale Konsole; der Test besteht und die Meldung gelangt nicht in den Build. Kein bestätigter Produktcodefehler daraus.
+
+### Korrektur des Release-Commits
+
+Der Commit `bb5bc8a8366911a7e9b370348858a9f495afd497` war unvollständig: `functions/internal/api/leads/index.js` fehlte. Die frühere Testsuite prüfte `listLeads` direkt, aber nicht die Pages-Routenzuordnung; deshalb blieb die Lücke unentdeckt. Die Korrektur umfasst ausschließlich diese Route, den gezielten Routentest und diese Dokumentationsänderung. Der echte lokale Pages-HTTP-Nachweis für den exportierten Git-Index ist am 04.10.2026 bestanden; ein Remote-Preview-Nachweis ist damit nicht gemeint.
 
 ### Commit-Vorschlag und Freigabestatus
 
 Vorschlag: `feat(internal): add authenticated lead review workspace`
 
-Der lokale Stand ist für einen lokalen Release-Commit technisch vorbereitet. Vor dem Commit müssen die oben genannten Ausschlüsse explizit aus dem Staging ferngehalten werden. Ein Commit, Push, Deployment, Remote-Migration oder Gate-Eingriff ist noch nicht erfolgt.
+Der ursprüngliche Release-Commit ist erstellt; der Korrektur-Commit ist noch nicht erstellt. Vor dessen Erstellung müssen ausschließlich die drei Korrekturdateien einzeln gestaged werden. Push, Deployment, Remote-Migration und Gate-Eingriff bleiben ausgeschlossen.
 
-Verbleibender Release-Blocker vor einem Veröffentlichungs-Commit: Es fehlt nur die ausdrückliche Commit-Freigabe und die Bestätigung der finalen Staging-Dateiliste. Die Produktionsfreigabe bleibt ein separater Schritt; der lokale Build-/Teststand ist nicht als Identitätsnachweis für das Preview-Deployment zu behandeln.
+Verbleibender Release-Blocker: kein technischer Routingnachweis innerhalb dieses Korrekturumfangs. Der Korrektur-Commit ist noch ausstehend; die Produktionsfreigabe bleibt ein separater Schritt und der lokale Stand ist nicht als Identitätsnachweis für das Preview-Deployment zu behandeln.
