@@ -1,6 +1,18 @@
 /api/*
   X-Robots-Tag: noindex, nofollow
 
+/internal
+  Cache-Control: no-store
+  X-Content-Type-Options: nosniff
+  X-Robots-Tag: noindex, nofollow
+  Referrer-Policy: no-referrer
+
+/internal/*
+  Cache-Control: no-store
+  X-Content-Type-Options: nosniff
+  X-Robots-Tag: noindex, nofollow
+  Referrer-Policy: no-referrer
+
 /functions/*
   X-Robots-Tag: noindex, nofollow
 

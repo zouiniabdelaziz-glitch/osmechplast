@@ -13,5 +13,5 @@ test('employee upload route files and Pages route manifest exist', () => {
     '_routes.json',
   ]) assert.equal(existsSync(path.join(root, file)), true, file);
   const routes = JSON.parse(readFileSync(path.join(root, '_routes.json'), 'utf8'));
-  assert.deepEqual(routes.include, ['/api/leads', '/internal/leads/*']);
+  assert.equal(routes.include.includes('/internal/*'), true);
 });

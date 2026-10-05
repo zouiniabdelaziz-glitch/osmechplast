@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 
+import { openInternalTestDb, closeInternalTestDb } from './helpers/internal-sqlite.mjs';
+
 test('upload migration defines required status columns', () => {
   const sql = fs.readFileSync('migrations/0002_lead_uploads.sql', 'utf8');
   assert.match(sql, /id TEXT PRIMARY KEY/);
@@ -75,4 +77,46 @@ test('numbered upload migrations execute together in SQLite', () => {
   const normalizeSql = (value) => value.replaceAll('\r\n', '\n').trim();
   const referenceLead = fs.readFileSync('schema.sql', 'utf8').split(/\n\s*CREATE TABLE IF NOT EXISTS lead_uploads/)[0];
   assert.equal(normalizeSql(fs.readFileSync('migrations/0001_leads.sql', 'utf8')), normalizeSql(referenceLead));
+});
+
+test('0005 defines workflow snapshots, request constraints, audit retention and a closed review gate', () => {
+  const db = openInternalTestDb({ through: '0005' });
+
+  try {
+    const leadColumns = db.prepare('PRAGMA table_info(leads)').all().map((row) => row.name);
+    assert.deepEqual(leadColumns.slice(-2), ['workflow_status', 'workflow_version']);
+
+    const tables = db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name IN ('lead_status_requests', 'lead_status_audit', 'internal_review_control') ORDER BY name").all().map((row) => row.name);
+    assert.deepEqual(tables, ['internal_review_control', 'lead_status_audit', 'lead_status_requests']);
+
+    const gate = db.prepare('SELECT id, enabled, protocol_version FROM internal_review_control').get();
+    assert.deepEqual({ id: gate.id, enabled: gate.enabled, protocol_version: gate.protocol_version }, { id: 1, enabled: 0, protocol_version: 2 });
+
+    const indexes = db.prepare("SELECT name FROM sqlite_master WHERE type = 'index'").all().map((row) => row.name);
+    assert.ok(indexes.includes('idx_leads_workflow_created'));
+    assert.ok(indexes.includes('idx_lead_status_audit_lead_time'));
+    assert.ok(indexes.includes('idx_lead_status_requests_lead'));
+
+    assert.throws(() => db.prepare(`
+      INSERT INTO lead_status_requests
+        (request_id, actor_id, requested_lead_id, expected_status, expected_version, target_status,
+         observed_status, observed_version, response_code, detail_code, occurred_at)
+      VALUES ('00000000-0000-4000-8000-000000000001', 'employee-test', 1, 'completed', 0, 'new',
+        'completed', 0, 409, 'status_conflict', '2026-09-25T00:00:00.000Z')
+    `).run());
+  } finally {
+    closeInternalTestDb(db);
+  }
+});
+
+test('D1 trigger CASE expressions are parenthesized for remote statement splitting', () => {
+  const workflow = fs.readFileSync('migrations/0005_internal_lead_workflow.sql', 'utf8');
+  const review = fs.readFileSync('migrations/0006_upload_review_audit.sql', 'utf8');
+  const workflowTrigger = workflow.slice(workflow.indexOf('CREATE TRIGGER lead_status_request_apply'));
+  const reviewTrigger = review.slice(review.indexOf('CREATE TRIGGER upload_review_guard'));
+
+  assert.doesNotMatch(workflowTrigger, /SELECT CASE\b/u);
+  assert.doesNotMatch(reviewTrigger, /SELECT CASE\b/u);
+  assert.match(workflowTrigger, /SELECT \(CASE[\s\S]+?END\);/u);
+  assert.match(reviewTrigger, /SELECT \(CASE[\s\S]+?END\);/u);
 });

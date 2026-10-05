@@ -26,7 +26,26 @@ export async function verifyAccessJwt(assertion, options = {}) {
     if (header.alg !== 'RS256' || !header.kid || typeof payload.iss !== 'string' || payload.iss !== normalizedTeamDomain) return { ok: false, reason: 'invalid_claims' };
     const audiences = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
     if (!audiences.includes(policyAud) || !Number.isFinite(payload.exp) || payload.exp <= now || (payload.nbf != null && (!Number.isFinite(payload.nbf) || payload.nbf > now))) return { ok: false, reason: 'invalid_claims' };
-    const response = await fetchImpl(`${normalizedTeamDomain}/cdn-cgi/access/certs`);
+    let jwksEndpoint = `${normalizedTeamDomain}/cdn-cgi/access/certs`;
+    if (options.jwksUrl) {
+      const override = new URL(options.jwksUrl);
+      if (override.protocol !== 'https:' && options.allowInsecureJwks !== true) return { ok: false, reason: 'invalid_claims' };
+      jwksEndpoint = override.toString();
+    }
+    const controller = new AbortController();
+    let timeout;
+    let response;
+    try {
+      response = await Promise.race([
+        fetchImpl(jwksEndpoint, { signal: controller.signal }),
+        new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new Error('jwks_timeout')); }, 3000); }),
+      ]);
+    } catch (error) {
+      if (error?.message === 'jwks_timeout') return { ok: false, reason: 'jwks_unavailable' };
+      throw error;
+    } finally {
+      clearTimeout(timeout);
+    }
     if (!response.ok) return { ok: false, reason: 'jwks_unavailable' };
     const key = (await response.json()).keys?.find((candidate) => candidate.kid === header.kid && candidate.alg === 'RS256');
     if (!key) return { ok: false, reason: 'unknown_key' };
@@ -34,7 +53,7 @@ export async function verifyAccessJwt(assertion, options = {}) {
     const input = new TextEncoder().encode(`${parts[0]}.${parts[1]}`);
     const signature = Uint8Array.from(atob(parts[2].replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(parts[2].length / 4) * 4, '=')), (c) => c.charCodeAt(0));
     if (!await crypto.subtle.verify('RSASSA-PKCS1-v1_5', cryptoKey, signature, input)) return { ok: false, reason: 'invalid_signature' };
-    const subject = payload.sub || payload.email;
+    const subject = payload.sub;
     const groups = Array.isArray(payload.groups) ? payload.groups : [];
     if (!subject || (!allowedSubjects.includes(subject) && !allowedGroups.some((group) => groups.includes(group)))) return { ok: false, reason: 'not_employee' };
     return { ok: true, subject, groups };

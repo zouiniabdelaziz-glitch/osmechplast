@@ -83,6 +83,7 @@ const publicDirectories = [
   'technologie',
   'unternehmen',
   'werkstoffe',
+  'internal',
 ];
 
 const publicRootFiles = [
