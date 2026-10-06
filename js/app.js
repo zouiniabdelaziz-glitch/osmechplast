@@ -14,6 +14,8 @@ const CONFIG = {
 
 /* â”€â”€ SPRACHE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 let currentLang = CONFIG.defaultLang;
+const staticTranslationSources = new WeakMap();
+const attributeTranslationSources = new WeakMap();
 
 function getSavedLang() {
   try {
@@ -53,11 +55,12 @@ function applyTranslations() {
   // Texte
   document.querySelectorAll('[data-key]').forEach(el => {
     const key = el.dataset.key;
-    if (!t[key]) return;
+    const value = t[key] ?? T.de[key];
+    if (value == null) return;
     if (key === 'hero_h1_html' || key === 'contact_h2') {
-      el.innerHTML = t[key];
+      el.innerHTML = value;
     } else {
-      el.textContent = t[key];
+      el.textContent = value;
     }
   });
 
@@ -65,7 +68,7 @@ function applyTranslations() {
   const sel = document.getElementById('f_service');
   if (sel) {
     ['f_service_opt0','f_service_opt1','f_service_opt2','f_service_opt3','f_service_opt4']
-      .forEach((k, i) => { if (sel.options[i] && t[k]) sel.options[i].text = t[k]; });
+      .forEach((k, i) => { if (sel.options[i]) sel.options[i].text = t[k] ?? T.de[k] ?? sel.options[i].text; });
   }
 
   // Ticker neu befÃ¼llen
@@ -89,9 +92,7 @@ function preserveOuterWhitespace(original, translated) {
 }
 
 function applyStaticTranslations() {
-  if (currentLang === CONFIG.defaultLang) return;
   const dict = buildStaticTranslationDictionary(currentLang);
-  if (!dict) return;
 
   const skipTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'SVG', 'PATH']);
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
@@ -99,22 +100,29 @@ function applyStaticTranslations() {
       const parent = node.parentElement;
       if (!parent || skipTags.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
       if (parent.closest('[data-no-translate]')) return NodeFilter.FILTER_REJECT;
-      const key = normalizeTextForTranslation(node.nodeValue);
-      return dict[key] ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
     }
   });
 
   const nodes = [];
   while (walker.nextNode()) nodes.push(walker.currentNode);
   nodes.forEach(node => {
-    const key = normalizeTextForTranslation(node.nodeValue);
-    node.nodeValue = preserveOuterWhitespace(node.nodeValue, dict[key]);
+    const source = staticTranslationSources.has(node) ? staticTranslationSources.get(node) : node.nodeValue;
+    staticTranslationSources.set(node, source);
+    const key = normalizeTextForTranslation(source);
+    const translated = currentLang === CONFIG.defaultLang ? source : (dict?.[key] ?? source);
+    node.nodeValue = preserveOuterWhitespace(source, translated);
   });
 
   ['aria-label', 'alt', 'title', 'placeholder'].forEach(attr => {
     document.querySelectorAll(`[${attr}]`).forEach(el => {
-      const key = normalizeTextForTranslation(el.getAttribute(attr));
-      if (dict[key]) el.setAttribute(attr, dict[key]);
+      let sources = attributeTranslationSources.get(el);
+      if (!sources) { sources = {}; attributeTranslationSources.set(el, sources); }
+      if (!(attr in sources)) sources[attr] = el.getAttribute(attr) || '';
+      const source = sources[attr];
+      const key = normalizeTextForTranslation(source);
+      const translated = currentLang === CONFIG.defaultLang ? source : (dict?.[key] ?? source);
+      el.setAttribute(attr, translated);
     });
   });
 }

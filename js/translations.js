@@ -10,7 +10,7 @@ const T = {
     logo_tag: 'Präzisionsdrehteile · Italien',
     nav_services: 'Leistungen', nav_machines: 'Maschinenpark', nav_materials: 'Werkstoffe',
     nav_process: 'Ablauf', nav_industries: 'Branchen', nav_cta: 'Angebot anfragen',
-    hnav_services: 'Leistungen', hnav_technology: 'Technologie', hnav_knowledge: 'Wissen', hnav_materials: 'Materialien',
+    hnav_services: 'Leistungen', legal_privacy: 'Datenschutz', services_quality_link: 'Qualität & Prüfung', hnav_technology: 'Technologie', hnav_knowledge: 'Wissen', hnav_materials: 'Materialien',
     hnav_quality: 'Qualität', hnav_company: 'Unternehmen', hnav_contact: 'Kontakt',
     hnav_cta: 'Anfrage senden', hnav_menu: 'Menü',
     cluster_design: 'Fertigungsgerechte Konstruktion',
@@ -103,7 +103,7 @@ const T = {
     c_kicker: 'Anfrage', contact_h2: 'CNC-Anfrage vorbereiten.<br><em>Anfrage senden.</em>',
     c_lead: 'Laden Sie Zeichnung oder technische Dateien direkt mit der Anfrage hoch. Ergänzen Sie Material, Menge und Zieltermin; wir prüfen die Angaben technisch und melden uns mit Rückfragen oder einem Angebot.',
     cp1_t: 'Technische Rückmeldung', cp1_s: 'Nach Prüfung der Zeichnung und Machbarkeit.',
-    cp2_t: 'Zeichnungsdaten', cp2_s: 'Nach der Kontaktaufnahme per E-Mail.',
+    cp2_t: 'Zeichnungsdaten', cp2_s: 'Direkt mit der Anfrage oder nach der Kontaktaufnahme per E-Mail.',
     cp3_t: 'Vertraulich', cp3_s: 'Ihre Zeichnungen bleiben Ihre Zeichnungen.',
     f_company: 'Firma *', f_name: 'Ansprechpartner *', f_phone: 'Telefon (optional)',
     f_service: 'Leistung',
@@ -113,7 +113,7 @@ const T = {
     f_files: 'Technische Dateien (optional)', upload_help: 'PDF, ASCII-DXF, STEP, STP, JPG, JPEG oder PNG; maximal 5 Dateien, 8 MiB je Datei und 16 MiB pro Anfrage. Dateien werden zunächst quarantänisiert geprüft.',
     turnstile_help: 'Bitte bestätigen Sie die Sicherheitsprüfung, bevor Sie die Anfrage senden.',
     f_sketch: 'Zeichnung / Skizze',
-    upload_text: 'Zeichnungsdaten nach Kontaktaufnahme per E-Mail',
+    upload_text: 'Technische Dateien direkt mit der Anfrage senden',
     upload_sub: 'PDF · DXF · STEP · STP · Bilddateien',
     ai_loading: 'Datei wird vorgemerkt…', ai_result_title: 'Dateihinweis',
     f_submit: 'Anfrage senden →',
@@ -215,7 +215,7 @@ const T = {
     logo_tag: 'Tornitura di precisione · Italia',
     nav_services: 'Servizi', nav_machines: 'Parco macchine', nav_materials: 'Materiali',
     nav_process: 'Processo', nav_industries: 'Settori', nav_cta: 'Richiedi preventivo',
-    hnav_services: 'Servizi', hnav_technology: 'Tecnologia', hnav_knowledge: 'Conoscenza', hnav_materials: 'Materiali',
+    hnav_services: 'Servizi', legal_privacy: 'Informativa sulla privacy', services_quality_link: 'Qualità e controlli', hnav_technology: 'Tecnologia', hnav_knowledge: 'Conoscenza', hnav_materials: 'Materiali',
     hnav_quality: 'Qualità', hnav_company: 'Azienda', hnav_contact: 'Contatto',
     hnav_cta: 'Invia richiesta', hnav_menu: 'Menu',
     cluster_design: 'Progettazione per la lavorazione',
@@ -307,8 +307,8 @@ const T = {
 
     c_kicker: 'Richiesta', contact_h2: 'Preparate la richiesta.<br><em>Richiesta tecnica.</em>',
     c_lead: 'Caricate il disegno o i file tecnici direttamente con la richiesta. Aggiungete materiale, quantità e data obiettivo; verifichiamo i dati tecnicamente e chiariamo i punti aperti.',
-    cp1_t: 'Risposta in 24h', cp1_s: 'Nei giorni lavorativi, garantito.',
-    cp2_t: 'Dati del disegno', cp2_s: 'Dopo il contatto via e-mail.',
+    cp1_t: 'Risposta tecnica', cp1_s: 'Dopo la verifica tecnica del disegno.',
+    cp2_t: 'Dati del disegno', cp2_s: 'Direttamente con la richiesta o dopo il contatto via e-mail.',
     cp3_t: 'Riservatezza', cp3_s: 'I vostri disegni restano vostri.',
     f_company: 'Azienda *', f_name: 'Referente *', f_phone: 'Telefono (opzionale)',
     f_service: 'Servizio',
@@ -318,7 +318,7 @@ const T = {
     f_files: 'File tecnici (facoltativi)', upload_help: 'PDF, DXF ASCII, STEP, STP, JPG, JPEG o PNG; massimo 5 file, 8 MiB per file e 16 MiB per richiesta. I file vengono inizialmente sottoposti a verifica in quarantena.',
     turnstile_help: 'Confermate la verifica di sicurezza prima di inviare la richiesta.',
     f_sketch: 'Disegno / schizzo (analisi AI immediata)',
-    upload_text: 'Dati del disegno dopo il contatto via e-mail',
+    upload_text: 'Inviare i file tecnici direttamente con la richiesta',
     upload_sub: 'PDF · DXF · STEP · STP · file immagine',
     ai_loading: '⏳ L\'AI sta analizzando il disegno…', ai_result_title: 'Prima valutazione AI',
     f_submit: 'Invia richiesta →',
@@ -411,9 +411,12 @@ const T = {
     logo_tag: 'Precision Turning · Italy',
     nav_services: 'Services', nav_machines: 'Machinery', nav_materials: 'Materials',
     nav_process: 'Process', nav_industries: 'Industries', nav_cta: 'Get a quote',
-    hnav_services: 'Services', hnav_technology: 'Technology', hnav_knowledge: 'Knowledge', hnav_materials: 'Materials',
+    hnav_services: 'Services', legal_privacy: 'Privacy policy', services_quality_link: 'Quality & inspection', hnav_technology: 'Technology', hnav_knowledge: 'Knowledge', hnav_materials: 'Materials',
     hnav_quality: 'Quality', hnav_company: 'Company', hnav_contact: 'Contact',
     hnav_cta: 'Send inquiry', hnav_menu: 'Menu',
+    cluster_design: 'Design for manufacture', cluster_materials: 'Materials for CNC turned parts',
+    cluster_turning: 'CNC turning and turn-milling', cluster_quality: 'Tolerances, surfaces and quality',
+    cluster_series: 'Prototypes, series and production planning', cluster_request: 'CNC inquiries, purchasing and cost',
     assistant_kicker: 'Inquiry assistant', assistant_title: 'Prepare your CNC part.',
     assistant_lead: 'Four details are enough to start. In the next step you add your contact details and drawing.',
     assistant_service_label: 'Which machining operation is required?',
@@ -497,8 +500,8 @@ const T = {
 
     c_kicker: 'Inquiry', contact_h2: 'Prepare your inquiry.<br><em>Technical review.</em>',
     c_lead: 'Upload your drawing or technical files with the inquiry. Add material, quantity and target date; we review the information technically and clarify open points.',
-    cp1_t: 'Reply in 24h', cp1_s: 'On business days, guaranteed.',
-    cp2_t: 'Drawing data', cp2_s: 'By e-mail after initial contact.',
+    cp1_t: 'Technical reply', cp1_s: 'After the technical review of the drawing.',
+    cp2_t: 'Drawing data', cp2_s: 'Directly with the inquiry or by e-mail after initial contact.',
     cp3_t: 'Confidential', cp3_s: 'Your drawings stay your drawings.',
     f_company: 'Company *', f_name: 'Contact person *', f_phone: 'Phone (optional)',
     f_service: 'Service',
@@ -508,7 +511,7 @@ const T = {
     f_files: 'Technical files (optional)', upload_help: 'PDF, ASCII DXF, STEP, STP, JPG, JPEG or PNG; up to 5 files, 8 MiB per file and 16 MiB per request. Files are initially checked in quarantine.',
     turnstile_help: 'Please complete the security check before sending the inquiry.',
     f_sketch: 'Drawing / sketch (instant AI analysis)',
-    upload_text: 'Drawing data by e-mail after initial contact',
+    upload_text: 'Send technical files directly with the inquiry',
     upload_sub: 'PDF · DXF · STEP · STP · image files',
     ai_loading: '⏳ AI is analysing your drawing…', ai_result_title: 'AI first assessment',
     f_submit: 'Send inquiry →',
@@ -601,9 +604,12 @@ const T = {
     logo_tag: 'Décolletage de précision · Italie',
     nav_services: 'Services', nav_machines: 'Parc machines', nav_materials: 'Matériaux',
     nav_process: 'Processus', nav_industries: 'Secteurs', nav_cta: 'Demander un devis',
-    hnav_services: 'Services', hnav_technology: 'Technologie', hnav_knowledge: 'Savoir', hnav_materials: 'Matériaux',
+    hnav_services: 'Services', legal_privacy: 'Politique de confidentialité', services_quality_link: 'Qualité et contrôle', hnav_technology: 'Technologie', hnav_knowledge: 'Savoir', hnav_materials: 'Matériaux',
     hnav_quality: 'Qualité', hnav_company: 'Entreprise', hnav_contact: 'Contact',
     hnav_cta: 'Envoyer la demande', hnav_menu: 'Menu',
+    cluster_design: 'Conception adaptée à la fabrication', cluster_materials: 'Matières pour pièces tournées CNC',
+    cluster_turning: 'Tournage CNC et tournage-fraisage', cluster_quality: 'Tolérances, surfaces et qualité',
+    cluster_series: 'Prototypes, séries et planification de production', cluster_request: 'Demandes CNC, achats et coûts',
     assistant_kicker: 'Assistant de demande', assistant_title: 'Préparer votre pièce CNC.',
     assistant_lead: 'Quatre informations suffisent pour commencer. À l’étape suivante, vous ajoutez vos coordonnées et le plan.',
     assistant_service_label: 'Quel usinage est nécessaire ?',
@@ -686,17 +692,19 @@ const T = {
     g3_t: 'Mesure & documentation', g3_p: 'Contrôle dimensionnel avec instruments calibrés.',
 
     c_kicker: 'Demande', contact_h2: 'Préparez votre demande.<br><em>Vérification technique.</em>',
-    c_lead: 'Téléchargez votre plan ou croquis — notre IA donne une première évaluation immédiate, le devis ferme suit sous 24 heures.',
-    cp1_t: 'Réponse en 24h', cp1_s: 'Jours ouvrés, garanti.',
-    cp2_t: 'Données du plan', cp2_s: 'Par e-mail après le premier contact.',
+    c_lead: 'Joignez votre plan ou vos fichiers techniques directement à la demande. Ajoutez la matière, la quantité et le délai souhaité ; nous vérifions les informations techniquement et clarifions les points ouverts.',
+    cp1_t: 'Réponse technique', cp1_s: 'Après la vérification technique du plan.',
+    cp2_t: 'Données du plan', cp2_s: 'Directement avec la demande ou par e-mail après le premier contact.',
     cp3_t: 'Confidentiel', cp3_s: 'Vos plans restent vos plans.',
     f_company: 'Société *', f_name: 'Interlocuteur *', f_phone: 'Téléphone (optionnel)',
     f_service: 'Service',
     f_service_opt0: 'Veuillez choisir…', f_service_opt1: 'Tournage CNC',
     f_service_opt2: 'Tournage-fraisage complet', f_service_opt3: 'Usinage des plastiques', f_service_opt4: 'Combinaison / incertain',
     f_msg: 'Votre demande (pièce, matière, quantité, délai)',
-    f_sketch: 'Plan / croquis (analyse IA immédiate)',
-    upload_text: 'Données du plan par e-mail après le premier contact',
+    f_files: 'Fichiers techniques (facultatifs)', upload_help: 'PDF, DXF ASCII, STEP, STP, JPG, JPEG ou PNG ; 5 fichiers maximum, 8 Mio par fichier et 16 Mio par demande. Les fichiers sont d’abord vérifiés en quarantaine.',
+    turnstile_help: 'Veuillez confirmer le contrôle de sécurité avant d’envoyer la demande.',
+    f_sketch: 'Plan / croquis',
+    upload_text: 'Joindre les fichiers techniques directement à la demande',
     upload_sub: 'PDF · DXF · STEP · STP · fichiers image',
     ai_loading: '⏳ L\'IA analyse votre plan…', ai_result_title: 'Première évaluation IA',
     f_submit: 'Envoyer la demande →',
@@ -704,7 +712,7 @@ const T = {
     f_submitting: 'Envoi de la demande…',
     f_error_validation: 'Veuillez vérifier les informations saisies.',
     f_error_network: 'La connexion a échoué.',
-    f_error_server: 'La demande n’a pas pu être enregistrée.',
+    f_error_server: 'La demande n’a pas pu être enregistrée.', f_error_size: 'Les fichiers sélectionnés ou les informations sont trop volumineux.', f_error_format: 'Ce format de fichier n’est pas pris en charge.', f_error_rate: 'Trop de demandes en peu de temps. Veuillez réessayer plus tard.',
 
     ft_about: 'Usinage CNC en sous-traitance depuis l\'Italie : tournage et tournage-fraisage complet en plastiques techniques, aluminium et acier.',
     ft_nav_t: 'Navigation', ft_svc_t: 'Services', ft_contact_t: 'Contact',
@@ -999,6 +1007,7 @@ const STATIC_TRANSLATIONS = {
     'Kontakt': 'Contatto',
     'Impressum': 'Note legali',
     'Datenschutz folgt': 'Privacy policy in preparazione',
+    'Datenschutz': 'Informativa sulla privacy',
     'Zeichnung senden': 'Invia disegno',
     'CNC-Anfrage vorbereiten': 'Preparare richiesta CNC',
     'Fertigung & Services': 'Produzione & servizi',
@@ -1051,6 +1060,7 @@ const STATIC_TRANSLATIONS = {
     'Materialangabe mitsenden.': 'Inviare anche l’indicazione del materiale.',
     '04 / QUALITÄT': '04 / QUALITÀ',
     'Qualität & Prüfung nach Zeichnung.': 'Qualità e controllo secondo disegno.',
+    'Qualität & Prüfung': 'Qualità e controlli',
     'Prüfverständnis': 'Approccio al controllo',
     'Zeichnung & Maße': 'Disegno & quote',
     'Fertigungsprüfung': 'Controllo in produzione',
@@ -1090,6 +1100,7 @@ const STATIC_TRANSLATIONS = {
     'Kontakt': 'Contact',
     'Impressum': 'Legal notice',
     'Datenschutz folgt': 'Privacy policy to follow',
+    'Datenschutz': 'Privacy policy',
     'Zeichnung senden': 'Send drawing',
     'CNC-Anfrage vorbereiten': 'Prepare CNC request',
     'Fertigung & Services': 'Manufacturing & services',
@@ -1142,6 +1153,7 @@ const STATIC_TRANSLATIONS = {
     'Materialangabe mitsenden.': 'Send the material specification as well.',
     '04 / QUALITÄT': '04 / QUALITY',
     'Qualität & Prüfung nach Zeichnung.': 'Quality & inspection to drawing.',
+    'Qualität & Prüfung': 'Quality & inspection',
     'Prüfverständnis': 'Inspection approach',
     'Zeichnung & Maße': 'Drawing & dimensions',
     'Fertigungsprüfung': 'In-process inspection',
@@ -1181,6 +1193,7 @@ const STATIC_TRANSLATIONS = {
     'Kontakt': 'Contact',
     'Impressum': 'Mentions légales',
     'Datenschutz folgt': 'Politique de confidentialité à venir',
+    'Datenschutz': 'Politique de confidentialité',
     'Zeichnung senden': 'Envoyer le plan',
     'CNC-Anfrage vorbereiten': 'Préparer une demande CNC',
     'Fertigung & Services': 'Fabrication & services',
@@ -1233,6 +1246,7 @@ const STATIC_TRANSLATIONS = {
     'Materialangabe mitsenden.': 'Envoyer aussi l’indication matière.',
     '04 / QUALITÄT': '04 / QUALITÉ',
     'Qualität & Prüfung nach Zeichnung.': 'Qualité & contrôle selon plan.',
+    'Qualität & Prüfung': 'Qualité et contrôle',
     'Prüfverständnis': 'Approche du contrôle',
     'Zeichnung & Maße': 'Plan & cotes',
     'Fertigungsprüfung': 'Contrôle en production',
@@ -1265,6 +1279,9 @@ const STATIC_TRANSLATIONS = {
 
 /* Zusätzliche Laufzeit-Übersetzungen für Seiten, deren Texte noch direkt im HTML stehen. */
 Object.assign(STATIC_TRANSLATIONS.it, {
+  'Turnstile verification': 'Verifica Turnstile',
+  'OSMP Startseite': 'Pagina iniziale OSMP',
+  'Hauptnavigation': 'Navigazione principale',
   'nach Zeichnung und Machbarkeit': 'secondo disegno e fattibilità',
   'technische Prüfung': 'verifica tecnica',
   'Anbieterkennzeichnung, Kontaktangaben sowie Register- und Steuerinformationen von OS.MECHPLAST SRLS.': 'Dati del fornitore, contatti e informazioni di registro e fiscali di OS.MECHPLAST SRLS.',
@@ -1464,6 +1481,9 @@ Object.assign(STATIC_TRANSLATIONS.it, {
 });
 
 Object.assign(STATIC_TRANSLATIONS.en, {
+  'Turnstile verification': 'Turnstile verification',
+  'OSMP Startseite': 'OSMP home page',
+  'Hauptnavigation': 'Main navigation',
   'nach Zeichnung und Machbarkeit': 'to drawing and feasibility',
   'technische Prüfung': 'technical review',
   'Anbieterkennzeichnung, Kontaktangaben sowie Register- und Steuerinformationen von OS.MECHPLAST SRLS.': 'Provider details, contact information, register and tax information for OS.MECHPLAST SRLS.',
@@ -1663,6 +1683,9 @@ Object.assign(STATIC_TRANSLATIONS.en, {
 });
 
 Object.assign(STATIC_TRANSLATIONS.fr, {
+  'Turnstile verification': 'Vérification Turnstile',
+  'OSMP Startseite': 'Page d’accueil OSMP',
+  'Hauptnavigation': 'Navigation principale',
   'nach Zeichnung und Machbarkeit': 'selon plan et faisabilité',
   'technische Prüfung': 'vérification technique',
   'Anbieterkennzeichnung, Kontaktangaben sowie Register- und Steuerinformationen von OS.MECHPLAST SRLS.': 'Identification du prestataire, coordonnées ainsi que données de registre et fiscales de OS.MECHPLAST SRLS.',
@@ -2377,7 +2400,7 @@ Object.assign(T.fr, {
   faq_drawing_a: 'Pour la vérification technique, la révision du plan, la matière ou sa désignation, la quantité et les exigences connues de fonction, surface ou contrôle sont utiles. Les informations ouvertes sont clarifiées avant l’offre.',
   faq_drawing_link: 'Voir les données de plan et la technologie CNC',
   faq_files_q: 'Quels formats de fichier peuvent être sélectionnés avec la demande ?',
-  faq_files_a: 'Le formulaire de demande n’accepte pas de fichiers. Après le premier contact, les données complètes du plan, comme PDF, DXF, STEP, STP ou des fichiers image, peuvent être envoyées par e-mail.',
+  faq_files_a: 'Le formulaire accepte les fichiers techniques directement avec la demande : PDF, DXF, STEP, STP et fichiers image. Cinq fichiers maximum sont acceptés, avec une limite de 8 Mio par fichier et de 16 Mio par demande ; les fichiers sont d’abord vérifiés en quarantaine.',
   faq_prototypes_q: 'OSMP fabrique-t-elle des prototypes et premiers échantillons ?',
   faq_prototypes_a: 'Oui. Pour les prototypes et premiers échantillons, nous vérifions le plan, la matière, la fonction et les caractéristiques d’usinage demandées pour la pièce concernée.',
   faq_prototypes_link: 'Évaluer prototypes et premiers échantillons',
@@ -2400,3 +2423,191 @@ Object.assign(T.fr, {
   faq_quote_a: 'Envoyez le plan, l’indication de matière et la quantité. Nous vérifions la faisabilité technique, clarifions les points ouverts et préparons l’offre à partir de la demande évaluée techniquement.',
   faq_quote_link: 'Démarrer une demande CNC avec un plan'
 });
+
+const LEISTUNGEN_STATIC = {
+  'Leistungen und Wissen': ['Services and knowledge', 'Servizi e conoscenza', 'Services et connaissances'],
+  'Fertigung & Services': ['Manufacturing & services', 'Produzione e servizi', 'Production et services'],
+  'CNC-Fertigung für Drehteile nach Zeichnung.': ['CNC manufacturing for turned parts to drawing.', 'Produzione CNC di particolari torniti su disegno.', 'Usinage CNC de pièces tournées selon plan.'],
+  'Von Einzelteilen und Erstmustern bis zu Kleinserien und wiederkehrender Fertigung: Wir prüfen Bauteil, Werkstoff, Menge und Zieltermin technisch.': ['From individual parts and first articles to small series and recurring production: we technically review the part, material, quantity and target date.', 'Da pezzi singoli e primi campioni fino a piccole serie e produzioni ricorrenti: verifichiamo tecnicamente pezzo, materiale, quantità e termine desiderato.', 'Des pièces unitaires et premiers échantillons aux petites séries et productions récurrentes : nous vérifions techniquement la pièce, la matière, la quantité et le délai souhaité.'],
+  'Illustrative Animation': ['Illustrative animation', 'Animazione illustrativa', 'Animation illustrative'],
+  'Leistungsübersicht': ['Service overview', 'Panoramica dei servizi', 'Aperçu des services'],
+  'Fertigung, abgestimmt auf Ihr Bauteil.': ['Manufacturing matched to your part.', 'Produzione adattata al vostro componente.', 'Une production adaptée à votre pièce.'],
+  'Wir fertigen Dreh- und Dreh-Frästeile für Prototypen, Ersatzteile, Kleinserien und wiederkehrende Serien. Maßgeblich sind Zeichnung, Werkstoff und Funktion des Bauteils.': ['We manufacture turned and turn-milled parts for prototypes, spare parts, small series and recurring series. The drawing, material and function of the part are decisive.', 'Produciamo particolari torniti e tornio-fresati per prototipi, ricambi, piccole serie e serie ricorrenti. Sono determinanti disegno, materiale e funzione del componente.', 'Nous fabriquons des pièces tournées et tournées-fraisées pour prototypes, pièces de rechange, petites séries et séries récurrentes. Le plan, la matière et la fonction de la pièce sont déterminants.'],
+  'CNC-Drehen': ['CNC turning', 'Tornitura CNC', 'Tournage CNC'],
+  'Für rotationssymmetrische Drehteile aus Stangen- oder Rohmaterial.': ['For rotationally symmetrical turned parts from bar or raw material.', 'Per particolari torniti rotosimmetrici da barra o da grezzo.', 'Pour les pièces tournées de révolution en barre ou à partir de brut.'],
+  'Wir fertigen unter anderem Wellen, Buchsen, Hülsen, Bolzen, Adapter, Flansche und Distanzstücke nach Zeichnung. Je nach Bauteilgeometrie gehören Außen- und Innendrehen, Bohren, Gewinde, Nuten, Einstiche und Passungen zum Bearbeitungsumfang.': ['We manufacture shafts, bushes, sleeves, pins, adapters, flanges and spacers to drawing. Depending on the part geometry, the scope may include external and internal turning, drilling, threads, grooves, recesses and fits.', 'Produciamo alberi, boccole, bussole, perni, adattatori, flange e distanziali su disegno. A seconda della geometria rientrano nella lavorazione tornitura esterna e interna, foratura, filetti, gole, scanalature e accoppiamenti.', 'Nous fabriquons notamment des arbres, bagues, douilles, axes, adaptateurs, brides et entretoises selon plan. Selon la géométrie, l’usinage peut comprendre le tournage extérieur et intérieur, le perçage, les filetages, les gorges, les rainures et les ajustements.'],
+  'Wellen, Buchsen, Hülsen, Bolzen, Adapter, Flansche und Distanzstücke': ['Shafts, bushes, sleeves, pins, adapters, flanges and spacers', 'Alberi, boccole, bussole, perni, adattatori, flange e distanziali', 'Arbres, bagues, douilles, axes, adaptateurs, brides et entretoises'],
+  'Außen- und Innendrehen': ['External and internal turning', 'Tornitura esterna e interna', 'Tournage extérieur et intérieur'],
+  'Bohren, Gewinde, Nuten und Einstiche': ['Drilling, threads, grooves and recesses', 'Foratura, filetti, gole e scanalature', 'Perçage, filetages, gorges et rainures'],
+  'Dreh-Fräsbearbeitung': ['Turn-mill machining', 'Tornitura-fresatura', 'Tournage-fraisage'],
+  'Wenn ein Drehteil zusätzliche Fräs- oder Bearbeitungsmerkmale braucht.': ['When a turned part needs additional milling or machining features.', 'Quando un particolare tornito richiede ulteriori caratteristiche di fresatura o lavorazione.', 'Lorsqu’une pièce tournée nécessite des opérations de fraisage ou d’usinage supplémentaires.'],
+  'Querbohrungen, Fräsflächen, Konturen oder Bearbeitung auf der Rückseite machen aus einem einfachen Drehteil oft ein komplexeres Bauteil. Auf der Hyundai WIA HD2200SY stehen dafür unter anderem Y-Achse und Gegenspindel zur Verfügung.': ['Cross-holes, milled surfaces, contours or back-side machining can turn a simple turned part into a more complex component. The Hyundai WIA HD2200SY provides a Y-axis and counter spindle for this.', 'Fori trasversali, superfici fresate, contorni o lavorazioni sul retro possono trasformare un semplice tornito in un componente più complesso. La Hyundai WIA HD2200SY dispone tra l’altro di asse Y e contromandrino.', 'Les perçages transversaux, surfaces fraisées, contours ou usinages arrière peuvent transformer une pièce tournée simple en composant plus complexe. La Hyundai WIA HD2200SY dispose notamment d’un axe Y et d’une contre-broche.'],
+  'Querbohrungen und stirnseitige Merkmale': ['Cross-holes and front-face features', 'Fori trasversali e caratteristiche frontali', 'Perçages transversaux et caractéristiques en face avant'],
+  'Fräsflächen, Konturen und Nuten': ['Milled surfaces, contours and grooves', 'Superfici fresate, contorni e gole', 'Surfaces fraisées, contours et rainures'],
+  'Bearbeitung auf Vorder- und Rückseite': ['Front- and back-side machining', 'Lavorazione sul fronte e sul retro', 'Usinage sur la face avant et la face arrière'],
+  'Prototypen und Erstmuster': ['Prototypes and first articles', 'Prototipi e primi campioni', 'Prototypes et premiers échantillons'],
+  'Bei Prototypen und Erstmustern steht die technische Einordnung des konkreten Teils im Vordergrund. Zeichnung oder Skizze, Werkstoff, Funktion und gewünschte Bearbeitungsmerkmale bilden die Grundlage für die Anfrage.': ['For prototypes and first articles, the technical assessment of the specific part comes first. The drawing or sketch, material, function and required machining features form the basis of the inquiry.', 'Per prototipi e primi campioni viene prima la valutazione tecnica del pezzo concreto. Disegno o schizzo, materiale, funzione e caratteristiche di lavorazione desiderate sono la base della richiesta.', 'Pour les prototypes et premiers échantillons, l’évaluation technique de la pièce concrète est prioritaire. Le plan ou croquis, la matière, la fonction et les caractéristiques d’usinage souhaitées constituent la base de la demande.'],
+  'Kleinserien': ['Small series', 'Piccole serie', 'Petites séries'],
+  'Für überschaubare Mengen gleichartiger Teile.': ['For manageable quantities of identical parts.', 'Per quantità gestibili di particolari uguali.', 'Pour des quantités maîtrisées de pièces identiques.'],
+  'Mittlere Serien und wiederkehrende Teile': ['Medium series and recurring parts', 'Serie medie e particolari ricorrenti', 'Séries moyennes et pièces récurrentes'],
+  'Für wiederkehrenden Bedarf und stabile Zeichnungsstände.': ['For recurring demand and stable drawing revisions.', 'Per fabbisogni ricorrenti e revisioni del disegno stabili.', 'Pour les besoins récurrents et les versions de plan stabilisées.'],
+  'Ersatzteile': ['Spare parts', 'Ricambi', 'Pièces de rechange'],
+  'Wenn ein Ersatzteil nach Zeichnung oder Muster benötigt wird.': ['When a spare part is needed to drawing or sample.', 'Quando serve un ricambio secondo disegno o campione.', 'Lorsqu’une pièce de rechange est nécessaire selon plan ou échantillon.']  ,'Werkstoffe als Schnittstelle zur Fertigung': ['Materials as an interface to manufacturing', 'I materiali come interfaccia alla produzione', 'Les matières comme interface avec la fabrication']
+  ,'Die Werkstoffgruppe beeinflusst Spannstrategie, Werkzeugwahl und Bearbeitungsweg.': ['The material group influences clamping strategy, tool selection and machining route.', 'Il gruppo di materiali influenza la strategia di serraggio, la scelta degli utensili e il percorso di lavorazione.', 'Le groupe de matières influence la stratégie de serrage, le choix des outils et le parcours d’usinage.']
+  ,'Auf der Leistungsseite nennen wir Werkstoffe nur als Rahmen für die Fertigung. Die technische Einordnung von Kunststoff, Aluminium und zerspanbaren Stählen gehört auf die Werkstoffseite.': ['On this service page, materials are mentioned only as a manufacturing framework. The technical assessment of plastics, aluminium and machinable steels belongs on the materials page.', 'In questa pagina i materiali sono indicati solo come quadro della produzione. La valutazione tecnica di plastiche, alluminio e acciai lavorabili appartiene alla pagina dei materiali.', 'Sur cette page, les matières sont mentionnées uniquement comme cadre de fabrication. Leur évaluation technique relève de la page des matières.']
+  ,'Materialangabe möglichst mit Zeichnung mitsenden': ['Send the material specification with the drawing where possible', 'Inviare possibilmente l’indicazione del materiale insieme al disegno', 'Joindre si possible l’indication de matière au plan']
+  ,'Machbarkeit abhängig von Werkstoff, Geometrie und Funktion': ['Feasibility depends on material, geometry and function', 'La fattibilità dipende da materiale, geometria e funzione', 'La faisabilité dépend de la matière, de la géométrie et de la fonction']
+  ,'Technische Prüfung im Leistungsprozess': ['Technical review in the service process', 'Verifica tecnica nel processo di servizio', 'Vérification technique dans le processus de service']
+  ,'Vor dem Angebot klären wir, welcher Bearbeitungsweg zur Zeichnung passt.': ['Before preparing an offer, we clarify which machining route fits the drawing.', 'Prima dell’offerta chiariamo quale percorso di lavorazione è adatto al disegno.', 'Avant l’offre, nous clarifions quel parcours d’usinage correspond au plan.']
+  ,'Hier geht es um die Machbarkeit der Fertigung: Bearbeitungsschritte, Zugänglichkeit und Ablauf. Prüfumfang, kritische Maße und Dokumentation sind auf der Qualitätsseite eingeordnet.': ['This section concerns manufacturing feasibility: machining steps, accessibility and sequence. Inspection scope, critical dimensions and documentation are covered on the quality page.', 'Qui si valuta la fattibilità della produzione: fasi di lavorazione, accessibilità e sequenza. Ambito di controllo, quote critiche e documentazione sono descritti nella pagina Qualità.', 'Cette section concerne la faisabilité de fabrication : étapes, accessibilité et séquence. Le périmètre de contrôle, les cotes critiques et la documentation sont présentés sur la page Qualité.']
+  ,'Bearbeitungsweg aus Zeichnung und Geometrie ableiten': ['Derive the machining route from the drawing and geometry', 'Definire il percorso di lavorazione da disegno e geometria', 'Déduire le parcours d’usinage du plan et de la géométrie']
+  ,'Offene Punkte vor dem Angebot klären': ['Clarify open points before preparing the offer', 'Chiarire i punti aperti prima dell’offerta', 'Clarifier les points ouverts avant l’offre']
+  ,'Weiter zur Anfrage': ['Continue to the inquiry', 'Vai alla richiesta', 'Passer à la demande']
+  ,'CNC-Anfrage vorbereiten': ['Prepare a CNC inquiry', 'Preparare una richiesta CNC', 'Préparer une demande CNC']
+  ,'Welche Angaben gehören ins Anfrageformular?': ['Which details belong in the inquiry form?', 'Quali dati servono nel modulo di richiesta?', 'Quelles informations faut-il indiquer dans le formulaire ?']
+  ,'Die Detailerfassung gehört auf die Kontaktseite. Für die Leistungszuordnung reichen hier die wichtigsten Daten: Zeichnung oder Skizze, gewünschte Bearbeitung, Werkstoff und Menge.': ['Detailed data belongs on the contact page. For assigning the service, the key information here is the drawing or sketch, required machining, material and quantity.', 'I dettagli vanno indicati nella pagina Contatto. Per assegnare il servizio bastano qui disegno o schizzo, lavorazione desiderata, materiale e quantità.', 'Les détails sont à renseigner sur la page Contact. Pour orienter le service, les données essentielles sont ici le plan ou croquis, l’usinage souhaité, la matière et la quantité.']
+  ,'Anfrageformular': ['Inquiry form', 'Modulo di richiesta', 'Formulaire de demande']
+  ,'Zeichnung und Kontaktdaten senden': ['Send drawing and contact details', 'Inviare disegno e dati di contatto', 'Envoyer le plan et les coordonnées']
+  ,'Werkstoff': ['Material', 'Materiale', 'Matière']
+  ,'Materialangabe technisch einordnen': ['Assess the material specification technically', 'Valutare tecnicamente l’indicazione del materiale', 'Évaluer techniquement l’indication de matière']
+  ,'Prüfung': ['Inspection', 'Controllo', 'Contrôle']
+  ,'Prüfanforderungen vorab klären': ['Clarify inspection requirements in advance', 'Chiarire in anticipo i requisiti di controllo', 'Clarifier les exigences de contrôle à l’avance']
+  ,'Datenformate': ['File formats', 'Formati dei file', 'Formats de fichier']
+  ,'PDF, DXF und STEP einordnen': ['Assess PDF, DXF and STEP files', 'Valutare PDF, DXF e STEP', 'Évaluer les fichiers PDF, DXF et STEP']
+  ,'Nächster Schritt': ['Next step', 'Prossimo passo', 'Étape suivante']
+  ,'Sie haben Zeichnung, Skizze oder Muster?': ['Do you have a drawing, sketch or sample?', 'Avete un disegno, uno schizzo o un campione?', 'Vous avez un plan, un croquis ou un échantillon ?']
+  ,'Wir prüfen Ihr Bauteil technisch und stimmen offene Punkte zu Werkstoff, Bearbeitung oder Menge mit Ihnen ab.': ['We review your part technically and clarify open points about material, machining or quantity with you.', 'Verifichiamo tecnicamente il vostro componente e chiariamo con voi i punti aperti su materiale, lavorazione o quantità.', 'Nous vérifions techniquement votre pièce et clarifions avec vous les points ouverts concernant matière, usinage ou quantité.']
+  ,'Werkstoffgruppen und Materialangaben ansehen': ['View material groups and material specifications', 'Vedere i gruppi di materiali e le indicazioni sul materiale', 'Voir les groupes de matières et les indications de matière']
+  ,'Qualitätsprüfung und Dokumentation ansehen': ['View quality inspection and documentation', 'Vedere il controllo qualità e la documentazione', 'Voir le contrôle qualité et la documentation']
+  ,'Die passende Maschine für die Bearbeitungsaufgabe.': ['The right machine for the machining task.', 'La macchina adatta per il compito di lavorazione.', 'La machine adaptée à l’opération d’usinage.']
+  ,'Welche Maschine zum Einsatz kommt, richtet sich nach Zeichnung, Werkstoff und den erforderlichen Arbeitsschritten.': ['The machine used depends on the drawing, material and required machining steps.', 'La macchina utilizzata dipende dal disegno, dal materiale e dalle fasi di lavorazione necessarie.', 'La machine utilisée dépend du plan, de la matière et des étapes d’usinage nécessaires.']
+  ,'Unser Maschinenpark umfasst drei CNC-Drehzentren: eine Hyundai WIA HD2200SY und zwei Hyundai WIA L210LMA. Der Breuning IRCO ILS-MUK Stangenlader ergänzt die HD2200SY bei passenden Aufträgen aus Stangenmaterial. Welche Maschine und welcher Bearbeitungsweg eingesetzt werden, ergibt sich aus Zeichnung, Werkstoff und den erforderlichen Arbeitsschritten. Weitere allgemeine Informationen zu den CNC-Drehzentren bietet der Herstellerkatalog von Hyundai WIA (PDF).': ['Our machine park comprises three CNC turning centres: one Hyundai WIA HD2200SY and two Hyundai WIA L210LMA machines. The Breuning IRCO ILS-MUK bar feeder supplements the HD2200SY for suitable bar-stock jobs. The drawing, material and required machining steps determine which machine and process are used. The Hyundai WIA manufacturer catalogue (PDF) provides further general information on the CNC turning centres.', 'Il nostro parco macchine comprende tre centri di tornitura CNC: una Hyundai WIA HD2200SY e due Hyundai WIA L210LMA. Il caricatore di barre Breuning IRCO ILS-MUK completa la HD2200SY per i lavori adatti da barra. La macchina e il percorso di lavorazione dipendono da disegno, materiale e fasi necessarie. Il catalogo del produttore Hyundai WIA (PDF) offre ulteriori informazioni generali sui centri di tornitura CNC.', 'Notre parc machines comprend trois centres de tournage CNC : une Hyundai WIA HD2200SY et deux Hyundai WIA L210LMA. Le ravitailleur de barres Breuning IRCO ILS-MUK complète la HD2200SY pour les travaux adaptés à partir de barres. Le plan, la matière et les étapes d’usinage nécessaires déterminent la machine et le parcours utilisés. Le catalogue constructeur Hyundai WIA (PDF) fournit des informations générales supplémentaires sur les centres de tournage CNC.']
+  ,'Dreh-Fräs-Bearbeitung': ['Turn-mill machining', 'Tornitura-fresatura', 'Tournage-fraisage']
+  ,'Die HD2200SY verbindet CNC-Drehen mit weiteren Bearbeitungsschritten. Die Y-Achse unterstützt Merkmale außerhalb der Drehachse, zum Beispiel Querbohrungen, Fräsflächen oder Konturen. Die Gegenspindel ermöglicht die Bearbeitung der Rückseite innerhalb des abgestimmten Bearbeitungsablaufs. Für passende Aufträge aus Stangenmaterial ergänzt der Breuning IRCO ILS-MUK Stangenlader die Materialzuführung. Geeignet ist diese Maschine für Dreh-Fräs-Teile wie Wellen, Buchsen, Adapter oder Flansche mit zusätzlichen Merkmalen, sofern Zeichnung und Zugänglichkeit dazu passen.': ['The HD2200SY combines CNC turning with additional machining steps. Its Y-axis supports features outside the turning axis, such as cross-holes, milled surfaces or contours. The counter spindle enables back-side machining within the coordinated process. For suitable bar-stock jobs, the Breuning IRCO ILS-MUK bar feeder supplies the material. This machine is suitable for turn-milled parts such as shafts, bushes, adapters or flanges with additional features, provided the drawing and accessibility allow it.', 'La HD2200SY combina la tornitura CNC con ulteriori fasi di lavorazione. L’asse Y supporta caratteristiche fuori dall’asse di tornitura, come fori trasversali, superfici fresate o contorni. Il contromandrino consente la lavorazione del retro nel processo coordinato. Per i lavori adatti da barra, il caricatore Breuning IRCO ILS-MUK alimenta il materiale. La macchina è adatta a particolari torniti-fresati come alberi, boccole, adattatori o flange con caratteristiche aggiuntive, se disegno e accessibilità lo consentono.', 'La HD2200SY combine le tournage CNC avec d’autres opérations d’usinage. Son axe Y permet des caractéristiques hors de l’axe de tournage, comme les perçages transversaux, surfaces fraisées ou contours. La contre-broche permet l’usinage arrière dans le processus défini. Pour les travaux adaptés à partir de barres, le ravitailleur Breuning IRCO ILS-MUK assure l’alimentation matière. Cette machine convient aux pièces tournées-fraisées comme les arbres, bagues, adaptateurs ou brides avec caractéristiques supplémentaires, si le plan et l’accessibilité le permettent.']
+  ,'Bearbeitungsart': ['Machining type', 'Tipo di lavorazione', 'Type d’usinage']
+  ,'Ausstattung': ['Equipment', 'Dotazione', 'Équipement']
+  ,'Geeignete Teile': ['Suitable parts', 'Particolari adatti', 'Pièces adaptées']
+  ,'Drehteile mit Zusatzmerkmalen': ['Turned parts with additional features', 'Particolari torniti con caratteristiche aggiuntive', 'Pièces tournées avec caractéristiques supplémentaires']
+  ,'Angetriebene Werkzeuge': ['Driven tools', 'Utensili motorizzati', 'Outils motorisés']
+  ,'Anzahl': ['Quantity', 'Quantità', 'Quantité']
+  ,'Breuning IRCO ILS-MUK Stangenlader': ['Breuning IRCO ILS-MUK bar feeder', 'Caricatore di barre Breuning IRCO ILS-MUK', 'Ravitailleur de barres Breuning IRCO ILS-MUK']
+  ,'Materialzuführung': ['Material feeding', 'Alimentazione del materiale', 'Alimentation matière']
+  ,'Der Stangenlader ergänzt die HD2200SY mit der Zuführung von Stangenmaterial für passende Drehteile. Ob diese Zuführung eingesetzt wird, prüfen wir anhand von Werkstoff, Zeichnung und Arbeitsfolge.': ['The bar feeder supplements the HD2200SY by feeding bar stock for suitable turned parts. We assess whether this feeding system is used based on the material, drawing and process sequence.', 'Il caricatore di barre completa la HD2200SY alimentando materiale da barra per particolari torniti adatti. Valutiamo l’impiego dell’alimentazione in base a materiale, disegno e sequenza di lavorazione.', 'Le ravitailleur complète la HD2200SY en alimentant des barres pour les pièces tournées adaptées. Nous évaluons son utilisation selon la matière, le plan et la séquence d’usinage.']
+  ,'Funktion': ['Function', 'Funzione', 'Fonction']
+  ,'Zuführung von Stangenmaterial': ['Bar-stock feeding', 'Alimentazione da barra', 'Alimentation de barres']
+  ,'Zuordnung': ['Assignment', 'Abbinamento', 'Affectation']
+  ,'CNC-Drehen': ['CNC turning', 'Tornitura CNC', 'Tournage CNC']
+  ,'Die zwei L210LMA sind CNC-Drehzentren für wiederkehrende Drehteile und Serienaufträge. Sie werden für Bearbeitungsschritte eingesetzt, die sich aus der Zeichnung ergeben, etwa Außen- und Innendrehen, Bohren, Gewinde oder Einstiche. Geeignete Teilearten sind zum Beispiel Wellen, Buchsen, Hülsen, Bolzen, Adapter und Distanzstücke, wenn Werkstoff, Geometrie und Arbeitsfolge dazu passen.': ['The two L210LMA machines are CNC turning centres for recurring turned parts and series orders. They are used for machining steps defined by the drawing, such as external and internal turning, drilling, threads or recesses. Suitable part types include shafts, bushes, sleeves, pins, adapters and spacers when material, geometry and process sequence are suitable.', 'Le due L210LMA sono centri di tornitura CNC per particolari torniti ricorrenti e ordini di serie. Vengono utilizzate per le fasi definite dal disegno, come tornitura esterna e interna, foratura, filettatura o gole. Tra i particolari adatti vi sono alberi, boccole, bussole, perni, adattatori e distanziali, quando materiale, geometria e sequenza sono compatibili.', 'Les deux L210LMA sont des centres de tournage CNC pour pièces tournées récurrentes et commandes en série. Elles sont utilisées pour les opérations définies par le plan, comme le tournage extérieur et intérieur, le perçage, les filetages ou les gorges. Les pièces adaptées comprennent notamment arbres, bagues, douilles, axes, adaptateurs et entretoises lorsque matière, géométrie et séquence conviennent.']  ,'Wie aus Rohmaterial ein rotationssymmetrisches Bauteil entsteht.': ['How raw material becomes a rotationally symmetrical component.', 'Come dal materiale grezzo nasce un componente rotosimmetrico.', 'Comment une matière brute devient une pièce de révolution.']
+  ,'Beim CNC-Drehen rotiert das Werkstück, während ein Werkzeug Material abträgt. Das Verfahren eignet sich besonders für Wellen, Buchsen, Bolzen, Flansche, Ringe und andere rotationssymmetrische Bauteile.': ['In CNC turning, the workpiece rotates while a tool removes material. The process is particularly suitable for shafts, bushes, pins, flanges, rings and other rotationally symmetrical parts.', 'Nella tornitura CNC il pezzo ruota mentre un utensile asporta materiale. Il processo è particolarmente adatto per alberi, boccole, perni, flange, anelli e altri componenti rotosimmetrici.', 'En tournage CNC, la pièce tourne tandis qu’un outil enlève de la matière. Le procédé convient notamment aux arbres, bagues, axes, brides, anneaux et autres pièces de révolution.']
+  ,'Außen- und Innendrehen': ['External and internal turning', 'Tornitura esterna e interna', 'Tournage extérieur et intérieur']
+  ,'Bohren, Gewinde und Einstiche': ['Drilling, threads and recesses', 'Foratura, filettature e gole', 'Perçage, filetages et gorges']
+  ,'Passungen und Funktionsmaße': ['Fits and functional dimensions', 'Accoppiamenti e quote funzionali', 'Ajustements et cotes fonctionnelles']
+  ,'Wenn ein Drehteil zusätzliche Merkmale außerhalb der Drehachse braucht.': ['When a turned part needs additional features outside the turning axis.', 'Quando un particolare tornito richiede caratteristiche aggiuntive fuori dall’asse di tornitura.', 'Lorsqu’une pièce tournée nécessite des caractéristiques supplémentaires hors de l’axe de tournage.']
+  ,'Querbohrungen, Fräsflächen, Nuten oder Konturen machen einen abgestimmten Ablauf aus Drehen und Fräsen sinnvoll. Welche Bearbeitung möglich und zweckmäßig ist, hängt von Geometrie, Toleranzen und Zugänglichkeit ab.': ['Cross-holes, milled surfaces, grooves or contours can make a coordinated turning and milling process useful. The feasible and appropriate machining depends on geometry, tolerances and accessibility.', 'Fori trasversali, superfici fresate, gole o contorni possono rendere utile un processo coordinato di tornitura e fresatura. La lavorazione possibile e opportuna dipende da geometria, tolleranze e accessibilità.', 'Les perçages transversaux, surfaces fraisées, rainures ou contours peuvent rendre pertinent un processus coordonné de tournage et fraisage. L’usinage possible et approprié dépend de la géométrie, des tolérances et de l’accessibilité.']
+  ,'Querbohrungen und stirnseitige Merkmale': ['Cross-holes and front-face features', 'Fori trasversali e caratteristiche frontali', 'Perçages transversaux et caractéristiques en face avant']
+  ,'Fräsflächen und Konturen': ['Milled surfaces and contours', 'Superfici fresate e contorni', 'Surfaces fraisées et contours']
+  ,'Bearbeitung auf Vorder- und Rückseite': ['Front- and back-side machining', 'Lavorazione sul fronte e sul retro', 'Usinage sur la face avant et la face arrière']
+  ,'Werkstoffgrundlagen im Bearbeitungsweg': ['Material fundamentals in the machining process', 'Fondamenti sui materiali nel percorso di lavorazione', 'Principes matière dans le parcours d’usinage']
+  ,'Der Werkstoff beeinflusst die Technologie, die Detailprüfung gehört auf die Werkstoffseite.': ['The material influences the technology; detailed material assessment belongs on the materials page.', 'Il materiale influenza la tecnologia; la valutazione dettagliata appartiene alla pagina dei materiali.', 'La matière influence la technologie ; son évaluation détaillée relève de la page des matières.']
+  ,'Für die Technologieentscheidung ist wichtig, ob Material, Geometrie und Bearbeitung zusammenpassen. Die konkrete Einordnung von Kunststoff, Aluminium und zerspanbaren Stählen ist auf der Werkstoffseite beschrieben.': ['For the technology decision, material, geometry and machining must fit together. The specific assessment of plastics, aluminium and machinable steels is described on the materials page.', 'Per la scelta tecnologica è importante che materiale, geometria e lavorazione siano compatibili. La valutazione concreta di plastiche, alluminio e acciai lavorabili è descritta nella pagina dei materiali.', 'Pour choisir la technologie, la matière, la géométrie et l’usinage doivent être cohérents. L’évaluation concrète des plastiques, de l’aluminium et des aciers usinables est décrite sur la page des matières.']
+  ,'Material wirkt auf Spannung, Werkzeugwahl und Bearbeitungsstrategie': ['Material affects clamping, tool selection and machining strategy', 'Il materiale influenza serraggio, scelta degli utensili e strategia di lavorazione', 'La matière influence le bridage, le choix des outils et la stratégie d’usinage']
+  ,'Detailfragen zur Anwendung nicht auf der Technologieseite doppeln': ['Do not duplicate application details on the technology page', 'Non duplicare i dettagli applicativi nella pagina Tecnologia', 'Ne pas dupliquer les détails d’application sur la page Technologie']
+  ,'Toleranzen als technische Schnittstelle': ['Tolerances as a technical interface', 'Le tolleranze come interfaccia tecnica', 'Les tolérances comme interface technique']
+  ,'Maße und Oberflächen beeinflussen Bearbeitungsweg und Prüfung.': ['Dimensions and surfaces influence the machining route and inspection.', 'Quote e superfici influenzano il percorso di lavorazione e il controllo.', 'Les cotes et surfaces influencent le parcours d’usinage et le contrôle.']
+  ,'Auf der Technologieseite geht es darum, warum Toleranzen und Zugänglichkeit den Bearbeitungsweg beeinflussen. Wie kritische Maße, Prüfumfang und Dokumentation behandelt werden, steht auf der Qualitätsseite.': ['The technology page explains why tolerances and accessibility influence the machining route. The quality page covers critical dimensions, inspection scope and documentation.', 'La pagina Tecnologia spiega perché tolleranze e accessibilità influenzano il percorso di lavorazione. La pagina Qualità tratta quote critiche, ambito di controllo e documentazione.', 'La page Technologie explique pourquoi les tolérances et l’accessibilité influencent le parcours d’usinage. La page Qualité traite les cotes critiques, le périmètre de contrôle et la documentation.']
+  ,'Bearbeitbarkeit aus Geometrie und Zugänglichkeit ableiten': ['Assess machinability from geometry and accessibility', 'Valutare la lavorabilità da geometria e accessibilità', 'Évaluer l’usinabilité selon la géométrie et l’accessibilité']
+  ,'Qualitätsseite: Zeichnung, Toleranzen und kritische Maße': ['Quality page: drawing, tolerances and critical dimensions', 'Pagina Qualità: disegno, tolleranze e quote critiche', 'Page Qualité : plan, tolérances et cotes critiques']
+  ,'Keine doppelte Prüfprozess-Erklärung in der Technologie': ['No duplicate inspection-process explanation on the technology page', 'Nessuna duplicazione della spiegazione del controllo nella pagina Tecnologia', 'Pas de doublon de l’explication du contrôle sur la page Technologie']
+  ,'Zeichnung, PDF, DXF und STEP': ['Drawing, PDF, DXF and STEP', 'Disegno, PDF, DXF e STEP', 'Plan, PDF, DXF et STEP']
+  ,'Welche Daten eine CNC-Anfrage technisch klarer machen.': ['Which data makes a CNC inquiry technically clearer.', 'Quali dati rendono più chiara tecnicamente una richiesta CNC.', 'Quelles données clarifient techniquement une demande CNC.']
+  ,'Eine bemaßte PDF-Zeichnung dokumentiert Maße, Toleranzen und Hinweise. DXF-Dateien helfen bei 2D-Geometrien. STEP-Dateien beschreiben die 3D-Geometrie und können bei komplexeren Bauteilen die technische Prüfung erleichtern.': ['A dimensioned PDF drawing documents dimensions, tolerances and notes. DXF files support 2D geometries. STEP files describe 3D geometry and can facilitate technical review for complex parts.', 'Un disegno PDF quotato documenta quote, tolleranze e indicazioni. I file DXF aiutano con geometrie 2D. I file STEP descrivono la geometria 3D e possono facilitare la verifica tecnica di componenti complessi.', 'Un plan PDF coté documente les cotes, tolérances et indications. Les fichiers DXF servent aux géométries 2D. Les fichiers STEP décrivent la géométrie 3D et peuvent faciliter la vérification technique de pièces complexes.']
+  ,'PDF für Zeichnung und Hinweise': ['PDF for drawings and notes', 'PDF per disegni e indicazioni', 'PDF pour plans et indications']
+  ,'DXF für 2D-Geometrien': ['DXF for 2D geometries', 'DXF per geometrie 2D', 'DXF pour géométries 2D']
+  ,'STEP für 3D-Geometrien': ['STEP for 3D geometries', 'STEP per geometrie 3D', 'STEP pour géométries 3D']
+  ,'Stückzahl und Wiederholbarkeit technisch einordnen': ['Assess quantity and repeatability technically', 'Valutare tecnicamente quantità e ripetibilità', 'Évaluer techniquement la quantité et la répétabilité']
+  ,'Die Menge beeinflusst Einrichtung, Spannkonzept und Wiederholbarkeit.': ['Quantity influences setup, clamping concept and repeatability.', 'La quantità influenza attrezzaggio, strategia di serraggio e ripetibilità.', 'La quantité influence la mise en place, le bridage et la répétabilité.']
+  ,'Technologisch ist relevant, ob ein Bauteil einmalig, als Erstmuster oder wiederkehrend gefertigt wird. Die eigentliche Leistungszuordnung für Prototypen, Kleinserien und Serien steht auf der Leistungsseite.': ['From a technology perspective, it matters whether a part is made once, as a first article or repeatedly. The actual service classification for prototypes, small series and series is on the services page.', 'Dal punto di vista tecnologico è rilevante se un componente viene prodotto una volta, come primo campione o in modo ricorrente. L’assegnazione del servizio per prototipi, piccole serie e serie è descritta nella pagina Servizi.', 'Sur le plan technologique, il importe de savoir si une pièce est fabriquée une fois, comme premier article ou de façon récurrente. L’affectation du service pour prototypes, petites séries et séries figure sur la page Services.']
+  ,'Technologischer Einfluss': ['Technological influence', 'Influenza tecnologica', 'Influence technologique']
+  ,'Einrichtung, Spannmittel und Arbeitsfolge richten sich nach Bauteil und Menge.': ['Setup, clamping tools and process sequence depend on the part and quantity.', 'Attrezzaggio, mezzi di serraggio e sequenza dipendono dal componente e dalla quantità.', 'La mise en place, les moyens de bridage et la séquence dépendent de la pièce et de la quantité.']
+  ,'Prototypen und Serien als Leistung ansehen': ['View prototypes and series as a service', 'Vedere prototipi e serie come servizio', 'Voir les prototypes et séries comme prestation']
+  ,'Menge und Zeichnung im Anfrageformular senden': ['Send quantity and drawing in the inquiry form', 'Inviare quantità e disegno nel modulo di richiesta', 'Envoyer la quantité et le plan dans le formulaire de demande']
+  ,'Prüfumfang separat einordnen': ['Assess the inspection scope separately', 'Valutare separatamente l’ambito di controllo', 'Évaluer séparément le périmètre de contrôle']
+  ,'Technische Anfrage starten': ['Start technical inquiry', 'Avviare la richiesta tecnica', 'Démarrer la demande technique']  ,'Qualität': ['Quality', 'Qualità', 'Qualité']
+  ,'Zeichnungsdaten für die technische Prüfung vorbereiten': ['Prepare drawing data for technical inspection', 'Preparare i dati del disegno per il controllo tecnico', 'Préparer les données du plan pour le contrôle technique']
+  ,'Werkstoffangaben für CNC-Drehteile einordnen': ['Classify material specifications for CNC-turned parts', 'Inquadrare le indicazioni del materiale per particolari torniti CNC', 'Classer les indications de matière pour les pièces tournées CNC']
+  ,'Wie der Werkstoff den Bearbeitungsweg beeinflusst, erklärt die Seite': ['The page explains how the material influences the machining route', 'La pagina spiega come il materiale influenza il percorso di lavorazione', 'La page explique comment la matière influence le parcours d’usinage']
+  ,'Werkstoffgrundlagen im CNC-Bearbeitungsweg': ['Material fundamentals in CNC machining', 'Fondamenti dei materiali nella lavorazione CNC', 'Principes des matières dans l’usinage CNC']
+  ,'. Den passenden Fertigungsumfang finden Sie unter': ['. You can find the suitable manufacturing scope under', '. Per trovare l’ambito di produzione adatto, consultate', '. Vous trouverez le périmètre de fabrication adapté sous']
+  ,'CNC-Fertigung und Werkstoffe': ['CNC manufacturing and materials', 'Produzione CNC e materiali', 'Usinage CNC et matières']
+  ,'Einsatz': ['Application', 'Impiego', 'Utilisation']
+  ,'Den': ['The', 'Il', 'Le']
+  ,'Überblick zur CNC-Fertigung nach Zeichnung': ['Overview of CNC manufacturing to drawing', 'Panoramica della produzione CNC su disegno', 'Aperçu de l’usinage CNC selon plan']
+  ,'und die': ['and the', 'e le', 'et les']
+  ,'eingesetzten CNC-Technologien': ['CNC technologies used', 'tecnologie CNC utilizzate', 'technologies CNC utilisées']
+  ,'finden Sie auf den jeweiligen Fachseiten.': ['can be found on the respective specialist pages.', 'sono disponibili nelle rispettive pagine specialistiche.', 'sont présentées sur les pages spécialisées correspondantes.']
+  ,'Zusammenarbeit in Europa': ['Collaboration in Europe', 'Collaborazione in Europa', 'Collaboration en Europe']
+  ,'Zum Start konzentrieren wir uns bewusst auf Kunden in Italien, Österreich, Deutschland, der Schweiz und Frankreich. Die Gründer haben ihre Ausbildung in Deutschland absolviert und sprechen Deutsch, Italienisch und Französisch. So bleiben Kommunikation, technische Abstimmung und Zusammenarbeit persönlich und direkt.': ['At the start, we are deliberately focusing on customers in Italy, Austria, Germany, Switzerland and France. The founders completed their training in Germany and speak German, Italian and French. This keeps communication, technical coordination and collaboration personal and direct.', 'All’inizio ci concentriamo consapevolmente sui clienti in Italia, Austria, Germania, Svizzera e Francia. I fondatori hanno completato la loro formazione in Germania e parlano tedesco, italiano e francese. In questo modo la comunicazione, il coordinamento tecnico e la collaborazione restano personali e diretti.', 'Au démarrage, nous nous concentrons délibérément sur des clients en Italie, en Autriche, en Allemagne, en Suisse et en France. Les fondateurs ont suivi leur formation en Allemagne et parlent allemand, italien et français. La communication, la coordination technique et la collaboration restent ainsi personnelles et directes.']
+  ,'Gefertigt in Ala': ['Manufactured in Ala', 'Prodotto ad Ala', 'Fabriqué à Ala']
+  ,'Direkter Austausch': ['Direct communication', 'Contatto diretto', 'Échange direct']
+  ,'04 / QUALITÄT': ['04 / QUALITY', '04 / QUALITÀ', '04 / QUALITÉ']
+  ,'Qualitätsprüfung für CNC-Drehteile nach Zeichnung.': ['Quality inspection for CNC turned parts to drawing.', 'Controllo qualità per particolari torniti CNC su disegno.', 'Contrôle qualité des pièces tournées CNC selon plan.']
+  ,'Wir prüfen Bauteile nach Zeichnung, Bauteilanforderung und vereinbartem Umfang. Kritische Maße, Oberfläche und Dokumentation werden vor der Fertigung sauber geklärt.': ['We inspect parts against the drawing, part requirements and the agreed scope. Critical dimensions, surfaces and documentation are clarified before production.', 'Controlliamo i componenti secondo disegno, requisiti del pezzo e ambito concordato. Quote critiche, superfici e documentazione vengono chiarite prima della produzione.', 'Nous contrôlons les pièces selon le plan, les exigences de la pièce et le périmètre convenu. Les cotes critiques, surfaces et documents sont clarifiés avant la fabrication.']
+  ,'Prüfverständnis': ['Inspection approach', 'Approccio al controllo', 'Approche du contrôle']
+  ,'Zeichnung & Maße': ['Drawing & dimensions', 'Disegno e quote', 'Plan et cotes']
+  ,'Fertigungsprüfung': ['In-process inspection', 'Controllo in produzione', 'Contrôle en production']
+  ,'Endkontrolle': ['Final inspection', 'Controllo finale', 'Contrôle final']
+  ,'Messmittel': ['Measuring equipment', 'Strumenti di misura', 'Moyens de mesure']
+  ,'Dokumentation': ['Documentation', 'Documentazione', 'Documentation']
+  ,'Zertifikate': ['Certificates', 'Certificati', 'Certificats']
+  ,'Kontrolle statt großer Versprechen': ['Inspection instead of grand promises', 'Controllo invece di grandi promesse', 'Le contrôle plutôt que les grandes promesses']
+  ,'Qualität heißt: relevante Maße beherrschen.': ['Quality means controlling the relevant dimensions.', 'Qualità significa controllare le quote rilevanti.', 'La qualité signifie maîtriser les cotes pertinentes.']
+  ,'Wir behandeln Qualität nicht als Werbesatz, sondern als Arbeitsweise: Zeichnung verstehen, kritische Merkmale klären, Fertigung kontrollieren und vereinbarte Prüfpunkte nachvollziehbar dokumentieren.': ['We do not treat quality as a marketing phrase, but as a way of working: understand the drawing, clarify critical features, control production and document agreed inspection points transparently.', 'Per noi la qualità non è uno slogan, ma un metodo di lavoro: comprendere il disegno, chiarire le caratteristiche critiche, controllare la produzione e documentare i punti concordati in modo tracciabile.', 'Nous ne traitons pas la qualité comme un slogan, mais comme une méthode de travail : comprendre le plan, clarifier les caractéristiques critiques, contrôler la fabrication et documenter les points convenus de manière traçable.']
+  ,'Prüfung nach Zeichnung und Auftrag.': ['Inspection according to drawing and order.', 'Controllo secondo disegno e ordine.', 'Contrôle selon le plan et la commande.']
+  ,'Der Prüfumfang muss zum Bauteil und zur Funktion passen.': ['The inspection scope must fit the part and its function.', 'L’ambito di controllo deve essere adatto al componente e alla sua funzione.', 'Le périmètre de contrôle doit être adapté à la pièce et à sa fonction.']
+  ,'Vor der Fertigung prüfen wir, welche Merkmale für Funktion, Montage und Wiederholbarkeit wichtig sind. Nicht jedes Maß hat die gleiche Bedeutung. Entscheidend sind die Anforderungen, die auf der Zeichnung oder im Auftrag festgelegt werden.': ['Before production, we assess which features matter for function, assembly and repeatability. Not every dimension has the same significance. The requirements specified on the drawing or in the order are decisive.', 'Prima della produzione valutiamo quali caratteristiche siano importanti per funzione, montaggio e ripetibilità. Non tutte le quote hanno lo stesso significato. Sono determinanti i requisiti indicati sul disegno o nell’ordine.', 'Avant la fabrication, nous évaluons les caractéristiques importantes pour la fonction, le montage et la répétabilité. Toutes les cotes n’ont pas la même importance. Les exigences du plan ou de la commande sont déterminantes.']
+  ,'Zeichnung und Funktionsmaße einordnen': ['Assess drawing and functional dimensions', 'Valutare disegno e quote funzionali', 'Évaluer le plan et les cotes fonctionnelles']
+  ,'Prüfumfang vorab klären': ['Clarify the inspection scope in advance', 'Chiarire in anticipo l’ambito di controllo', 'Clarifier à l’avance le périmètre de contrôle']
+  ,'Rückfragen stellen, wenn Angaben fehlen': ['Ask questions when information is missing', 'Porre domande quando mancano informazioni', 'Poser des questions lorsque des informations manquent']
+  ,'Zeichnung, Toleranzen und kritische Maße.': ['Drawing, tolerances and critical dimensions.', 'Disegno, tolleranze e quote critiche.', 'Plan, tolérances et cotes critiques.']
+  ,'Qualität beginnt bei klaren Anforderungen.': ['Quality starts with clear requirements.', 'La qualità inizia da requisiti chiari.', 'La qualité commence par des exigences claires.']
+  ,'Wir achten besonders auf Passungen, Bezugsflächen, Gewinde, Rundlauf, Oberflächenangaben und Merkmale, die für Montage oder Funktion entscheidend sind. Unklare oder widersprüchliche Angaben werden nicht ignoriert, sondern vorab geklärt.': ['We pay particular attention to fits, reference surfaces, threads, runout, surface specifications and features decisive for assembly or function. Unclear or contradictory information is clarified in advance.', 'Prestiamo particolare attenzione ad accoppiamenti, superfici di riferimento, filettature, concentricità, indicazioni sulle superfici e caratteristiche decisive per montaggio o funzione. Le indicazioni poco chiare o contraddittorie vengono chiarite in anticipo.', 'Nous accordons une attention particulière aux ajustements, surfaces de référence, filetages, faux-rond, indications de surface et caractéristiques déterminantes pour le montage ou la fonction. Les indications ambiguës ou contradictoires sont clarifiées à l’avance.']
+  ,'Passungen und Bezugsmaße': ['Fits and reference dimensions', 'Accoppiamenti e quote di riferimento', 'Ajustements et cotes de référence']
+  ,'Oberflächen- und Kantenangaben': ['Surface and edge specifications', 'Indicazioni su superfici e spigoli', 'Indications de surface et d’arêtes']
+  ,'Funktionsrelevante Merkmale': ['Functionally relevant features', 'Caratteristiche funzionalmente rilevanti', 'Caractéristiques fonctionnelles']
+  ,'Kontrolle während der Fertigung.': ['Inspection during production.', 'Controllo durante la produzione.', 'Contrôle pendant la fabrication.']
+  ,'Prüfpunkte werden passend zum Bearbeitungsweg gesetzt.': ['Inspection points are defined to suit the machining route.', 'I punti di controllo vengono definiti in base al percorso di lavorazione.', 'Les points de contrôle sont définis en fonction du parcours d’usinage.']
+  ,'Erste Teile und Einstellmaße prüfen': ['Inspect first parts and setup dimensions', 'Controllare i primi pezzi e le quote di regolazione', 'Contrôler les premières pièces et les cotes de réglage']
+  ,'Kritische Merkmale im Ablauf kontrollieren': ['Control critical features during the process', 'Controllare le caratteristiche critiche durante il processo', 'Contrôler les caractéristiques critiques pendant le processus']
+  ,'Prüfung an Menge und Risiko anpassen': ['Adapt inspection to quantity and risk', 'Adattare il controllo a quantità e rischio', 'Adapter le contrôle à la quantité et au risque']
+  ,'Endkontrolle vor Lieferung.': ['Final inspection before delivery.', 'Controllo finale prima della consegna.', 'Contrôle final avant livraison.']
+  ,'Das Bauteil wird nach vereinbartem Umfang geprüft.': ['The part is inspected according to the agreed scope.', 'Il componente viene controllato secondo l’ambito concordato.', 'La pièce est contrôlée selon le périmètre convenu.']
+  ,'Maßprüfung nach Zeichnung': ['Dimensional inspection according to drawing', 'Controllo dimensionale secondo disegno', 'Contrôle dimensionnel selon le plan']
+  ,'Sichtprüfung nach Bauteilanforderung': ['Visual inspection according to part requirements', 'Controllo visivo secondo i requisiti del componente', 'Contrôle visuel selon les exigences de la pièce']
+  ,'Rückmeldung bei Auffälligkeiten': ['Feedback when anomalies are found', 'Riscontro in caso di anomalie', 'Retour en cas d’anomalie']
+  ,'Nachweis': ['Evidence', 'Evidenza', 'Justificatif']
+  ,'Dokumentation wird vor dem Auftrag abgestimmt, nicht nachträglich improvisiert.': ['Documentation is agreed before the order, not improvised afterwards.', 'La documentazione viene concordata prima dell’ordine, non improvvisata successivamente.', 'La documentation est définie avant la commande, pas improvisée après coup.']
+  ,'Prüfmerkmale': ['Inspection features', 'Caratteristiche di controllo', 'Caractéristiques contrôlées']
+  ,'Welche Maße oder Merkmale dokumentiert werden sollen.': ['Which dimensions or features should be documented.', 'Quali quote o caratteristiche devono essere documentate.', 'Quelles cotes ou caractéristiques doivent être documentées.']
+  ,'Prüfumfang': ['Inspection scope', 'Ambito di controllo', 'Périmètre de contrôle']
+  ,'Zeichnungsbezug': ['Drawing reference', 'Riferimento al disegno', 'Référence au plan']
+  ,'Vorab klären': ['Clarify in advance', 'Chiarire in anticipo', 'Clarifier à l’avance']
+  ,'Zeichnung und Prüfanforderung mitsenden.': ['Send the drawing and inspection requirements.', 'Inviare il disegno e i requisiti di controllo.', 'Joindre le plan et les exigences de contrôle.']
+  ,'Wenn kritische Maße, Messprotokoll oder besondere Prüfungen wichtig sind, senden Sie diese Angaben direkt mit der Zeichnung. Dann können wir Angebot und Fertigungsweg sauber vorbereiten.': ['If critical dimensions, a measurement report or special inspections are important, send these details with the drawing. We can then prepare the offer and machining route properly.', 'Se sono importanti quote critiche, un rapporto di misura o controlli speciali, inviate questi dati direttamente con il disegno. Potremo così preparare correttamente offerta e percorso di lavorazione.', 'Si des cotes critiques, un rapport de mesure ou des contrôles particuliers sont importants, joignez ces informations au plan. Nous pourrons ainsi préparer correctement l’offre et le parcours d’usinage.']  ,'Dreh-Frästeile und CNC-Technologie verständlich erklärt.': ['Turn-milled parts and CNC technology explained clearly.', 'Particolari torniti-fresati e tecnologia CNC spiegati in modo chiaro.', 'Pièces tournées-fraisées et technologie CNC expliquées clairement.']
+  ,'Grundlagen zu Bearbeitungsprinzipien, Zeichnungsdaten und Maschinenpark - für Konstruktion und Einkauf.': ['Basics of machining principles, drawing data and the machine park — for engineering and purchasing.', 'Nozioni di base su principi di lavorazione, dati di disegno e parco macchine — per progettazione e acquisti.', 'Bases sur les principes d’usinage, les données de plan et le parc machines — pour le bureau d’études et les achats.']
+  ,'Technologie & Wissen': ['Technology & knowledge', 'Tecnologia e conoscenza', 'Technologie et savoir-faire']
+  ,'CNC-Drehen einfach erklärt': ['CNC turning explained simply', 'Tornitura CNC spiegata semplicemente', 'Le tournage CNC expliqué simplement']
+  ,'Was ist Dreh-Fräsbearbeitung?': ['What is turn-mill machining?', 'Che cos’è la tornitura-fresatura?', 'Qu’est-ce que le tournage-fraisage ?']
+  ,'Toleranzen & Oberflächen': ['Tolerances & surfaces', 'Tolleranze e superfici', 'Tolérances et surfaces']
+  ,'Prototyp & Serie': ['Prototype & series', 'Prototipo e serie', 'Prototype et série']
+  ,'Qualitätsprüfung für CNC-Drehteile nach Zeichnung.': ['Quality inspection for CNC turned parts to drawing.', 'Controllo qualità per particolari torniti CNC su disegno.', 'Contrôle qualité des pièces tournées CNC selon plan.']
+  ,'Wir prüfen Bauteile nach Zeichnung, Bauteilanforderung und vereinbartem Umfang. Kritische Maße, Oberfläche und Dokumentation werden vor der Fertigung sauber geklärt.': ['We inspect parts against the drawing, part requirements and the agreed scope. Critical dimensions, surfaces and documentation are clarified before production.', 'Controlliamo i componenti secondo disegno, requisiti del pezzo e ambito concordato. Quote critiche, superfici e documentazione vengono chiarite prima della produzione.', 'Nous contrôlons les pièces selon le plan, les exigences de la pièce et le périmètre convenu. Les cotes critiques, surfaces et documents sont clarifiés avant la fabrication.']
+  ,'Qualitätsprüfung': ['Quality inspection', 'Controllo qualità', 'Contrôle qualité']
+  ,'Prüfverständnis': ['Inspection approach', 'Approccio al controllo', 'Approche du contrôle']
+  ,'Zeichnung & Maße': ['Drawing & dimensions', 'Disegno e quote', 'Plan et cotes']
+  ,'Fertigungsprüfung': ['In-process inspection', 'Controllo in produzione', 'Contrôle en production']  ,'Bauteil prüfen lassen': ['Request a technical part review', 'Richiedere la verifica tecnica del componente', 'Demander la vérification technique de la pièce']
+};
+for (const [source, values] of Object.entries(LEISTUNGEN_STATIC)) {
+  STATIC_TRANSLATIONS.en[source] = values[0];
+  STATIC_TRANSLATIONS.it[source] = values[1];
+  STATIC_TRANSLATIONS.fr[source] = values[2];
+}

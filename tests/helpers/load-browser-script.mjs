@@ -108,6 +108,7 @@ export function loadBrowserScript(relativePath, overrides = {}) {
     Blob,
     crypto: overrides.crypto || { randomUUID() { return '123e4567-e89b-42d3-a456-426614174000'; } },
     console: overrides.console || console,
+    STATIC_TRANSLATIONS: overrides.STATIC_TRANSLATIONS || {},
     T: overrides.T || {
       de: {
         f_success: 'Anfrage gespeichert.',
