@@ -120,6 +120,8 @@ Bessere Angabe:
 
 Die konkrete Bezeichnung muss zur Anwendung und zur Zeichnung passen. Der Fertiger sollte sie nicht aus einer allgemeinen Materialgruppe erraten.
 
+Eine Übersicht passender Materialgruppen finden Sie auf der Seite [Werkstoffe für CNC-Drehteile](/werkstoffe/).
+
 ## 4. Die Stückzahl allein beschreibt den Bedarf nicht vollständig
 
 Für die Fertigungsplanung ist nicht nur die Gesamtmenge wichtig. Auch Losgröße und Wiederholungsbedarf beeinflussen den möglichen Fertigungsweg.
@@ -177,6 +179,8 @@ Mögliche Anforderungen sind:
 Fordern Sie nicht pauschal einen vollständigen Prüfbericht, wenn nur wenige Maße funktionskritisch sind. Kennzeichnen Sie die relevanten Merkmale eindeutig. So kann der Fertiger den Prüfaufwand passend bewerten.
 
 Wichtig ist auch die Frage, **wann** geprüft werden soll. Bei nachgelagerten Behandlungen oder besonderen Werkstoffen kann der vereinbarte Prüfzustand eine Rolle spielen.
+
+Welche Prüfungen und Dokumente vor dem Auftrag geklärt werden, beschreibt die Seite [Qualitätsprüfung für CNC-Drehteile](/qualitaet/).
 
 ## 7. Änderungsstand und Ansprechpartner verhindern Missverständnisse
 
